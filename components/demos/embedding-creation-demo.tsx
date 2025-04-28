@@ -362,26 +362,26 @@ export default function EmbeddingCreationDemo() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="creation" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="creation">Embedding Creation</TabsTrigger>
-          <TabsTrigger value="comparison">Model Comparison</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-slate-800 border border-slate-700">
+          <TabsTrigger value="creation" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">Embedding Creation</TabsTrigger>
+          <TabsTrigger value="comparison" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">Model Comparison</TabsTrigger>
         </TabsList>
 
         {/* Embedding Creation Tab */}
         <TabsContent value="creation" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Embedding Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Cpu className="h-5 w-5" />
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                  <Cpu className="h-5 w-5 text-emerald-400" />
                   Embedding Configuration
-                </CardTitle>
-                <CardDescription>Configure embedding model and generation settings</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </h3>
+                <p className="text-slate-400 text-sm">Configure embedding model and settings</p>
+              </div>
+              <div className="p-5 space-y-4">
                 <div className="space-y-2">
-                  <Label>Embedding Model</Label>
+                  <Label className="text-slate-300">Embedding Model</Label>
                   <Select
                     value={selectedModel.id}
                     onValueChange={(value) => {
@@ -389,12 +389,12 @@ export default function EmbeddingCreationDemo() {
                       if (model) setSelectedModel(model)
                     }}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                       <SelectValue placeholder="Select embedding model" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-slate-800 border-slate-700">
                       {embeddingModels.map(model => (
-                        <SelectItem key={model.id} value={model.id}>
+                        <SelectItem key={model.id} value={model.id} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
                           {model.name} ({model.dimensions}d)
                         </SelectItem>
                       ))}
@@ -402,31 +402,31 @@ export default function EmbeddingCreationDemo() {
                   </Select>
 
                   <div className="grid grid-cols-3 gap-2 mt-2">
-                    <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded text-center">
-                      <div className="text-xs text-slate-500 mb-1">Quality</div>
-                      <div className="font-medium">{selectedModel.quality}</div>
+                    <div className="p-2 bg-slate-900/50 border border-slate-700 rounded text-center">
+                      <div className="text-xs text-slate-400 mb-1">Quality</div>
+                      <div className="text-slate-300 font-medium">{selectedModel.quality}</div>
                     </div>
-                    <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded text-center">
-                      <div className="text-xs text-slate-500 mb-1">Speed</div>
-                      <div className="font-medium">{selectedModel.speed}</div>
+                    <div className="p-2 bg-slate-900/50 border border-slate-700 rounded text-center">
+                      <div className="text-xs text-slate-400 mb-1">Speed</div>
+                      <div className="text-slate-300 font-medium">{selectedModel.speed}</div>
                     </div>
-                    <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded text-center">
-                      <div className="text-xs text-slate-500 mb-1">Cost</div>
-                      <div className="font-medium">{selectedModel.cost}</div>
+                    <div className="p-2 bg-slate-900/50 border border-slate-700 rounded text-center">
+                      <div className="text-xs text-slate-400 mb-1">Cost</div>
+                      <div className="text-slate-300 font-medium">{selectedModel.cost}</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Text Chunks</Label>
+                  <Label className="text-slate-300">Text Chunks</Label>
                   <div className="max-h-[200px] overflow-y-auto space-y-2">
                     {chunks.map(chunk => (
-                      <div key={chunk.id} className="p-2 border border-gray-200 dark:border-gray-700 rounded-md">
+                      <div key={chunk.id} className="p-2 bg-slate-900/50 border border-slate-700 hover:border-slate-600 transition-all rounded-md">
                         <div className="flex justify-between items-start">
-                          <span className="font-medium text-sm">Chunk #{chunk.id}</span>
-                          <Badge>{chunk.category}</Badge>
+                          <span className="font-medium text-sm text-slate-300">Chunk #{chunk.id}</span>
+                          <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white">{chunk.category}</Badge>
                         </div>
-                        <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">{chunk.text}</p>
+                        <p className="text-xs text-slate-400 mt-1 line-clamp-2">{chunk.text}</p>
                         <div className="text-xs text-slate-500 mt-1">
                           Last updated: {chunk.lastUpdated.toLocaleDateString()}
                         </div>
@@ -436,106 +436,106 @@ export default function EmbeddingCreationDemo() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Embedding Status</Label>
-                  <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md">
+                  <Label className="text-slate-300">Embedding Status</Label>
+                  <div className="p-3 bg-slate-900/50 border border-slate-700 rounded-md">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm">Embeddings Generated:</span>
-                      <span className="font-medium">{Object.keys(embeddings).length} / {chunks.length}</span>
+                      <span className="text-sm text-slate-400">Embeddings Generated:</span>
+                      <span className="font-medium text-slate-300">{Object.keys(embeddings).length} / {chunks.length}</span>
                     </div>
                     {lastRefreshed && (
                       <div className="flex justify-between items-center mt-1">
-                        <span className="text-sm">Last Refreshed:</span>
-                        <span className="font-medium">{lastRefreshed.toLocaleTimeString()}</span>
+                        <span className="text-sm text-slate-400">Last Refreshed:</span>
+                        <span className="font-medium text-slate-300">{lastRefreshed.toLocaleTimeString()}</span>
                       </div>
                     )}
                   </div>
                 </div>
-              </CardContent>
-              <CardFooter>
+              </div>
+              <div className="px-5 py-4 border-t border-slate-700">
                 <Button
                   onClick={generateAllEmbeddings}
                   disabled={isGenerating}
-                  className="w-full"
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
                 >
                   {isGenerating ? "Generating..." : "Generate Embeddings"}
                 </Button>
-              </CardFooter>
-            </Card>
+              </div>
+            </div>
 
             {/* Embedding Visualization */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-emerald-400" />
                   Embedding Visualization
-                </CardTitle>
-                <CardDescription>2D projection of high-dimensional embeddings</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="border rounded-md p-1 bg-white">
+                </h3>
+                <p className="text-slate-400 text-sm">2D projection of high-dimensional embeddings</p>
+              </div>
+              <div className="p-5">
+                <div className="border border-slate-700 rounded-md p-1 bg-slate-900/50">
                   <canvas ref={canvasRef} width={400} height={300} className="w-full h-[300px] rounded" />
                 </div>
                 <div className="flex justify-center mt-4 gap-4">
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                    <span className="text-xs">Technical</span>
+                    <span className="text-xs text-slate-400">Technical</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                    <span className="text-xs">Best Practice</span>
+                    <span className="text-xs text-slate-400">Best Practice</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                    <span className="text-xs">Financial</span>
+                    <span className="text-xs text-slate-400">Financial</span>
                   </div>
                 </div>
-              </CardContent>
-              <CardFooter className="text-xs text-slate-500 text-center">
+              </div>
+              <div className="px-5 py-3 border-t border-slate-700 text-xs text-slate-500 text-center">
                 Note: This is a simplified 2D projection. Real embeddings have {selectedModel.dimensions} dimensions.
-              </CardFooter>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Search with Embeddings */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Search className="h-5 w-5" />
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                <Search className="h-5 w-5 text-emerald-400" />
                 Search with Embeddings
-              </CardTitle>
-              <CardDescription>See how embeddings enable semantic search</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-md mb-4">
-                <h3 className="font-medium mb-2">How Search Works in This Demo</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300">
+              </h3>
+              <p className="text-slate-400 text-sm">See how embeddings enable semantic search</p>
+            </div>
+            <div className="p-5 space-y-4">
+              <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-md mb-4">
+                <h3 className="font-medium mb-2 text-slate-300">How Search Works in This Demo</h3>
+                <p className="text-sm text-slate-400">
                   This demo uses a simplified simulation of vector search. Instead of a real embedding model, we use a 
                   deterministic algorithm that converts text to vectors based on character codes and text patterns.
                   When you search, we:
                 </p>
-                <ol className="list-decimal ml-5 mt-2 text-sm text-slate-600 dark:text-slate-300 space-y-1">
+                <ol className="list-decimal ml-5 mt-2 text-sm text-slate-400 space-y-1">
                   <li>Generate a simulated vector for your query using our simplified algorithm</li>
                   <li>Compare it to the simulated vectors of each text chunk using cosine similarity</li>
                   <li>Return the chunks with the highest similarity scores</li>
                 </ol>
-                <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
+                <p className="text-sm text-slate-400 mt-2">
                   This demonstrates the core concept of semantic search while being fast enough to run entirely in your browser.
                 </p>
               </div>
               
-              <div className="p-4 border-l-4 border-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-r-md mb-4">
-                <h3 className="font-medium mb-2 text-blue-700 dark:text-blue-300">Try These Example Queries</h3>
+              <div className="p-4 border-l-4 border-emerald-500 bg-slate-900/50 rounded-r-md mb-4">
+                <h3 className="font-medium mb-2 text-emerald-400">Try These Example Queries</h3>
                 <div className="grid grid-cols-2 gap-2 mt-3">
                   {["semantic understanding", "vector dimensions", "performance improvement", "revenue report", "RAG system"].map((query) => (
                     <Button 
                       key={query} 
                       variant="outline" 
                       size="sm" 
-                      className="justify-start text-xs"
+                      className="justify-start text-xs border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
                       onClick={() => performSearch(query)}
                       disabled={Object.keys(embeddings).length === 0}
                     >
-                      <Search className="mr-2 h-3 w-3" />
+                      <Search className="mr-2 h-3 w-3 text-emerald-400" />
                       {query}
                     </Button>
                   ))}
@@ -552,10 +552,12 @@ export default function EmbeddingCreationDemo() {
                       performSearch();
                     }
                   }}
+                  className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
                 />
                 <Button
                   onClick={() => performSearch()}
                   disabled={isSearching || !searchQuery.trim() || Object.keys(embeddings).length === 0}
+                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
                 >
                   {isSearching ? "Searching..." : "Search"}
                 </Button>
@@ -563,6 +565,7 @@ export default function EmbeddingCreationDemo() {
                   <Button 
                     variant="outline" 
                     onClick={clearSearch}
+                    className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
                   >
                     Clear
                   </Button>
@@ -570,7 +573,7 @@ export default function EmbeddingCreationDemo() {
               </div>
 
               {Object.keys(embeddings).length === 0 && (
-                <div className="p-4 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300 rounded-md text-sm flex items-start gap-2">
+                <div className="p-4 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-md text-sm flex items-start gap-2">
                   <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                   <span>No embeddings generated yet. Click "Generate Embeddings" to create embeddings for the text chunks.</span>
                 </div>
@@ -578,63 +581,65 @@ export default function EmbeddingCreationDemo() {
 
               {searchResults.length > 0 && (
                 <div className="space-y-3">
-                  <h3 className="font-medium">Search Results</h3>
+                  <h3 className="font-medium text-slate-300">Search Results</h3>
                   {searchResults.map(result => {
                     const chunk = chunks.find(c => c.id === result.id)
                     return chunk ? (
-                      <div key={result.id} className="p-3 border border-gray-200 dark:border-gray-700 rounded-md">
+                      <div key={result.id} className="p-3 bg-slate-900/50 border border-slate-700 hover:border-slate-600 transition-all rounded-md">
                         <div className="flex justify-between items-start">
-                          <span className="font-medium">Chunk #{chunk.id}</span>
-                          <Badge>{(result.similarity * 100).toFixed(1)}% match</Badge>
+                          <span className="font-medium text-slate-300">Chunk #{chunk.id}</span>
+                          <Badge className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">
+                            {(result.similarity * 100).toFixed(1)}% match
+                          </Badge>
                         </div>
-                        <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{chunk.text}</p>
+                        <p className="text-sm text-slate-400 mt-1">{chunk.text}</p>
                       </div>
                     ) : null
                   })}
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Model Comparison Tab */}
         <TabsContent value="comparison" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Embedding Model Comparison</CardTitle>
-              <CardDescription>Compare different embedding models and their characteristics</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <h3 className="text-slate-200 font-medium">Embedding Model Comparison</h3>
+              <p className="text-slate-400 text-sm">Compare different embedding models and their characteristics</p>
+            </div>
+            <div className="p-5">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="border-b border-gray-200 dark:border-gray-700">
-                      <th className="text-left p-3">Model Type</th>
-                      <th className="text-left p-3">Dimensions</th>
-                      <th className="text-left p-3">Best For</th>
-                      <th className="text-left p-3">Advantages</th>
-                      <th className="text-left p-3">Disadvantages</th>
+                    <tr className="border-b border-slate-700">
+                      <th className="text-left p-3 text-slate-300">Model Type</th>
+                      <th className="text-left p-3 text-slate-300">Dimensions</th>
+                      <th className="text-left p-3 text-slate-300">Best For</th>
+                      <th className="text-left p-3 text-slate-300">Advantages</th>
+                      <th className="text-left p-3 text-slate-300">Disadvantages</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-gray-200 dark:border-gray-700">
-                      <td className="p-3 font-medium">Small Models<br />(128-384d)</td>
-                      <td className="p-3">128-384</td>
-                      <td className="p-3 text-sm">
+                    <tr className="border-b border-slate-700">
+                      <td className="p-3 font-medium text-slate-300">Small Models<br />(128-384d)</td>
+                      <td className="p-3 text-slate-400">128-384</td>
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Simple applications</li>
                           <li>Large document sets</li>
                           <li>Cost-sensitive deployments</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Fast generation</li>
                           <li>Lower storage requirements</li>
                           <li>Lower API costs</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Less semantic precision</li>
                           <li>Poorer handling of nuance</li>
@@ -642,24 +647,24 @@ export default function EmbeddingCreationDemo() {
                         </ul>
                       </td>
                     </tr>
-                    <tr className="border-b border-gray-200 dark:border-gray-700">
-                      <td className="p-3 font-medium">Medium Models<br />(512-768d)</td>
-                      <td className="p-3">512-768</td>
-                      <td className="p-3 text-sm">
+                    <tr className="border-b border-slate-700">
+                      <td className="p-3 font-medium text-slate-300">Medium Models<br />(512-768d)</td>
+                      <td className="p-3 text-slate-400">512-768</td>
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>General purpose RAG</li>
                           <li>Balanced applications</li>
                           <li>Most documentation</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Good balance of quality/cost</li>
                           <li>Reasonable generation speed</li>
                           <li>Good semantic understanding</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>May struggle with specialized domains</li>
                           <li>Moderate storage requirements</li>
@@ -668,23 +673,23 @@ export default function EmbeddingCreationDemo() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-3 font-medium">Large Models<br />(1024-1536d+)</td>
-                      <td className="p-3">1024-1536+</td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 font-medium text-slate-300">Large Models<br />(1024-1536d+)</td>
+                      <td className="p-3 text-slate-400">1024-1536+</td>
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Complex semantic tasks</li>
                           <li>Specialized domains</li>
                           <li>High-precision requirements</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Highest semantic precision</li>
                           <li>Better cross-lingual capabilities</li>
                           <li>Better for complex queries</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Slower generation</li>
                           <li>Higher storage requirements</li>
@@ -695,19 +700,19 @@ export default function EmbeddingCreationDemo() {
                   </tbody>
                 </table>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Model Change Simulation</CardTitle>
-                <CardDescription>See what happens when you change embedding models</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <h3 className="text-slate-200 font-medium">Model Change Simulation</h3>
+                <p className="text-slate-400 text-sm">See what happens when you change embedding models</p>
+              </div>
+              <div className="p-5 space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="model-change" className="flex items-center gap-2">
+                    <Label htmlFor="model-change" className="flex items-center gap-2 text-slate-300">
                       <AlertCircle className="h-4 w-4 text-amber-500" />
                       Simulate Model Change
                     </Label>
@@ -715,6 +720,7 @@ export default function EmbeddingCreationDemo() {
                       id="model-change"
                       checked={simulateModelChange}
                       onCheckedChange={setSimulateModelChange}
+                      className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                     />
                   </div>
                   <p className="text-xs text-slate-500">
@@ -723,12 +729,12 @@ export default function EmbeddingCreationDemo() {
                 </div>
 
                 {simulateModelChange && Object.keys(embeddings).length === 0 && (
-                  <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-                    <h3 className="font-medium text-amber-800 dark:text-amber-300 flex items-center gap-2 mb-2">
+                  <div className="p-4 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-lg">
+                    <h3 className="font-medium text-amber-300 flex items-center gap-2 mb-2">
                       <AlertCircle className="h-5 w-5" />
                       Model Change Detected
                     </h3>
-                    <p className="text-sm text-amber-700 dark:text-amber-300">
+                    <p className="text-sm text-amber-300">
                       The embedding model has changed, invalidating existing embeddings. You need to regenerate all embeddings
                       with the new model to ensure consistency. Different models produce incompatible vector spaces.
                     </p>
@@ -737,7 +743,7 @@ export default function EmbeddingCreationDemo() {
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="incomplete-embeddings" className="flex items-center gap-2">
+                    <Label htmlFor="incomplete-embeddings" className="flex items-center gap-2 text-slate-300">
                       <AlertCircle className="h-4 w-4 text-amber-500" />
                       Simulate Incomplete Embeddings
                     </Label>
@@ -745,6 +751,7 @@ export default function EmbeddingCreationDemo() {
                       id="incomplete-embeddings"
                       checked={simulateIncompleteEmbeddings}
                       onCheckedChange={setSimulateIncompleteEmbeddings}
+                      className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                     />
                   </div>
                   <p className="text-xs text-slate-500">
@@ -753,39 +760,51 @@ export default function EmbeddingCreationDemo() {
                 </div>
 
                 {simulateIncompleteEmbeddings && Object.keys(embeddings).length > 0 && (
-                  <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-                    <h3 className="font-medium text-amber-800 dark:text-amber-300 flex items-center gap-2 mb-2">
+                  <div className="p-4 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-lg">
+                    <h3 className="font-medium text-amber-300 flex items-center gap-2 mb-2">
                       <AlertCircle className="h-5 w-5" />
                       Incomplete Embeddings Detected
                     </h3>
-                    <p className="text-sm text-amber-700 dark:text-amber-300">
+                    <p className="text-sm text-amber-300">
                       Some chunks ({chunks.length - Object.keys(embeddings).length} of {chunks.length}) are missing embeddings.
                       This creates blind spots in your search index where content exists but cannot be retrieved.
                     </p>
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Best Practices</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <h3 className="text-slate-200 font-medium">Best Practices</h3>
+              </div>
+              <div className="p-5">
                 <div className="space-y-4">
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2 flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
+                    <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-300">
+                      <CheckCircle2 className="h-5 w-5 text-emerald-400" />
                       Implement Change Detection
                     </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
+                    <p className="text-sm text-slate-400">
                       Track document changes with timestamps or checksums to identify which embeddings need refreshing.
                       This enables efficient incremental updates rather than full reindexing.
                     </p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
+            <h3 className="text-slate-200 font-medium mb-3 flex items-center gap-2">
+              <Layers className="h-5 w-5 text-emerald-400" />
+              Embedding Strategy Recap
+            </h3>
+            <p className="text-sm text-slate-400 mb-4">
+              Choose the right embedding model based on your specific needs. Higher dimensions generally provide better semantic 
+              understanding but come with increased costs and storage requirements. Refresh embeddings when source content changes 
+              to maintain retrieval quality.
+            </p>
           </div>
         </TabsContent>
       </Tabs>

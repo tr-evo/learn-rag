@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { format } from "date-fns"
-import { CalendarIcon, Tag, Search, Filter, Shield, AlertCircle, CheckCircle2 } from "lucide-react"
+import { CalendarIcon, Tag, Search, Filter, Shield, AlertCircle, CheckCircle2, BookOpen, AlertTriangle, FolderSearch } from "lucide-react"
 
 // Rename the original sampleDocuments array to initialSampleDocuments
 const initialSampleDocuments = [
@@ -260,153 +260,190 @@ export default function MetadataTaggingDemo() {
   }, [activeFilters, showMissingMetadata, showInconsistentMetadata])
 
   return (
+    <div className="space-y-6 text-slate-200">
     <Tabs defaultValue="tagging" className="w-full">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="tagging">Metadata Tagging</TabsTrigger>
-        <TabsTrigger value="search">Search & Filter</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 bg-slate-800 p-1 mb-4">
+          <TabsTrigger 
+            value="tagging" 
+            className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white"
+          >
+            Metadata Tagging
+          </TabsTrigger>
+          <TabsTrigger 
+            value="search" 
+            className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white"
+          >
+            Search & Filter
+          </TabsTrigger>
       </TabsList>
 
       {/* Metadata Tagging Tab */}
       <TabsContent value="tagging">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Document List */}
-          <Card className="md:col-span-1">
-            <CardHeader>
-              <CardTitle>Documents</CardTitle>
-              <CardDescription>Select a document to edit its metadata</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-emerald-400" />
+                  <h3 className="font-medium text-slate-200">Documents</h3>
+                </div>
+                <span className="text-xs text-slate-400">{sampleDocuments.length} items</span>
+              </div>
+              
+              <div className="p-4 space-y-3">
               {sampleDocuments.map((doc) => (
                 <div
                   key={doc.id}
-                  className={`p-3 border rounded-md cursor-pointer ${selectedDocument.id === doc.id
-                    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                    : "border-gray-200 dark:border-gray-700 hover:border-emerald-300"
+                    className={`p-3 border rounded-lg cursor-pointer transition-all ${
+                      selectedDocument.id === doc.id
+                        ? "border-emerald-500/50 bg-emerald-900/20"
+                        : "border-slate-700 hover:border-slate-600 bg-slate-800/50"
                     }`}
                   onClick={() => handleSelectDocument(doc)}
                 >
-                  <h3 className="font-medium">{doc.title}</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 truncate">{doc.content}</p>
+                    <h3 className="font-medium text-slate-200">{doc.title}</h3>
+                    <p className="text-sm text-slate-400 truncate mt-1">{doc.content}</p>
                   <div className="flex flex-wrap gap-1 mt-2">
                     {Object.entries(doc.metadata)
                       .slice(0, 3) // Show only first 3 metadata items
                       .map(([key, value]) => (
-                        <Badge key={key} variant="outline" className="text-xs">
+                          <Badge key={key} className="bg-slate-700 text-slate-300 hover:bg-slate-700 text-xs">
                           {key}: {value instanceof Date ? format(value, "yyyy-MM-dd") : value}
                         </Badge>
                       ))}
                     {Object.keys(doc.metadata).length > 3 && (
-                      <Badge variant="outline" className="text-xs">
+                        <Badge className="bg-slate-700 text-slate-300 hover:bg-slate-700 text-xs">
                         +{Object.keys(doc.metadata).length - 3} more
                       </Badge>
                     )}
                   </div>
                 </div>
               ))}
-            </CardContent>
-          </Card>
+              </div>
+            </div>
 
           {/* Metadata Editor */}
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Tag className="h-5 w-5" />
-                Edit Metadata
-              </CardTitle>
-              <CardDescription>Add or modify metadata for {selectedDocument.title}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            <div className="md:col-span-2 bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Tag className="h-5 w-5 text-emerald-400" />
+                  <h3 className="font-medium text-slate-200">Metadata Editor</h3>
+                </div>
+                <Badge className="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30">
+                  {selectedDocument.title}
+                </Badge>
+              </div>
+              
+              <div className="p-5 space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Source */}
                 <div className="space-y-2">
-                  <Label htmlFor="source">Source</Label>
+                    <Label htmlFor="source" className="text-slate-300">Source</Label>
                   <Input
                     id="source"
                     value={editedMetadata.source}
                     onChange={(e) => handleMetadataChange("source", e.target.value)}
+                      className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
 
                 {/* Author */}
                 <div className="space-y-2">
-                  <Label htmlFor="author">Author</Label>
+                    <Label htmlFor="author" className="text-slate-300">Author</Label>
                   <Input
                     id="author"
                     value={editedMetadata.author}
                     onChange={(e) => handleMetadataChange("author", e.target.value)}
+                      className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
 
                 {/* Date */}
                 <div className="space-y-2">
-                  <Label htmlFor="date">Date</Label>
+                    <Label htmlFor="date" className="text-slate-300">Date</Label>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-start text-left font-normal" id="date">
-                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        <Button
+                          id="date"
+                          variant="outline"
+                          className="w-full justify-start text-left font-normal bg-slate-900/50 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-slate-200"
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4 text-emerald-400" />
                         {date ? format(date, "PPP") : <span>Pick a date</span>}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar mode="single" selected={date} onSelect={handleDateChange} initialFocus />
+                      <PopoverContent className="w-auto p-0 bg-slate-800 border-slate-700">
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          onSelect={handleDateChange}
+                          initialFocus
+                          className="bg-slate-800 text-slate-200"
+                        />
                     </PopoverContent>
                   </Popover>
                 </div>
 
                 {/* Category */}
                 <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
+                    <Label htmlFor="category" className="text-slate-300">Category</Label>
                   <Input
                     id="category"
                     value={editedMetadata.category}
                     onChange={(e) => handleMetadataChange("category", e.target.value)}
+                      className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
 
                 {/* Department */}
                 <div className="space-y-2">
-                  <Label htmlFor="department">Department</Label>
+                    <Label htmlFor="department" className="text-slate-300">Department</Label>
                   <Input
                     id="department"
                     value={editedMetadata.department}
                     onChange={(e) => handleMetadataChange("department", e.target.value)}
+                      className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
 
                 {/* Confidentiality */}
                 <div className="space-y-2">
-                  <Label htmlFor="confidentiality">Confidentiality</Label>
+                    <Label htmlFor="confidentiality" className="text-slate-300">Confidentiality</Label>
                   <Input
                     id="confidentiality"
                     value={editedMetadata.confidentiality}
                     onChange={(e) => handleMetadataChange("confidentiality", e.target.value)}
+                      className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
 
                 {/* Version */}
                 <div className="space-y-2">
-                  <Label htmlFor="version">Version</Label>
+                    <Label htmlFor="version" className="text-slate-300">Version</Label>
                   <Input
                     id="version"
                     value={editedMetadata.version}
                     onChange={(e) => handleMetadataChange("version", e.target.value)}
+                      className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
               </div>
-            </CardContent>
-            <CardFooter>
-              <Button onClick={saveMetadataChanges}>Save Metadata</Button>
-            </CardFooter>
-            {/* Add this right after the CardFooter in the Metadata Editor card */}
+                
+                <Button 
+                  onClick={saveMetadataChanges}
+                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all mt-4"
+                >
+                  Save Metadata
+                </Button>
+                
             {showSaveSuccess && (
-              <div className="px-6 pb-4">
-                <div className="bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 p-2 rounded-md text-sm flex items-center">
-                  <CheckCircle2 className="h-4 w-4 mr-2" />
-                  Metadata saved successfully!
+                  <div className="mt-2 p-3 bg-emerald-900/20 border border-emerald-500/50 rounded-lg text-emerald-300 flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    <span>Metadata saved successfully!</span>
                 </div>
+                )}
               </div>
-            )}
-          </Card>
+            </div>
         </div>
       </TabsContent>
 
@@ -414,27 +451,24 @@ export default function MetadataTaggingDemo() {
       <TabsContent value="search">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Search and Filter Controls */}
-          <Card className="md:col-span-1">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Search className="h-5 w-5" />
-                Search & Filter
-              </CardTitle>
-              <CardDescription>Use metadata to narrow down results</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
+                <Search className="h-5 w-5 text-emerald-400" />
+                <h3 className="font-medium text-slate-200">Search & Filter</h3>
+              </div>
+              
+              <div className="p-5 space-y-5">
               {/* Search input */}
               <div className="space-y-2">
-                <Label htmlFor="search">Search Text</Label>
-                <div className="flex gap-2">
+                  <Label htmlFor="search" className="text-slate-300">Search Text</Label>
+                  <div className="relative">
                   <Input
                     id="search"
-                    placeholder="Search in documents and metadata..."
+                      placeholder="Search documents and metadata..."
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value)
                       if (e.target.value === "" && hasSearched) {
-                        // If search is cleared, update results immediately
                         handleSearch()
                       }
                     }}
@@ -443,26 +477,31 @@ export default function MetadataTaggingDemo() {
                         handleSearch()
                       }
                     }}
+                      className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20 pl-9"
                   />
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
                 </div>
               </div>
 
               {/* Metadata filters */}
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <Filter className="h-4 w-4" />
-                  Metadata Filters
-                </Label>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 pb-2 border-b border-slate-700">
+                    <Filter className="h-4 w-4 text-emerald-400" />
+                    <Label className="text-slate-300 font-medium">Metadata Filters</Label>
+                  </div>
 
                 {/* Department filter */}
-                <div className="space-y-1">
-                  <Label className="text-sm font-normal">Department</Label>
+                  <div className="space-y-2">
+                    <Label className="text-sm text-slate-400">Department</Label>
                   <div className="flex flex-wrap gap-2">
                     {getUniqueValues("department").map((dept) => (
                       <Badge
                         key={dept}
-                        variant={activeFilters.department === dept ? "default" : "outline"}
-                        className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                          className={`cursor-pointer transition-colors ${
+                            activeFilters.department === dept
+                              ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                              : "bg-slate-700 hover:bg-slate-600 text-slate-300"
+                          }`}
                         onClick={() => toggleFilter("department", activeFilters.department === dept ? null : dept)}
                       >
                         {dept}
@@ -472,14 +511,18 @@ export default function MetadataTaggingDemo() {
                 </div>
 
                 {/* Confidentiality filter */}
-                <div className="space-y-1">
-                  <Label className="text-sm font-normal">Confidentiality</Label>
+                  <div className="space-y-2">
+                    <Label className="text-sm text-slate-400">Confidentiality</Label>
                   <div className="flex flex-wrap gap-2">
                     {getUniqueValues("confidentiality").map((level) => (
                       <Badge
                         key={level}
-                        variant={activeFilters.confidentiality === level ? "default" : "outline"}
-                        className={`cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ${level === "Confidential" ? "border-red-300 text-red-600 dark:text-red-400" : ""
+                          className={`cursor-pointer transition-colors ${
+                            activeFilters.confidentiality === level
+                              ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                              : level === "Confidential"
+                              ? "bg-red-900/30 hover:bg-red-900/50 text-red-300 border border-red-500/30"
+                              : "bg-slate-700 hover:bg-slate-600 text-slate-300"
                           }`}
                         onClick={() =>
                           toggleFilter("confidentiality", activeFilters.confidentiality === level ? null : level)
@@ -492,15 +535,18 @@ export default function MetadataTaggingDemo() {
                   </div>
                 </div>
 
-                {/* Date filter (simplified) */}
-                <div className="space-y-1">
-                  <Label className="text-sm font-normal">Date (After)</Label>
+                  {/* Date filter */}
+                  <div className="space-y-2">
+                    <Label className="text-sm text-slate-400">Date (After)</Label>
                   <div className="flex flex-wrap gap-2">
                     {["2023-01-01", "2023-03-01"].map((dateStr) => (
                       <Badge
                         key={dateStr}
-                        variant={activeFilters.date === dateStr ? "default" : "outline"}
-                        className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                          className={`cursor-pointer transition-colors ${
+                            activeFilters.date === dateStr
+                              ? "bg-emerald-500 hover:bg-emerald-600 text-white"
+                              : "bg-slate-700 hover:bg-slate-600 text-slate-300"
+                          }`}
                         onClick={() => toggleFilter("date", activeFilters.date === dateStr ? null : dateStr)}
                       >
                         {dateStr}
@@ -511,72 +557,101 @@ export default function MetadataTaggingDemo() {
               </div>
 
               {/* Simulation Controls */}
-              <div className="space-y-2 border-t pt-4 mt-4">
-                <Label className="text-sm font-medium">Simulate Metadata Issues</Label>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
+                <div className="space-y-3 pt-4 mt-4 border-t border-slate-700">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="h-4 w-4 text-amber-400" />
+                    <Label className="text-sm font-medium text-slate-300">Simulate Metadata Issues</Label>
+                  </div>
+                  
+                  <div className="space-y-3 pl-2">
+                    <div className="flex items-start space-x-2">
                     <Checkbox
                       id="missing-metadata"
                       checked={showMissingMetadata}
                       onCheckedChange={(checked) => setShowMissingMetadata(checked === true)}
+                        className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 mt-1"
                     />
-                    <Label htmlFor="missing-metadata" className="text-sm font-normal cursor-pointer">
+                      <Label htmlFor="missing-metadata" className="text-sm text-slate-300 cursor-pointer">
                       Missing confidentiality tags (security risk)
                     </Label>
                   </div>
-                  <div className="flex items-center space-x-2">
+                    
+                    <div className="flex items-start space-x-2">
                     <Checkbox
                       id="inconsistent-metadata"
                       checked={showInconsistentMetadata}
                       onCheckedChange={(checked) => setShowInconsistentMetadata(checked === true)}
+                        className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 mt-1"
                     />
-                    <Label htmlFor="inconsistent-metadata" className="text-sm font-normal cursor-pointer">
+                      <Label htmlFor="inconsistent-metadata" className="text-sm text-slate-300 cursor-pointer">
                       Inconsistent department naming
                     </Label>
+                    </div>
                   </div>
                 </div>
+                
+                <div className="flex gap-3 pt-3">
+                  <Button
+                    variant="outline"
+                    onClick={resetFilters}
+                    className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
+                  >
+                    Reset Filters
+                  </Button>
+                  <Button
+                    onClick={handleSearch}
+                    className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
+                  >
+                    Search
+                  </Button>
+                </div>
               </div>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={resetFilters}>
-                Reset
-              </Button>
-              <Button onClick={handleSearch}>Search</Button>
-            </CardFooter>
-          </Card>
+            </div>
 
           {/* Search Results */}
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle>Search Results</CardTitle>
-              <CardDescription>
-                {hasSearched
-                  ? `Found ${searchResults.length} document${searchResults.length !== 1 ? "s" : ""}`
-                  : "Use the search and filters to find documents"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+            <div className="md:col-span-2 bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FolderSearch className="h-5 w-5 text-emerald-400" />
+                  <h3 className="font-medium text-slate-200">Search Results</h3>
+                </div>
+                {hasSearched && (
+                  <Badge className="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30">
+                    {searchResults.length} {searchResults.length === 1 ? 'result' : 'results'}
+                  </Badge>
+                )}
+              </div>
+              
+              <div className="p-5">
               {!hasSearched ? (
-                <div className="flex flex-col items-center justify-center text-center p-6 h-64">
-                  <Search className="h-12 w-12 text-slate-300 dark:text-slate-600 mb-4" />
-                  <p className="text-slate-600 dark:text-slate-300">
-                    Use the search and metadata filters to find relevant documents
+                  <div className="flex flex-col items-center justify-center text-center py-16">
+                    <div className="bg-slate-700/30 rounded-full p-4 mb-4">
+                      <Search className="h-10 w-10 text-slate-500" />
+                    </div>
+                    <h3 className="text-slate-300 font-medium mb-2">Ready to Search</h3>
+                    <p className="text-slate-400 max-w-md">
+                      Use the search and metadata filters to find relevant documents in your collection
                   </p>
                 </div>
               ) : searchResults.length === 0 ? (
-                <div className="flex flex-col items-center justify-center text-center p-6 h-64">
-                  <AlertCircle className="h-12 w-12 text-slate-300 dark:text-slate-600 mb-4" />
-                  <p className="text-slate-600 dark:text-slate-300">No documents match your search criteria</p>
+                  <div className="flex flex-col items-center justify-center text-center py-16">
+                    <div className="bg-slate-700/30 rounded-full p-4 mb-4">
+                      <AlertCircle className="h-10 w-10 text-slate-500" />
+                    </div>
+                    <h3 className="text-slate-300 font-medium mb-2">No Results Found</h3>
+                    <p className="text-slate-400 max-w-md">
+                      Try adjusting your search terms or filters to find matching documents
+                    </p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {searchResults.map((doc) => (
-                    <div key={doc.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                      <h3 className="font-medium mb-1">{doc.title}</h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">{doc.content}</p>
-                      <div className="flex flex-wrap gap-1">
+                      <div key={doc.id} className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg hover:border-slate-600 transition-colors">
+                        <h3 className="font-medium text-slate-200 mb-1">{doc.title}</h3>
+                        <p className="text-sm text-slate-400 mb-3">{doc.content}</p>
+                        <div className="flex flex-wrap gap-1 mt-1">
                         {Object.entries(doc.metadata).map(([key, value]) => (
-                          <Badge key={key} variant="outline" className="text-xs">
+                            <Badge key={key} className="bg-slate-700 text-slate-300 hover:bg-slate-700 text-xs">
                             {key}: {value instanceof Date ? format(value, "yyyy-MM-dd") : value}
                           </Badge>
                         ))}
@@ -588,22 +663,28 @@ export default function MetadataTaggingDemo() {
 
               {/* Metadata Issues Warning */}
               {hasSearched && (showMissingMetadata || showInconsistentMetadata) && (
-                <div className="mt-6 p-4 border border-yellow-300 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+                  <div className="mt-6 p-4 bg-amber-900/20 border border-amber-500/30 rounded-lg">
+                    <div className="flex gap-3">
+                      <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-medium text-yellow-800 dark:text-yellow-300">Metadata Issues Detected</h4>
-                      <ul className="mt-2 text-sm text-yellow-700 dark:text-yellow-200 space-y-1 list-disc pl-5">
+                        <h4 className="font-medium text-amber-300 mb-2">Metadata Issues Detected</h4>
+                        <ul className="space-y-2 text-sm text-slate-300">
                         {showMissingMetadata && (
-                          <li>
-                            <strong>Missing confidentiality tags:</strong> Some confidential documents may not be
+                            <li className="flex gap-2">
+                              <span className="text-amber-400 font-bold">•</span>
+                              <span>
+                                <strong className="text-amber-300">Missing confidentiality tags:</strong> Some confidential documents may not be
                             properly tagged, creating potential security risks.
+                              </span>
                           </li>
                         )}
                         {showInconsistentMetadata && (
-                          <li>
-                            <strong>Inconsistent naming:</strong> The department "Human Resources" is sometimes tagged
+                            <li className="flex gap-2">
+                              <span className="text-amber-400 font-bold">•</span>
+                              <span>
+                                <strong className="text-amber-300">Inconsistent naming:</strong> The department "Human Resources" is sometimes tagged
                             as "HR", causing filtering inconsistencies.
+                              </span>
                           </li>
                         )}
                       </ul>
@@ -611,51 +692,63 @@ export default function MetadataTaggingDemo() {
                   </div>
                 </div>
               )}
-            </CardContent>
-          </Card>
+              </div>
+            </div>
         </div>
       </TabsContent>
+      </Tabs>
 
-      {/* Best Practices Card */}
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Metadata Tagging Best Practices</CardTitle>
-        </CardHeader>
-        <CardContent>
+      {/* Best Practices */}
+      <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
+        <h3 className="text-sm font-medium text-emerald-400 mb-4 flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4" />
+          Metadata Tagging Best Practices
+        </h3>
+        
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                Consistency is Key
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
+          <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg transition-all hover:border-emerald-500/30">
+            <div className="flex items-center gap-2 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="16" x2="12" y2="12" />
+                <line x1="12" y1="8" x2="12.01" y2="8" />
+              </svg>
+              <h4 className="font-medium text-slate-200">Consistency is Key</h4>
+            </div>
+            <p className="text-sm text-slate-400">
                 Use consistent naming conventions and controlled vocabularies for metadata fields. Standardize date
                 formats, department names, and other common fields.
               </p>
             </div>
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                Automate When Possible
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
+          
+          <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg transition-all hover:border-emerald-500/30">
+            <div className="flex items-center gap-2 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+              </svg>
+              <h4 className="font-medium text-slate-200">Automate When Possible</h4>
+            </div>
+            <p className="text-sm text-slate-400">
                 Use automated extraction for metadata when possible. Extract dates, authors, and categories from
                 document properties or content to reduce manual tagging errors.
               </p>
             </div>
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                Prioritize Security Metadata
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
+          
+          <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg transition-all hover:border-emerald-500/30">
+            <div className="flex items-center gap-2 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <h4 className="font-medium text-slate-200">Prioritize Security Metadata</h4>
+            </div>
+            <p className="text-sm text-slate-400">
                 Always include access control and confidentiality metadata. This is critical for preventing unauthorized
                 access to sensitive information in RAG systems.
               </p>
             </div>
           </div>
-        </CardContent>
-      </Card>
-    </Tabs>
+      </div>
+    </div>
   )
 }

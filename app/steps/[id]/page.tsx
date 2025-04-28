@@ -321,23 +321,23 @@ export default function StepPage({ params }: { params: { id: string } }) {
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-600/20 to-transparent"></div>
         
         <header className="container mx-auto px-4 py-10 relative z-10">
-          <div className="mb-8">
+      <div className="mb-8">
             <Link 
               href="/" 
               className="inline-flex items-center text-emerald-400 hover:text-emerald-300 transition-colors"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              <span>Back to Overview</span>
-            </Link>
-          </div>
-          
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          <span>Back to Overview</span>
+        </Link>
+      </div>
+
           <div className="flex items-center mb-6">
             <div className="mr-4 bg-gradient-to-br from-emerald-500 to-teal-600 
               text-white rounded-full w-12 h-12 flex items-center justify-center
               text-xl font-bold shadow-lg">
               {step.id}
-            </div>
-            <div>
+        </div>
+        <div>
               <div className="text-sm text-emerald-400 mb-1">
                 Phase {phaseNumber}: {phase}
               </div>
@@ -345,9 +345,9 @@ export default function StepPage({ params }: { params: { id: string } }) {
                 bg-clip-text text-transparent">
                 {step.title}
               </h1>
-            </div>
-          </div>
-          
+        </div>
+      </div>
+
           <p className="text-xl text-slate-300 max-w-4xl">
             {step.description}
           </p>
@@ -386,19 +386,19 @@ export default function StepPage({ params }: { params: { id: string } }) {
             Common Challenges
           </h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {step.challenges.map((challenge, index) => (
+          {step.challenges.map((challenge, index) => (
               <li key={index} className="flex items-start">
                 <span className="inline-block bg-amber-400/20 text-amber-300 rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center mr-3 mt-0.5">
                   {index + 1}
                 </span>
                 <span className="text-slate-300">{challenge}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-        {step.demo && (
-          <div>
+      {step.demo && (
+        <div>
             <h2 className="text-2xl font-semibold mb-6 text-emerald-400 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />

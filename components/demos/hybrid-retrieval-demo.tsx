@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -195,19 +194,17 @@ export default function HybridRetrievalDemo() {
         const vectorRanks: Record<number, number> = {}
         const bm25Ranks: Record<number, number> = {}
 
-          // Calculate vector ranks
-          ([...results])
-          .sort((a, b) => b.scores.vector - a.scores.vector)
-          .forEach((doc, idx) => {
-            vectorRanks[doc.id] = idx + 1
-          })
+        // Calculate vector ranks
+        const vectorRanked = [...results].sort((a, b) => b.scores.vector - a.scores.vector)
+        vectorRanked.forEach((doc, idx) => {
+          vectorRanks[doc.id] = idx + 1
+        })
 
-          // Calculate BM25 ranks - this likely has the same issue
-          ([...results])
-          .sort((a, b) => b.scores.bm25 - a.scores.bm25)
-          .forEach((doc, idx) => {
-            bm25Ranks[doc.id] = idx + 1
-          })
+        // Calculate BM25 ranks
+        const bm25Ranked = [...results].sort((a, b) => b.scores.bm25 - a.scores.bm25)
+        bm25Ranked.forEach((doc, idx) => {
+          bm25Ranks[doc.id] = idx + 1
+        })
 
         // Calculate reciprocal rank fusion score
         results.forEach(doc => {
@@ -241,195 +238,224 @@ export default function HybridRetrievalDemo() {
   // Helper function to render score badges
   const renderScoreBadge = (score: number, label: string) => {
     const colorClass = score >= 0.8
-      ? "bg-green-500"
+      ? "bg-emerald-900/30 border border-emerald-500/50 text-emerald-300"
       : score >= 0.6
-        ? "bg-yellow-500"
-        : "bg-red-500"
+        ? "bg-amber-900/20 border border-amber-500/30 text-amber-300"
+        : "bg-red-900/20 border border-red-500/30 text-red-300"
 
     return (
-      <Badge className={`${colorClass} text-white`}>
+      <Badge className={`${colorClass} font-medium`}>
         {label}: {score.toFixed(2)}
       </Badge>
     )
   }
 
   return (
-    <div className="container mx-auto py-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Try Hybrid Retrieval</CardTitle>
-          <CardDescription>
-            Search through our sample document collection using different retrieval methods
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {/* Search input and controls */}
-            <div className="space-y-4">
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <div className="flex-1">
-                  <Input
-                    placeholder="Enter search query..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full"
-                  />
-                </div>
-                <Button onClick={performSearch} disabled={isSearching || !searchQuery.trim()}>
-                  {isSearching ? <LoaderIcon className="mr-2 h-4 w-4 animate-spin" /> : <SearchIcon className="mr-2 h-4 w-4" />}
-                  Search
-                </Button>
-              </div>
 
-              <div className="flex flex-wrap gap-2">
-                {exampleQueries.map((query) => (
-                  <Badge
-                    key={query}
-                    className="cursor-pointer hover:bg-secondary"
-                    onClick={() => setSearchQuery(query)}
-                  >
-                    {query}
-                  </Badge>
-                ))}
+    <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+      <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+        <div>
+          <h2 className="text-slate-200 font-medium text-xl">Try Hybrid Retrieval</h2>
+          <p className="text-slate-400 text-sm mt-1">
+            Search through our sample document collection using different retrieval methods
+          </p>
+        </div>
+      </div>
+
+      <div className="p-6">
+        <div className="space-y-6">
+          {/* Search input and controls */}
+          <div className="space-y-4">
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="flex-1">
+                <Input
+                  placeholder="Enter search query..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
+                />
+              </div>
+              <Button
+                onClick={performSearch}
+                disabled={isSearching || !searchQuery.trim()}
+                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
+              >
+                {isSearching ? <LoaderIcon className="mr-2 h-4 w-4 animate-spin" /> : <SearchIcon className="mr-2 h-4 w-4" />}
+                Search
+              </Button>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {exampleQueries.map((query) => (
+                <Badge
+                  key={query}
+                  className="cursor-pointer bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition-colors"
+                  onClick={() => setSearchQuery(query)}
+                >
+                  {query}
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          {/* Search configuration */}
+          <div className="bg-slate-900/50 border border-slate-700 rounded-xl overflow-hidden p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                <Settings2Icon className="h-4 w-4 text-emerald-400" />
+                Search Configuration
+              </h3>
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="advanced-mode"
+                  checked={isAdvancedMode}
+                  onCheckedChange={setIsAdvancedMode}
+                  className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+                />
+                <Label htmlFor="advanced-mode" className="text-slate-300">Advanced Mode</Label>
               </div>
             </div>
 
-            {/* Search configuration */}
-            <div className="border rounded-md p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-medium">Search Configuration</h3>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="advanced-mode"
-                    checked={isAdvancedMode}
-                    onCheckedChange={setIsAdvancedMode}
-                  />
-                  <Label htmlFor="advanced-mode">Advanced Mode</Label>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="fusion-method">Fusion Method</Label>
-                    <Select
-                      value={fusionMethod}
-                      onValueChange={setFusionMethod}
-                    >
-                      <SelectTrigger id="fusion-method">
-                        <SelectValue placeholder="Select fusion method" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {fusionMethods.map((method) => (
-                          <SelectItem key={method.id} value={method.id}>
-                            <div className="flex flex-col">
-                              <span>{method.name}</span>
-                              <span className="text-xs text-muted-foreground">{method.description}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {isAdvancedMode && (
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id="show-vector"
-                          checked={showVectorResults}
-                          onCheckedChange={setShowVectorResults}
-                        />
-                        <Label htmlFor="show-vector">Show Vector Results</Label>
-                      </div>
-
-                      <div className="flex items-center space-x-2">
-                        <Switch
-                          id="show-bm25"
-                          checked={showBm25Results}
-                          onCheckedChange={setShowBm25Results}
-                        />
-                        <Label htmlFor="show-bm25">Show BM25 Results</Label>
-                      </div>
-                    </div>
-                  )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="fusion-method" className="text-slate-300">Fusion Method</Label>
+                  <Select
+                    value={fusionMethod}
+                    onValueChange={setFusionMethod}
+                  >
+                    <SelectTrigger id="fusion-method" className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
+                      <SelectValue placeholder="Select fusion method" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-800 border-slate-700">
+                      {fusionMethods.map((method) => (
+                        <SelectItem key={method.id} value={method.id} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
+                          <div className="flex flex-col">
+                            <span>{method.name}</span>
+                            <span className="text-xs text-slate-400">{method.description}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
-                {fusionMethod === "weighted" && (
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <Label htmlFor="vector-weight">Vector Search Weight: {vectorWeight}%</Label>
-                      </div>
-                      <Slider
-                        id="vector-weight"
-                        min={0}
-                        max={100}
-                        step={5}
-                        value={[vectorWeight]}
-                        onValueChange={(value) => {
-                          setVectorWeight(value[0])
-                          setBm25Weight(100 - value[0])
-                        }}
+                {isAdvancedMode && (
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="show-vector"
+                        checked={showVectorResults}
+                        onCheckedChange={setShowVectorResults}
+                        className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                       />
+                      <Label htmlFor="show-vector" className="text-slate-300">Show Vector Results</Label>
                     </div>
 
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <Label htmlFor="bm25-weight">Keyword (BM25) Weight: {bm25Weight}%</Label>
-                      </div>
-                      <Slider
-                        id="bm25-weight"
-                        min={0}
-                        max={100}
-                        step={5}
-                        value={[bm25Weight]}
-                        onValueChange={(value) => {
-                          setBm25Weight(value[0])
-                          setVectorWeight(100 - value[0])
-                        }}
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="show-bm25"
+                        checked={showBm25Results}
+                        onCheckedChange={setShowBm25Results}
+                        className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                       />
+                      <Label htmlFor="show-bm25" className="text-slate-300">Show BM25 Results</Label>
                     </div>
                   </div>
                 )}
               </div>
-            </div>
 
-            {/* Search results */}
-            {searchResults.length > 0 && (
-              <div className="space-y-4">
-                <h3 className="font-medium">Search Results</h3>
-                <div className="space-y-4">
-                  {searchResults.map((doc) => (
-                    <Card key={doc.id} className="overflow-hidden">
-                      <div className="p-4 border-b bg-muted/20">
-                        <div className="flex justify-between">
-                          <h4 className="font-medium">{doc.title}</h4>
-                          <Badge>{doc.source}</Badge>
-                        </div>
-                        <div className="flex gap-2 mt-2 flex-wrap">
-                          {showVectorResults && renderScoreBadge(doc.scores.vector, "Vector")}
-                          {showBm25Results && renderScoreBadge(doc.scores.bm25, "BM25")}
-                          {renderScoreBadge(
-                            fusionMethod === "reciprocal" ? (doc.fusionScore || 0) : doc.scores.combined,
-                            "Combined"
-                          )}
-                        </div>
-                      </div>
-                      <div className="p-4">
-                        <p>{doc.content}</p>
-                        <div className="text-sm text-muted-foreground mt-2">
-                          Document date: {doc.date}
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
+              {fusionMethod === "weighted" && (
+                <div className="space-y-6">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label htmlFor="vector-weight" className="text-slate-300">Vector Search Weight: {vectorWeight}%</Label>
+                    </div>
+                    <Slider
+                      id="vector-weight"
+                      min={0}
+                      max={100}
+                      step={5}
+                      value={[vectorWeight]}
+                      onValueChange={(value) => {
+                        setVectorWeight(value[0])
+                        setBm25Weight(100 - value[0])
+                      }}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label htmlFor="bm25-weight" className="text-slate-300">Keyword (BM25) Weight: {bm25Weight}%</Label>
+                    </div>
+                    <Slider
+                      id="bm25-weight"
+                      min={0}
+                      max={100}
+                      step={5}
+                      value={[bm25Weight]}
+                      onValueChange={(value) => {
+                        setBm25Weight(value[0])
+                        setVectorWeight(100 - value[0])
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Search results */}
+          {searchResults.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                <SearchIcon className="h-4 w-4 text-emerald-400" />
+                Search Results
+              </h3>
+              <div className="space-y-4">
+                {searchResults.map((doc) => (
+                  <div key={doc.id} className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600">
+                    <div className="px-5 py-4 bg-slate-700/30 border-b border-slate-700">
+                      <div className="flex justify-between">
+                        <h4 className="text-slate-200 font-medium">{doc.title}</h4>
+                        <Badge className="bg-slate-900/50 text-slate-300 border-slate-700">{doc.source}</Badge>
+                      </div>
+                      <div className="flex gap-2 mt-2 flex-wrap">
+                        {showVectorResults && renderScoreBadge(doc.scores.vector, "Vector")}
+                        {showBm25Results && renderScoreBadge(doc.scores.bm25, "BM25")}
+                        {renderScoreBadge(
+                          fusionMethod === "reciprocal" ? (doc.fusionScore || 0) : doc.scores.combined,
+                          "Combined"
+                        )}
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <p className="text-slate-300">{doc.content}</p>
+                      <div className="text-sm text-slate-400 mt-2">
+                        Document date: {doc.date}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Info Panel */}
+          <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
+            <h4 className="text-emerald-400 font-medium mb-2 flex items-center gap-2">
+              <BarChart3Icon className="h-4 w-4" />
+              About Hybrid Retrieval
+            </h4>
+            <p className="text-slate-400">
+              This demo showcases how different retrieval methods can be combined for more effective document search.
+              Vector search excels at semantic understanding, while BM25 is strong with exact keyword matching.
+              Experiment with different fusion methods to see how they balance precision and recall.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
+
   )
 } 

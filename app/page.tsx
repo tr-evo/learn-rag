@@ -105,7 +105,7 @@ export default function Home() {
         <header className="container mx-auto px-4 py-16 relative z-10">
           <h1 className="text-5xl md:text-7xl font-bold text-center mb-4 bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent drop-shadow-sm">
             RAG Explorer
-          </h1>
+        </h1>
           <p className="text-xl md:text-2xl text-center text-slate-300 mb-8 max-w-3xl mx-auto">
             An interactive journey through the Retrieval Augmented Generation pipeline — 
             explore each component, understand pitfalls, and master implementation.
@@ -121,7 +121,7 @@ export default function Home() {
               Start Learning
             </a>
           </div>
-        </header>
+      </header>
       </div>
 
       {/* Main Content */}
@@ -219,7 +219,7 @@ export default function Home() {
               <h4 className="font-medium text-white mb-2">Source Attribution</h4>
               <p className="text-slate-300 text-sm">Provide citations and evidence for generated content</p>
             </div>
-            
+
             <div className="p-4 bg-slate-700/50 rounded-lg flex flex-col items-center text-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-emerald-400 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="4 17 10 11 4 5"/>
@@ -257,18 +257,18 @@ export default function Home() {
                     <div className="bg-gradient-to-br from-emerald-500 to-teal-600 
                       text-white rounded-full w-10 h-10 flex items-center justify-center
                       shadow-inner shadow-emerald-700">
-                      {step.id}
+                          {step.id}
                     </div>
                     <h3 className="text-xl font-bold text-emerald-400 group-hover:text-emerald-300 transition-colors">
                       {step.title}
-                    </h3>
+                      </h3>
                   </div>
   
                   <div className="mb-4 pl-14">
                     <div className="flex items-start gap-2 mb-3">
                       <BookOpen className="h-5 w-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                       <p className="text-slate-300">{step.description}</p>
-                    </div>
+                      </div>
                     
                     <div className="flex items-start gap-2">
                       <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
@@ -279,9 +279,9 @@ export default function Home() {
                   <div className="pl-14 mt-6 flex items-center text-emerald-400 group-hover:text-emerald-300">
                     <span className="transition-all group-hover:mr-2">Explore</span>
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </div>
-              </Link>
+                      </div>
+                    </div>
+                  </Link>
             ))}
           </div>
         </div>
@@ -324,8 +324,8 @@ export default function Home() {
                       <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
                       <p className="text-amber-300/80 text-sm">{step.pitfall}</p>
                     </div>
-                  </div>
-                  
+                </div>
+
                   <div className="pl-14 mt-6 flex items-center text-emerald-400 group-hover:text-emerald-300">
                     <span className="transition-all group-hover:mr-2">Explore</span>
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -374,13 +374,13 @@ export default function Home() {
                       <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
                       <p className="text-amber-300/80 text-sm">{step.pitfall}</p>
                     </div>
-                  </div>
-                  
+                </div>
+
                   <div className="pl-14 mt-6 flex items-center text-emerald-400 group-hover:text-emerald-300">
                     <span className="transition-all group-hover:mr-2">Explore</span>
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
-                </div>
+              </div>
               </Link>
             ))}
           </div>

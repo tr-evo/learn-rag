@@ -424,43 +424,41 @@ export default function ChunkingDesignDemo() {
     if (!searchQuery.trim()) return text
 
     const regex = new RegExp(`(${searchQuery})`, "gi")
-    return text.replace(regex, '<span class="bg-yellow-200 dark:bg-yellow-800">$1</span>')
+    return text.replace(regex, '<span class="bg-emerald-500/20 text-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300">$1</span>')
   }
 
   return (
     <div className="space-y-6">
       <Tabs defaultValue="design" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="design">Chunking Design</TabsTrigger>
-          <TabsTrigger value="search">Search Impact</TabsTrigger>
-          <TabsTrigger value="comparison">Strategy Comparison</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 bg-slate-800 p-1 rounded-lg">
+          <TabsTrigger value="design" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">Chunking Design</TabsTrigger>
+          <TabsTrigger value="search" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">Search Impact</TabsTrigger>
+          <TabsTrigger value="comparison" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">Strategy Comparison</TabsTrigger>
         </TabsList>
 
         {/* Chunking Design Tab */}
         <TabsContent value="design" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Document Selection */}
-            <Card className="md:col-span-1">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Layers className="h-5 w-5" />
-                  Sample Documents
-                </CardTitle>
-                <CardDescription>Select a document to chunk</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="md:col-span-1 bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
+                <Layers className="h-5 w-5 text-emerald-400" />
+                <h3 className="text-slate-200 font-medium">Sample Documents</h3>
+              </div>
+              <div className="p-5 space-y-4">
+                <p className="text-slate-400">Select a document to chunk</p>
                 {sampleDocuments.map((doc) => (
                   <div
                     key={doc.id}
-                    className={`p-3 border rounded-md cursor-pointer ${
+                    className={`p-3 border rounded-md cursor-pointer transition-all ${
                       selectedDocument.id === doc.id
-                        ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                        : "border-gray-200 dark:border-gray-700 hover:border-emerald-300"
+                        ? "border-emerald-500 bg-emerald-900/20"
+                        : "border-slate-700 hover:border-emerald-500/30 hover:bg-slate-700/50"
                     }`}
                     onClick={() => setSelectedDocument(doc)}
                   >
-                    <h3 className="font-medium">{doc.title}</h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 truncate">
+                    <h3 className="font-medium text-slate-200">{doc.title}</h3>
+                    <p className="text-sm text-slate-400 truncate">
                       {doc.content.substring(0, 100)}...
                     </p>
                     <div className="mt-2 text-xs text-slate-500">
@@ -468,34 +466,33 @@ export default function ChunkingDesignDemo() {
                     </div>
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Chunking Configuration */}
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Scissors className="h-5 w-5" />
-                  Chunking Configuration
-                </CardTitle>
-                <CardDescription>Configure how the document is split into chunks</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
+            <div className="md:col-span-2 bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
+                <Scissors className="h-5 w-5 text-emerald-400" />
+                <h3 className="text-slate-200 font-medium">Chunking Configuration</h3>
+              </div>
+              <div className="p-5 space-y-6">
+                <p className="text-slate-400">Configure how the document is split into chunks</p>
+                
                 {/* Chunking Strategy */}
                 <div className="space-y-2">
-                  <Label>Chunking Strategy</Label>
+                  <Label className="text-slate-300">Chunking Strategy</Label>
                   <Select value={chunkingStrategy} onValueChange={setChunkingStrategy}>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                       <SelectValue placeholder="Select chunking strategy" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-slate-900 border-slate-700">
                       <SelectItem value="fixed-size">Fixed Size (Token Count)</SelectItem>
                       <SelectItem value="paragraph">Paragraph-based</SelectItem>
                       <SelectItem value="sentence">Sentence-based</SelectItem>
                       <SelectItem value="semantic">Semantic Boundaries</SelectItem>
                     </SelectContent>
                   </Select>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                  <p className="text-sm text-slate-400">
                     {chunkingStrategy === "fixed-size"
                       ? "Splits text into chunks of a fixed token count, regardless of content boundaries."
                       : chunkingStrategy === "paragraph"
@@ -509,8 +506,8 @@ export default function ChunkingDesignDemo() {
                 {/* Chunk Size */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label>Chunk Size (tokens)</Label>
-                    <span className="text-sm font-medium">{chunkSize} tokens</span>
+                    <Label className="text-slate-300">Chunk Size (tokens)</Label>
+                    <span className="text-sm font-medium text-slate-300">{chunkSize} tokens</span>
                   </div>
                   <Slider
                     value={[chunkSize]}
@@ -529,8 +526,8 @@ export default function ChunkingDesignDemo() {
                 {/* Overlap Size */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label>Overlap Size (tokens)</Label>
-                    <span className="text-sm font-medium">{overlapSize} tokens</span>
+                    <Label className="text-slate-300">Overlap Size (tokens)</Label>
+                    <span className="text-sm font-medium text-slate-300">{overlapSize} tokens</span>
                   </div>
                   <Slider
                     value={[overlapSize]}
@@ -547,7 +544,7 @@ export default function ChunkingDesignDemo() {
                     <span>Large (100)</span>
                   </div>
                   {!isOverlapApplicable && (
-                    <div className="mt-2 text-sm text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                    <div className="mt-2 text-sm text-amber-300 flex items-center gap-1 bg-amber-900/20 border border-amber-500/30 p-2 rounded">
                       <AlertCircle className="h-4 w-4" />
                       <span>
                         Overlap is not applicable for this configuration. 
@@ -567,101 +564,105 @@ export default function ChunkingDesignDemo() {
                         id="respect-paragraphs"
                         checked={respectParagraphs}
                         onCheckedChange={setRespectParagraphs}
+                        className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                       />
-                      <Label htmlFor="respect-paragraphs">Respect paragraph boundaries</Label>
+                      <Label htmlFor="respect-paragraphs" className="text-slate-300">Respect paragraph boundaries</Label>
                     </div>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 ml-6">
+                    <p className="text-sm text-slate-400 ml-6">
                       When enabled, paragraphs are kept intact and combined until they reach the chunk size limit.
                       When disabled, large paragraphs are split into smaller chunks using the overlap setting.
                     </p>
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Chunks Preview */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <SplitSquareHorizontal className="h-5 w-5" />
-                Resulting Chunks
-              </CardTitle>
-              <CardDescription>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <SplitSquareHorizontal className="h-5 w-5 text-emerald-400" />
+                <h3 className="text-slate-200 font-medium">Resulting Chunks</h3>
+              </div>
+              <div className="text-sm text-slate-400">
                 {chunks.length} chunks created with an average of{" "}
                 {tokenCounts.length > 0
                   ? Math.round(tokenCounts.reduce((sum, count) => sum + count, 0) / tokenCounts.length)
                   : 0}{" "}
                 tokens per chunk
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </div>
+            </div>
+            <div className="p-5">
               <div className="space-y-4">
                 {chunks.map((chunk, index) => (
-                  <div key={index} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <div key={index} className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-medium">Chunk #{index + 1}</h3>
-                      <Badge className="bg-secondary text-secondary-foreground">{tokenCounts[index]} tokens</Badge>
+                      <h3 className="font-medium text-slate-200">Chunk #{index + 1}</h3>
+                      <Badge className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">{tokenCounts[index]} tokens</Badge>
                     </div>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 whitespace-pre-line">{chunk}</p>
+                    <p className="text-sm text-slate-300 whitespace-pre-line">{chunk}</p>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Search Impact Tab */}
         <TabsContent value="search" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Search Controls */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Search className="h-5 w-5" />
-                  Search
-                </CardTitle>
-                <CardDescription>See how chunking affects search results</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
+                <Search className="h-5 w-5 text-emerald-400" />
+                <h3 className="text-slate-200 font-medium">Search</h3>
+              </div>
+              <div className="p-5 space-y-4">
+                <p className="text-slate-400">See how chunking affects search results</p>
                 <div className="space-y-2">
-                  <Label>Search Query</Label>
+                  <Label className="text-slate-300">Search Query</Label>
                   <div className="flex gap-2">
                     <Input
                       placeholder="Enter search query..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
                     />
-                    <Button onClick={performSearch} disabled={isSearching || !searchQuery.trim()}>
+                    <Button 
+                      onClick={performSearch} 
+                      disabled={isSearching || !searchQuery.trim()}
+                      className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
+                    >
                       {isSearching ? "Searching..." : "Search"}
                     </Button>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Current Chunking Strategy</Label>
+                  <Label className="text-slate-300">Current Chunking Strategy</Label>
                   <div className="flex flex-wrap gap-2">
-                    <Badge className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-900/50 text-slate-300 border-slate-700">
                       Strategy: {chunkingStrategy}
                     </Badge>
-                    <Badge className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-900/50 text-slate-300 border-slate-700">
                       Chunk Size: {chunkSize} tokens
                     </Badge>
-                    <Badge className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-900/50 text-slate-300 border-slate-700">
                       Overlap: {overlapSize} tokens
                     </Badge>
                   </div>
                 </div>
                 
-                <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg mb-4">
+                <div className="bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-lg p-4">
                   <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <AlertCircle className="h-5 w-5 text-amber-800 dark:text-amber-300" />
+                    <AlertCircle className="h-5 w-5" />
                     Simulation Note
                   </h3>
-                  <p className="text-sm text-amber-700 dark:text-amber-300">
+                  <p className="text-sm">
                     This is a simplified search simulation using exact keyword matching. In a real RAG system:
                   </p>
-                  <ul className="text-sm text-amber-700 dark:text-amber-300 mt-2 list-disc pl-5">
+                  <ul className="text-sm mt-2 list-disc pl-5">
                     <li>Text would be converted to vector embeddings</li>
                     <li>Search would use vector similarity (cosine, dot product, etc.) instead of keyword matching</li>
                     <li>Semantic meaning would be captured, not just exact text matches</li>
@@ -669,79 +670,79 @@ export default function ChunkingDesignDemo() {
                   </ul>
                 </div>
 
-                <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                  <h3 className="font-medium mb-2">How Chunking Affects Search</h3>
-                  <ul className="text-sm text-slate-600 dark:text-slate-300 space-y-2 list-disc pl-5">
+                <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-4">
+                  <h3 className="font-medium mb-2 text-slate-200">How Chunking Affects Search</h3>
+                  <ul className="text-sm text-slate-400 space-y-2 list-disc pl-5">
                     <li>
-                      <strong>Too large chunks:</strong> May dilute relevance by including irrelevant text alongside the
+                      <strong className="text-slate-300">Too large chunks:</strong> May dilute relevance by including irrelevant text alongside the
                       answer
                     </li>
                     <li>
-                      <strong>Too small chunks:</strong> May split answers across multiple chunks, making them harder to
+                      <strong className="text-slate-300">Too small chunks:</strong> May split answers across multiple chunks, making them harder to
                       retrieve
                     </li>
                     <li>
-                      <strong>Optimal overlap:</strong> Helps preserve context between chunks but increases storage
+                      <strong className="text-slate-300">Optimal overlap:</strong> Helps preserve context between chunks but increases storage
                       requirements
                     </li>
                   </ul>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Search Results */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Search Results</CardTitle>
-                <CardDescription>
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
+                <h3 className="text-slate-200 font-medium">Search Results</h3>
+                <div className="text-sm text-slate-400">
                   {searchResults.length > 0
                     ? `Found ${searchResults.length} chunks matching "${searchQuery}"`
                     : searchQuery
                       ? "No matching chunks found"
                       : "Enter a search query to see results"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
+                </div>
+              </div>
+              <div className="p-5">
                 {searchResults.length === 0 ? (
-                  <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                  <div className="text-center py-8 text-slate-400">
                     {searchQuery ? "No matching chunks found" : "Enter a search query to see results"}
                   </div>
                 ) : (
                   <div className="space-y-4">
                     {searchResults.map((index) => (
-                      <div key={index} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                      <div key={index} className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
                         <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-medium">Chunk #{index + 1}</h3>
-                          <Badge className="bg-secondary text-secondary-foreground">{tokenCounts[index]} tokens</Badge>
+                          <h3 className="font-medium text-slate-200">Chunk #{index + 1}</h3>
+                          <Badge className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">{tokenCounts[index]} tokens</Badge>
                         </div>
                         <p
-                          className="text-sm text-slate-600 dark:text-slate-300"
+                          className="text-sm text-slate-300"
                           dangerouslySetInnerHTML={{ __html: highlightSearchTerms(chunks[index]) }}
                         />
                       </div>
                     ))}
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Search Analysis */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Search Analysis</CardTitle>
-              <CardDescription>Understanding how chunking affects search quality</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
+              <h3 className="text-slate-200 font-medium">Search Analysis</h3>
+              <div className="text-sm text-slate-400">Understanding how chunking affects search quality</div>
+            </div>
+            <div className="p-5">
               <div className="space-y-4">
                 {searchResults.length > 0 ? (
                   <>
-                    <div className="p-4 border border-green-200 dark:border-green-900 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                      <h3 className="font-medium text-green-800 dark:text-green-300 flex items-center gap-2 mb-2">
+                    <div className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300 rounded-lg p-4">
+                      <h3 className="font-medium flex items-center gap-2 mb-2">
                         <CheckCircle2 className="h-5 w-5" />
                         Search Success
                       </h3>
-                      <p className="text-sm text-green-700 dark:text-green-300">
+                      <p className="text-sm">
                         Your search for "{searchQuery}" found {searchResults.length} relevant chunks. This indicates
                         that your chunking strategy is working well for this type of query.
                       </p>
@@ -749,12 +750,12 @@ export default function ChunkingDesignDemo() {
 
                     {/* Chunking analysis based on results */}
                     {searchResults.length > 3 && (
-                      <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-                        <h3 className="font-medium text-amber-800 dark:text-amber-300 flex items-center gap-2 mb-2">
+                      <div className="bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-lg p-4">
+                        <h3 className="font-medium flex items-center gap-2 mb-2">
                           <AlertCircle className="h-5 w-5" />
                           Potential Improvement
                         </h3>
-                        <p className="text-sm text-amber-700 dark:text-amber-300">
+                        <p className="text-sm">
                           Your search returned many chunks ({searchResults.length}). Consider using larger chunk sizes
                           to consolidate related information, which could improve retrieval precision.
                         </p>
@@ -762,12 +763,12 @@ export default function ChunkingDesignDemo() {
                     )}
 
                     {chunkSize < 100 && searchResults.length === 1 && (
-                      <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-                        <h3 className="font-medium text-amber-800 dark:text-amber-300 flex items-center gap-2 mb-2">
+                      <div className="bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-lg p-4">
+                        <h3 className="font-medium flex items-center gap-2 mb-2">
                           <AlertCircle className="h-5 w-5" />
                           Potential Issue
                         </h3>
-                        <p className="text-sm text-amber-700 dark:text-amber-300">
+                        <p className="text-sm">
                           Your chunks may be too small. While you found a match, small chunks might split related
                           information across multiple chunks, potentially missing context.
                         </p>
@@ -775,15 +776,15 @@ export default function ChunkingDesignDemo() {
                     )}
                   </>
                 ) : searchQuery ? (
-                  <div className="p-4 border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                    <h3 className="font-medium text-red-800 dark:text-red-300 flex items-center gap-2 mb-2">
+                  <div className="bg-red-900/20 border border-red-500/30 text-red-300 rounded-lg p-4">
+                    <h3 className="font-medium flex items-center gap-2 mb-2">
                       <AlertCircle className="h-5 w-5" />
                       Search Failed
                     </h3>
-                    <p className="text-sm text-red-700 dark:text-red-300">
+                    <p className="text-sm">
                       Your search for "{searchQuery}" didn't find any matches. This could indicate that:
                     </p>
-                    <ul className="text-sm text-red-700 dark:text-red-300 mt-2 list-disc pl-5">
+                    <ul className="text-sm mt-2 list-disc pl-5">
                       <li>The information isn't in the document</li>
                       <li>Your chunking strategy might be splitting relevant content</li>
                       <li>Try adjusting chunk size or overlap to improve results</li>
@@ -791,46 +792,46 @@ export default function ChunkingDesignDemo() {
                   </div>
                 ) : null}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Strategy Comparison Tab */}
         <TabsContent value="comparison">
-          <Card>
-            <CardHeader>
-              <CardTitle>Chunking Strategy Comparison</CardTitle>
-              <CardDescription>Compare different approaches to chunking</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
+              <h3 className="text-slate-200 font-medium">Chunking Strategy Comparison</h3>
+              <div className="text-sm text-slate-400">Compare different approaches to chunking</div>
+            </div>
+            <div className="p-5">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="border-b border-gray-200 dark:border-gray-700">
-                      <th className="text-left p-3">Strategy</th>
-                      <th className="text-left p-3">Best For</th>
-                      <th className="text-left p-3">Advantages</th>
-                      <th className="text-left p-3">Disadvantages</th>
+                    <tr className="border-b border-slate-700">
+                      <th className="text-left p-3 text-slate-300">Strategy</th>
+                      <th className="text-left p-3 text-slate-300">Best For</th>
+                      <th className="text-left p-3 text-slate-300">Advantages</th>
+                      <th className="text-left p-3 text-slate-300">Disadvantages</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-gray-200 dark:border-gray-700">
-                      <td className="p-3 font-medium">Fixed Size</td>
-                      <td className="p-3 text-sm">
+                    <tr className="border-b border-slate-700">
+                      <td className="p-3 font-medium text-slate-200">Fixed Size</td>
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Simple text</li>
                           <li>Homogeneous content</li>
                           <li>When consistency matters</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Simple to implement</li>
                           <li>Predictable chunk sizes</li>
                           <li>Works with any text</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>May split mid-sentence or paragraph</li>
                           <li>Can break semantic units</li>
@@ -838,23 +839,23 @@ export default function ChunkingDesignDemo() {
                         </ul>
                       </td>
                     </tr>
-                    <tr className="border-b border-gray-200 dark:border-gray-700">
-                      <td className="p-3 font-medium">Paragraph-based</td>
-                      <td className="p-3 text-sm">
+                    <tr className="border-b border-slate-700">
+                      <td className="p-3 font-medium text-slate-200">Paragraph-based</td>
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Well-structured documents</li>
                           <li>Articles and blog posts</li>
                           <li>Documentation</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Preserves natural document structure</li>
                           <li>Keeps related content together</li>
                           <li>Often needs less overlap</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Inconsistent chunk sizes</li>
                           <li>Very long paragraphs may exceed limits</li>
@@ -862,23 +863,23 @@ export default function ChunkingDesignDemo() {
                         </ul>
                       </td>
                     </tr>
-                    <tr className="border-b border-gray-200 dark:border-gray-700">
-                      <td className="p-3 font-medium">Sentence-based</td>
-                      <td className="p-3 text-sm">
+                    <tr className="border-b border-slate-700">
+                      <td className="p-3 font-medium text-slate-200">Sentence-based</td>
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Q&A content</li>
                           <li>Fact-dense material</li>
                           <li>When precision matters</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Preserves complete sentences</li>
                           <li>Good for precise fact retrieval</li>
                           <li>Works well with complex punctuation</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>May create very small chunks</li>
                           <li>Can lose paragraph-level context</li>
@@ -887,22 +888,22 @@ export default function ChunkingDesignDemo() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-3 font-medium">Semantic</td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 font-medium text-slate-200">Semantic</td>
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Complex documents</li>
                           <li>Legal or technical content</li>
                           <li>When context is critical</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Preserves semantic meaning</li>
                           <li>Adapts to document structure</li>
                           <li>Best for complex retrieval</li>
                         </ul>
                       </td>
-                      <td className="p-3 text-sm">
+                      <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
                           <li>Most complex to implement</li>
                           <li>May require ML models</li>
@@ -913,145 +914,152 @@ export default function ChunkingDesignDemo() {
                   </tbody>
                 </table>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Chunk Size Considerations</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2">Small Chunks (50-150 tokens)</h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">
-                      Small chunks improve precision by targeting specific information but may lose context.
-                    </p>
-                    <div className="flex items-center gap-2 mt-3">
-                      <div style={{ width: '100%' }} className="h-2 bg-emerald-500 rounded"></div>
-                      <span className="text-xs w-20">Precision</span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div style={{ width: '33%' }} className="h-2 bg-red-500 rounded"></div>
-                      <span className="text-xs w-20">Context</span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div style={{ width: '40%' }} className="h-2 bg-amber-500 rounded"></div>
-                      <span className="text-xs w-20">Storage Efficiency</span>
-                    </div>
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
+                <h3 className="text-slate-200 font-medium">Chunk Size Considerations</h3>
+              </div>
+              <div className="p-5 space-y-4">
+                <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
+                  <h3 className="font-medium mb-2 text-slate-200">Small Chunks (50-150 tokens)</h3>
+                  <p className="text-sm text-slate-400 mb-2">
+                    Small chunks improve precision by targeting specific information but may lose context.
+                  </p>
+                  <div className="flex items-center gap-2 mt-3">
+                    <div style={{ width: '100%' }} className="h-2 bg-emerald-500 rounded"></div>
+                    <span className="text-xs w-20 text-slate-300">Precision</span>
                   </div>
-
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2">Medium Chunks (150-300 tokens)</h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">
-                      Medium chunks balance precision and context, suitable for most general use cases.
-                    </p>
-                    <div className="flex items-center gap-2 mt-3">
-                      <div style={{ width: '75%' }} className="h-2 bg-emerald-500 rounded"></div>
-                      <span className="text-xs w-20">Precision</span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div style={{ width: '67%' }} className="h-2 bg-red-500 rounded"></div>
-                      <span className="text-xs w-20">Context</span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div style={{ width: '70%' }} className="h-2 bg-amber-500 rounded"></div>
-                      <span className="text-xs w-20">Storage Efficiency</span>
-                    </div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div style={{ width: '33%' }} className="h-2 bg-red-500 rounded"></div>
+                    <span className="text-xs w-20 text-slate-300">Context</span>
                   </div>
-
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2">Large Chunks (300-500+ tokens)</h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">
-                      Large chunks preserve more context but may reduce precision and hit embedding model limits.
-                    </p>
-                    <div className="flex items-center gap-2 mt-3">
-                      <div style={{ width: '50%' }} className="h-2 bg-emerald-500 rounded"></div>
-                      <span className="text-xs w-20">Precision</span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div style={{ width: '100%' }} className="h-2 bg-red-500 rounded"></div>
-                      <span className="text-xs w-20">Context</span>
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div style={{ width: '90%' }} className="h-2 bg-amber-500 rounded"></div>
-                      <span className="text-xs w-20">Storage Efficiency</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-4 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                    <h3 className="font-medium mb-2">About Storage Efficiency</h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      Storage efficiency generally increases with chunk size because:
-                    </p>
-                    <ul className="text-sm text-slate-600 dark:text-slate-300 mt-2 list-disc pl-5">
-                      <li>Each chunk requires metadata overhead (IDs, timestamps, etc.)</li>
-                      <li>More chunks (from smaller chunking) means more total overhead</li>
-                      <li>Vector embeddings typically have fixed dimensionality regardless of text length</li>
-                      <li>Large chunks may store more content with the same embedding size</li>
-                      <li>Very large chunks can hit diminishing returns due to model token limits</li>
-                    </ul>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div style={{ width: '40%' }} className="h-2 bg-amber-500 rounded"></div>
+                    <span className="text-xs w-20 text-slate-300">Storage Efficiency</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Best Practices</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2 flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                      Match Chunking to Content Type
-                    </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      Different content types benefit from different chunking strategies. Technical documentation works
-                      well with semantic or paragraph-based chunking, while Q&A content might benefit from
-                      sentence-based approaches.
-                    </p>
+                <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
+                  <h3 className="font-medium mb-2 text-slate-200">Medium Chunks (150-300 tokens)</h3>
+                  <p className="text-sm text-slate-400 mb-2">
+                    Medium chunks balance precision and context, suitable for most general use cases.
+                  </p>
+                  <div className="flex items-center gap-2 mt-3">
+                    <div style={{ width: '75%' }} className="h-2 bg-emerald-500 rounded"></div>
+                    <span className="text-xs w-20 text-slate-300">Precision</span>
                   </div>
-
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2 flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                      Consider Embedding Model Limits
-                    </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      Always ensure your chunks don't exceed the token limit of your embedding model. For example, if
-                      using OpenAI's text-embedding-ada-002, keep chunks under 8,191 tokens (though much smaller is
-                      typically better).
-                    </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div style={{ width: '67%' }} className="h-2 bg-red-500 rounded"></div>
+                    <span className="text-xs w-20 text-slate-300">Context</span>
                   </div>
-
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2 flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                      Test and Iterate
-                    </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      There's no one-size-fits-all chunking strategy. Test different approaches with representative
-                      queries and measure retrieval quality. Be prepared to adjust your strategy based on real-world
-                      performance.
-                    </p>
-                  </div>
-
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2 flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                      Use Metadata to Enhance Retrieval
-                    </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      Complement your chunking strategy with rich metadata. Even with imperfect chunks, good metadata
-                      can help filter and rank results appropriately.
-                    </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div style={{ width: '70%' }} className="h-2 bg-amber-500 rounded"></div>
+                    <span className="text-xs w-20 text-slate-300">Storage Efficiency</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+
+                <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
+                  <h3 className="font-medium mb-2 text-slate-200">Large Chunks (300-500+ tokens)</h3>
+                  <p className="text-sm text-slate-400 mb-2">
+                    Large chunks preserve more context but may reduce precision and hit embedding model limits.
+                  </p>
+                  <div className="flex items-center gap-2 mt-3">
+                    <div style={{ width: '50%' }} className="h-2 bg-emerald-500 rounded"></div>
+                    <span className="text-xs w-20 text-slate-300">Precision</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div style={{ width: '100%' }} className="h-2 bg-red-500 rounded"></div>
+                    <span className="text-xs w-20 text-slate-300">Context</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div style={{ width: '90%' }} className="h-2 bg-amber-500 rounded"></div>
+                    <span className="text-xs w-20 text-slate-300">Storage Efficiency</span>
+                  </div>
+                </div>
+                
+                <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5">
+                  <h3 className="font-medium mb-2 text-slate-200">About Storage Efficiency</h3>
+                  <p className="text-sm text-slate-400">
+                    Storage efficiency generally increases with chunk size because:
+                  </p>
+                  <ul className="text-sm text-slate-400 mt-2 list-disc pl-5">
+                    <li>Each chunk requires metadata overhead (IDs, timestamps, etc.)</li>
+                    <li>More chunks (from smaller chunking) means more total overhead</li>
+                    <li>Vector embeddings typically have fixed dimensionality regardless of text length</li>
+                    <li>Large chunks may store more content with the same embedding size</li>
+                    <li>Very large chunks can hit diminishing returns due to model token limits</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
+                <h3 className="text-slate-200 font-medium">Best Practices</h3>
+              </div>
+              <div className="p-5 space-y-4">
+                <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
+                  <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    Match Chunking to Content Type
+                  </h3>
+                  <p className="text-sm text-slate-400">
+                    Different content types benefit from different chunking strategies. Technical documentation works
+                    well with semantic or paragraph-based chunking, while Q&A content might benefit from
+                    sentence-based approaches.
+                  </p>
+                </div>
+
+                <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
+                  <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    Consider Embedding Model Limits
+                  </h3>
+                  <p className="text-sm text-slate-400">
+                    Always ensure your chunks don't exceed the token limit of your embedding model. For example, if
+                    using OpenAI's text-embedding-ada-002, keep chunks under 8,191 tokens (though much smaller is
+                    typically better).
+                  </p>
+                </div>
+
+                <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
+                  <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    Test and Iterate
+                  </h3>
+                  <p className="text-sm text-slate-400">
+                    There's no one-size-fits-all chunking strategy. Test different approaches with representative
+                    queries and measure retrieval quality. Be prepared to adjust your strategy based on real-world
+                    performance.
+                  </p>
+                </div>
+
+                <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
+                  <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    Use Metadata to Enhance Retrieval
+                  </h3>
+                  <p className="text-sm text-slate-400">
+                    Complement your chunking strategy with rich metadata. Even with imperfect chunks, good metadata
+                    can help filter and rank results appropriately.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
+            <h3 className="font-medium mb-3 text-slate-200">Key Takeaways</h3>
+            <ul className="text-sm text-slate-400 space-y-2 list-disc pl-5">
+              <li>Choose your chunking strategy based on your specific content and search requirements</li>
+              <li>Balance chunk size to optimize for both context preservation and retrieval precision</li>
+              <li>Use appropriate overlap settings when breaking apart semantically connected content</li>
+              <li>Consider storage and computational constraints when designing your chunking pipeline</li>
+              <li>Regularly evaluate and refine your chunking approach as your content and use cases evolve</li>
+            </ul>
           </div>
         </TabsContent>
       </Tabs>

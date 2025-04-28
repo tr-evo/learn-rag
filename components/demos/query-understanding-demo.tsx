@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -338,32 +337,34 @@ export default function QueryUnderstandingDemo() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="demo" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="demo">Query Processing</TabsTrigger>
-          <TabsTrigger value="techniques">Rewriting Techniques</TabsTrigger>
-          <TabsTrigger value="challenges">Common Challenges</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 bg-slate-800 border border-slate-700 rounded-lg">
+          <TabsTrigger value="demo" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Query Processing</TabsTrigger>
+          <TabsTrigger value="techniques" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Rewriting Techniques</TabsTrigger>
+          <TabsTrigger value="challenges" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Common Challenges</TabsTrigger>
         </TabsList>
 
         {/* Query Processing Tab */}
         <TabsContent value="demo" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Query Input */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Search className="h-5 w-5" />
-                  Query Input
-                </CardTitle>
-                <CardDescription>Select a sample query or enter your own</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <div>
+                  <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                    <Search className="h-5 w-5 text-emerald-400" />
+                    Query Input
+                  </h3>
+                  <p className="text-slate-400 text-sm">Select a sample query or enter your own</p>
+                </div>
+              </div>
+              <div className="p-5 space-y-4">
                 <div className="space-y-2">
-                  <Label>Sample Queries</Label>
+                  <Label className="text-slate-300">Sample Queries</Label>
                   <Select value={selectedQuery} onValueChange={handleQuerySelect}>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                       <SelectValue placeholder="Select a sample query" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-slate-800 border-slate-700 text-slate-300">
                       <SelectItem value="default">-- Select a query --</SelectItem>
                       {sampleQueries.map(query => (
                         <SelectItem key={query.id} value={query.id.toString()}>
@@ -374,78 +375,79 @@ export default function QueryUnderstandingDemo() {
                   </Select>
                 </div>
 
-
-
-                <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-md">
-                  <h3 className="font-medium mb-2">Active Query</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4">
+                  <h3 className="text-slate-200 font-medium mb-2">Active Query</h3>
+                  <p className="text-sm text-slate-300">
                     {activeQuery || "No query selected"}
                   </p>
 
                   {selectedQuery && (
                     <div className="mt-2">
-                      <Badge className="mr-2">
+                      <Badge className="mr-2 bg-emerald-500 hover:bg-emerald-600">
                         {sampleQueries.find(q => q.id === Number.parseInt(selectedQuery))?.category}
                       </Badge>
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-400 mt-1">
                         Issue: {sampleQueries.find(q => q.id === Number.parseInt(selectedQuery))?.issue}
                       </p>
                     </div>
                   )}
                 </div>
-              </CardContent>
-              <CardFooter>
+              </div>
+              <div className="px-5 py-4 border-t border-slate-700">
                 <Button
                   onClick={processQuery}
                   disabled={!activeQuery.trim() || isProcessing}
-                  className="w-full"
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
                 >
                   {isProcessing ? "Processing..." : "Process Query"}
                 </Button>
-              </CardFooter>
-            </Card>
+              </div>
+            </div>
 
             {/* Query Processing Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Wand2 className="h-5 w-5" />
-                  Processing Configuration
-                </CardTitle>
-                <CardDescription>Configure how the query is processed</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <div>
+                  <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                    <Wand2 className="h-5 w-5 text-emerald-400" />
+                    Processing Configuration
+                  </h3>
+                  <p className="text-slate-400 text-sm">Configure how the query is processed</p>
+                </div>
+              </div>
+              <div className="p-5 space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="query-rewriting" className="flex items-center gap-2">
-                      <Lightbulb className="h-4 w-4 text-amber-500" />
+                    <Label htmlFor="query-rewriting" className="flex items-center gap-2 text-slate-300">
+                      <Lightbulb className="h-4 w-4 text-emerald-400" />
                       Enable Query Rewriting
                     </Label>
                     <Switch
                       id="query-rewriting"
                       checked={enableQueryRewriting}
                       onCheckedChange={setEnableQueryRewriting}
+                      className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                     />
                   </div>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-400">
                     When enabled, the system will attempt to improve the query by rewriting it.
                   </p>
                 </div>
 
                 {enableQueryRewriting && (
                   <div className="space-y-2">
-                    <Label>Rewriting Technique</Label>
+                    <Label className="text-slate-300">Rewriting Technique</Label>
                     <Select value={rewriteTechnique} onValueChange={setRewriteTechnique}>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                         <SelectValue placeholder="Select a rewriting technique" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-slate-800 border-slate-700 text-slate-300">
                         <SelectItem value="expand-acronyms">Expand Acronyms</SelectItem>
                         <SelectItem value="add-context">Add Context</SelectItem>
                         <SelectItem value="reformulate">Reformulate Query</SelectItem>
                       </SelectContent>
                     </Select>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-400">
                       {rewriteTechnique === "expand-acronyms"
                         ? "Expands acronyms to their full form (e.g., 'API' → 'Application Programming Interface (API)')"
                         : rewriteTechnique === "add-context"
@@ -457,72 +459,71 @@ export default function QueryUnderstandingDemo() {
 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="policy-check" className="flex items-center gap-2">
-                      <ShieldAlert className="h-4 w-4 text-amber-500" />
+                    <Label htmlFor="policy-check" className="flex items-center gap-2 text-slate-300">
+                      <ShieldAlert className="h-4 w-4 text-emerald-400" />
                       Enable Policy Check
                     </Label>
                     <Switch
                       id="policy-check"
                       checked={enablePolicyCheck}
                       onCheckedChange={setEnablePolicyCheck}
+                      className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                     />
                   </div>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-400">
                     When enabled, the system will check if the query violates any policies.
                   </p>
                 </div>
 
-                <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-md">
-                  <h3 className="font-medium mb-2">What This Demo Shows</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4">
+                  <h3 className="text-slate-200 font-medium mb-2">What This Demo Shows</h3>
+                  <p className="text-sm text-slate-300">
                     This demo illustrates how query understanding techniques can improve retrieval by:
                   </p>
-                  <ul className="text-sm text-slate-600 dark:text-slate-300 list-disc pl-5 mt-2 space-y-1">
+                  <ul className="text-sm text-slate-300 list-disc pl-5 mt-2 space-y-1">
                     <li>Expanding acronyms to match full terms in documents</li>
                     <li>Adding context to ambiguous queries</li>
                     <li>Reformulating queries to be more specific</li>
                     <li>Checking queries against policy guidelines</li>
                   </ul>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Query Processing Results */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ArrowRight className="h-5 w-5" />
-                Processing Results
-              </CardTitle>
-              <CardDescription>
-                {rewrittenQuery
-                  ? "See how the query was processed and the resulting search"
-                  : "Process a query to see results"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <div>
+                <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                  <ArrowRight className="h-5 w-5 text-emerald-400" />
+                  Processing Results
+                </h3>
+                <p className="text-slate-400 text-sm">
+                  {rewrittenQuery
+                    ? "See how the query was processed and the resulting search"
+                    : "Process a query to see results"}
+                </p>
+              </div>
+            </div>
+            <div className="p-5 space-y-4">
               {rewrittenQuery && (
                 <div className="space-y-4">
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2">Original Query</h3>
-                    <p className="text-slate-600 dark:text-slate-300">{activeQuery}</p>
+                  <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
+                    <h3 className="text-slate-200 font-medium mb-2">Original Query</h3>
+                    <p className="text-slate-300">{activeQuery}</p>
                   </div>
 
                   <div className="flex items-center justify-center">
-                    <ArrowRight className="h-6 w-6 text-emerald-500" />
+                    <ArrowRight className="h-6 w-6 text-emerald-400" />
                   </div>
 
-                  <div className={`p-4 border rounded-lg ${rewrittenQuery.startsWith("[POLICY VIOLATION DETECTED]")
-                    ? "border-red-300 bg-red-50 dark:bg-red-900/20"
-                    : "border-emerald-300 bg-emerald-50 dark:bg-emerald-900/20"
+                  <div className={`p-4 rounded-lg ${rewrittenQuery.startsWith("[POLICY VIOLATION DETECTED]")
+                    ? "bg-red-900/20 border border-red-500/30 text-red-300"
+                    : "bg-emerald-900/20 border border-emerald-500/50 text-emerald-300"
                     }`}>
-                    <h3 className="font-medium mb-2">Processed Query</h3>
-                    <p className={
-                      rewrittenQuery.startsWith("[POLICY VIOLATION DETECTED]")
-                        ? "text-red-600 dark:text-red-400"
-                        : "text-emerald-600 dark:text-emerald-400"
-                    }>
+                    <h3 className="text-slate-200 font-medium mb-2">Processed Query</h3>
+                    <p>
                       {rewrittenQuery}
                     </p>
                   </div>
@@ -530,22 +531,22 @@ export default function QueryUnderstandingDemo() {
                   {!rewrittenQuery.startsWith("[POLICY VIOLATION DETECTED]") && (
                     <>
                       <div className="flex items-center justify-center">
-                        <ArrowRight className="h-6 w-6 text-emerald-500" />
+                        <ArrowRight className="h-6 w-6 text-emerald-400" />
                       </div>
 
-                      <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                        <h3 className="font-medium mb-2">Search Results</h3>
+                      <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
+                        <h3 className="text-slate-200 font-medium mb-2">Search Results</h3>
                         {searchResults.length === 0 ? (
-                          <p className="text-slate-500 dark:text-slate-400">No results found</p>
+                          <p className="text-slate-400">No results found</p>
                         ) : (
                           <div className="space-y-3">
                             {searchResults.map(result => (
-                              <div key={result.id} className="p-3 border border-gray-200 dark:border-gray-700 rounded-md">
-                                <h4 className="font-medium">{result.title}</h4>
-                                <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{result.content}</p>
+                              <div key={result.id} className="p-3 bg-slate-800 border border-slate-700 rounded-md transition-all hover:border-emerald-500/30">
+                                <h4 className="text-slate-200 font-medium">{result.title}</h4>
+                                <p className="text-sm text-slate-300 mt-1">{result.content}</p>
                                 <div className="flex flex-wrap gap-1 mt-2">
                                   {result.keywords.map(keyword => (
-                                    <Badge key={keyword} className="text-xs">
+                                    <Badge key={keyword} className="text-xs bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30">
                                       {keyword}
                                     </Badge>
                                   ))}
@@ -561,12 +562,12 @@ export default function QueryUnderstandingDemo() {
               )}
 
               {rewrittenQuery && rewrittenQuery.startsWith("[POLICY VIOLATION DETECTED]") && (
-                <div className="p-4 border border-red-300 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                <div className="p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
                   <div className="flex items-start gap-2">
-                    <ShieldAlert className="h-5 w-5 text-red-500 mt-0.5" />
+                    <ShieldAlert className="h-5 w-5 text-red-300 mt-0.5" />
                     <div>
-                      <h3 className="font-medium text-red-600 dark:text-red-400">Policy Violation Detected</h3>
-                      <p className="text-sm text-red-600 dark:text-red-400 mt-1">
+                      <h3 className="font-medium text-red-300">Policy Violation Detected</h3>
+                      <p className="text-sm text-red-300 mt-1">
                         This query appears to violate system policies. In a real system, this might be blocked,
                         logged, or handled according to your security protocols.
                       </p>
@@ -576,64 +577,66 @@ export default function QueryUnderstandingDemo() {
               )}
 
               {!rewrittenQuery && (
-                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                <div className="text-center py-8 text-slate-400">
                   Select a query and click "Process Query" to see how query understanding works
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Rewriting Techniques Tab */}
         <TabsContent value="techniques">
-          <Card>
-            <CardHeader>
-              <CardTitle>Query Rewriting Techniques</CardTitle>
-              <CardDescription>Different approaches to improve query understanding</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <div>
+                <h3 className="text-slate-200 font-medium">Query Rewriting Techniques</h3>
+                <p className="text-slate-400 text-sm">Different approaches to improve query understanding</p>
+              </div>
+            </div>
+            <div className="p-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2 flex items-center gap-2">
-                      <Lightbulb className="h-5 w-5 text-amber-500" />
+                  <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
+                    <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
+                      <Lightbulb className="h-5 w-5 text-emerald-400" />
                       Acronym Expansion
                     </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
+                    <p className="text-sm text-slate-300 mb-3">
                       Expands acronyms and abbreviations to their full form to improve matching with documents
                       that might use either the acronym or the full term.
                     </p>
-                    <div className="bg-slate-100 dark:bg-slate-800 p-3 rounded-md">
+                    <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-medium">Original:</span>
-                        <span className="text-xs">What's the ROI on our ML investments?</span>
+                        <span className="text-xs font-medium text-slate-300">Original:</span>
+                        <span className="text-xs text-slate-400">What's the ROI on our ML investments?</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium">Rewritten:</span>
-                        <span className="text-xs text-emerald-600 dark:text-emerald-400">
+                        <span className="text-xs font-medium text-slate-300">Rewritten:</span>
+                        <span className="text-xs text-emerald-400">
                           What's the Return on Investment (ROI) on our Machine Learning (ML) investments?
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2 flex items-center gap-2">
-                      <Lightbulb className="h-5 w-5 text-amber-500" />
+                  <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
+                    <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
+                      <Lightbulb className="h-5 w-5 text-emerald-400" />
                       Context Addition
                     </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
+                    <p className="text-sm text-slate-300 mb-3">
                       Adds contextual information to ambiguous queries based on user history, conversation context,
                       or domain knowledge.
                     </p>
-                    <div className="bg-slate-100 dark:bg-slate-800 p-3 rounded-md">
+                    <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-medium">Original:</span>
-                        <span className="text-xs">What's the revenue for Q2?</span>
+                        <span className="text-xs font-medium text-slate-300">Original:</span>
+                        <span className="text-xs text-slate-400">What's the revenue for Q2?</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium">Rewritten:</span>
-                        <span className="text-xs text-emerald-600 dark:text-emerald-400">
+                        <span className="text-xs font-medium text-slate-300">Rewritten:</span>
+                        <span className="text-xs text-emerald-400">
                           What's the revenue for Q2 (referring to Q2 2023 financial results)?
                         </span>
                       </div>
@@ -642,46 +645,46 @@ export default function QueryUnderstandingDemo() {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2 flex items-center gap-2">
-                      <Lightbulb className="h-5 w-5 text-amber-500" />
+                  <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
+                    <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
+                      <Lightbulb className="h-5 w-5 text-emerald-400" />
                       Query Reformulation
                     </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
+                    <p className="text-sm text-slate-300 mb-3">
                       Rewrites the query to be more specific, comprehensive, or aligned with the document corpus
                       vocabulary, often using an LLM.
                     </p>
-                    <div className="bg-slate-100 dark:bg-slate-800 p-3 rounded-md">
+                    <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-medium">Original:</span>
-                        <span className="text-xs">How do I use the ML model?</span>
+                        <span className="text-xs font-medium text-slate-300">Original:</span>
+                        <span className="text-xs text-slate-400">How do I use the ML model?</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium">Rewritten:</span>
-                        <span className="text-xs text-emerald-600 dark:text-emerald-400">
+                        <span className="text-xs font-medium text-slate-300">Rewritten:</span>
+                        <span className="text-xs text-emerald-400">
                           What are the steps to implement and utilize the sentiment analysis machine learning model, including input formats and output interpretation?
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                    <h3 className="font-medium mb-2 flex items-center gap-2">
-                      <ShieldAlert className="h-5 w-5 text-amber-500" />
+                  <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
+                    <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
+                      <ShieldAlert className="h-5 w-5 text-emerald-400" />
                       Policy Checking
                     </h3>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
+                    <p className="text-sm text-slate-300 mb-3">
                       Analyzes queries for potential policy violations, security risks, or out-of-scope requests
                       before processing them.
                     </p>
-                    <div className="bg-slate-100 dark:bg-slate-800 p-3 rounded-md">
+                    <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-medium">Original:</span>
-                        <span className="text-xs">How can I bypass the content filter?</span>
+                        <span className="text-xs font-medium text-slate-300">Original:</span>
+                        <span className="text-xs text-slate-400">How can I bypass the content filter?</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium">Flagged:</span>
-                        <span className="text-xs text-red-600 dark:text-red-400">
+                        <span className="text-xs font-medium text-slate-300">Flagged:</span>
+                        <span className="text-xs text-red-300">
                           [POLICY VIOLATION DETECTED] How can I bypass the content filter?
                         </span>
                       </div>
@@ -690,66 +693,68 @@ export default function QueryUnderstandingDemo() {
                 </div>
               </div>
 
-              <div className="mt-6 p-4 border border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
-                <h3 className="font-medium text-emerald-800 dark:text-emerald-300 flex items-center gap-2 mb-2">
-                  <CheckCircle2 className="h-5 w-5" />
+              <div className="mt-6 p-4 bg-emerald-900/20 border border-emerald-500/50 rounded-lg">
+                <h3 className="font-medium text-emerald-300 flex items-center gap-2 mb-2">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-400" />
                   Implementation Approaches
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                   <div>
-                    <h4 className="text-sm font-medium text-emerald-700 dark:text-emerald-400 mb-1">Rule-Based Systems</h4>
-                    <p className="text-sm text-emerald-700 dark:text-emerald-400">
+                    <h4 className="text-sm font-medium text-emerald-300 mb-1">Rule-Based Systems</h4>
+                    <p className="text-sm text-emerald-300">
                       Use predefined patterns, dictionaries, and heuristics to identify and transform specific query elements.
                       Fast and predictable, but limited to known patterns.
                     </p>
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-emerald-700 dark:text-emerald-400 mb-1">LLM-Based Rewriting</h4>
-                    <p className="text-sm text-emerald-700 dark:text-emerald-400">
+                    <h4 className="text-sm font-medium text-emerald-300 mb-1">LLM-Based Rewriting</h4>
+                    <p className="text-sm text-emerald-300">
                       Use language models to understand and reformulate queries more intelligently.
                       More flexible and powerful, but adds latency and may introduce unexpected changes.
                     </p>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Common Challenges Tab */}
         <TabsContent value="challenges">
-          <Card>
-            <CardHeader>
-              <CardTitle>Common Query Understanding Challenges</CardTitle>
-              <CardDescription>Issues that can affect retrieval quality</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <div>
+                <h3 className="text-slate-200 font-medium">Common Query Understanding Challenges</h3>
+                <p className="text-slate-400 text-sm">Issues that can affect retrieval quality</p>
+              </div>
+            </div>
+            <div className="p-5">
               <div className="space-y-6">
-                <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-                  <h3 className="font-medium text-amber-800 dark:text-amber-300 flex items-center gap-2 mb-2">
-                    <AlertCircle className="h-5 w-5" />
+                <div className="p-4 bg-amber-900/20 border border-amber-500/30 rounded-lg">
+                  <h3 className="font-medium text-amber-300 flex items-center gap-2 mb-2">
+                    <AlertCircle className="h-5 w-5 text-amber-300" />
                     Ambiguity
                   </h3>
-                  <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
+                  <p className="text-sm text-amber-300 mb-3">
                     Many terms and phrases can have multiple meanings, making it difficult to determine the user's intent.
                   </p>
-                  <div className="bg-white dark:bg-slate-800 p-3 rounded-md">
-                    <h4 className="text-sm font-medium mb-2">Example: "Java" Ambiguity</h4>
+                  <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
+                    <h4 className="text-sm font-medium text-slate-200 mb-2">Example: "Java" Ambiguity</h4>
                     <div className="space-y-2">
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium mt-0.5">Query:</span>
-                        <span className="text-xs">How do I install Java?</span>
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">Query:</span>
+                        <span className="text-xs text-slate-400">How do I install Java?</span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium mt-0.5">Ambiguity:</span>
-                        <span className="text-xs">
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">Ambiguity:</span>
+                        <span className="text-xs text-slate-400">
                           Could refer to the programming language (Java SDK), the runtime environment (JRE),
                           or even a coffee machine brand.
                         </span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium mt-0.5">Solution:</span>
-                        <span className="text-xs">
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">Solution:</span>
+                        <span className="text-xs text-slate-400">
                           Use context from conversation history, user profile (e.g., developer vs. non-technical user),
                           or ask for clarification.
                         </span>
@@ -758,32 +763,32 @@ export default function QueryUnderstandingDemo() {
                   </div>
                 </div>
 
-                <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-                  <h3 className="font-medium text-amber-800 dark:text-amber-300 flex items-center gap-2 mb-2">
-                    <AlertCircle className="h-5 w-5" />
+                <div className="p-4 bg-amber-900/20 border border-amber-500/30 rounded-lg">
+                  <h3 className="font-medium text-amber-300 flex items-center gap-2 mb-2">
+                    <AlertCircle className="h-5 w-5 text-amber-300" />
                     Vocabulary Mismatch
                   </h3>
-                  <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
+                  <p className="text-sm text-amber-300 mb-3">
                     Users often use different terminology than what appears in the documents, leading to retrieval failures.
                   </p>
-                  <div className="bg-white dark:bg-slate-800 p-3 rounded-md">
-                    <h4 className="text-sm font-medium mb-2">Example: Technical vs. Layman Terms</h4>
+                  <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
+                    <h4 className="text-sm font-medium text-slate-200 mb-2">Example: Technical vs. Layman Terms</h4>
                     <div className="space-y-2">
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium mt-0.5">Document:</span>
-                        <span className="text-xs">
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">Document:</span>
+                        <span className="text-xs text-slate-400">
                           "To authenticate, utilize the OAuth 2.0 protocol with JWT bearer tokens."
                         </span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium mt-0.5">User Query:</span>
-                        <span className="text-xs">
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">User Query:</span>
+                        <span className="text-xs text-slate-400">
                           "How do I log in to the API?"
                         </span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium mt-0.5">Solution:</span>
-                        <span className="text-xs">
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">Solution:</span>
+                        <span className="text-xs text-slate-400">
                           Expand queries with synonyms, related terms, or domain-specific vocabulary.
                         </span>
                       </div>
@@ -791,8 +796,8 @@ export default function QueryUnderstandingDemo() {
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

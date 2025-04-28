@@ -184,11 +184,11 @@ export default function SourcePreprocessingDemo() {
       </div>
       
       {/* Input and Output panels with processing flow */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-slate-800/80 rounded-xl border border-slate-700 overflow-hidden">
           <div className="px-4 py-3 bg-slate-700/50 flex items-center justify-between">
             <div className="flex items-center">
-              {getInputIcon()}
+            {getInputIcon()}
               <span className="ml-2 font-medium text-slate-200">Source Input</span>
             </div>
             <div className="text-xs px-2 py-1 rounded-full bg-slate-600 text-slate-300">
@@ -197,12 +197,12 @@ export default function SourcePreprocessingDemo() {
           </div>
           
           <div className="p-4">
-            <Textarea
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
+          <Textarea
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
               className="min-h-[280px] font-mono text-sm bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
-              placeholder={`Enter ${inputType} content here...`}
-            />
+            placeholder={`Enter ${inputType} content here...`}
+          />
           </div>
         </div>
         
@@ -238,17 +238,17 @@ export default function SourcePreprocessingDemo() {
             </div>
             
             <div className="p-4">
-              <Textarea
-                value={processedText}
-                readOnly
+          <Textarea
+            value={processedText}
+            readOnly
                 className="min-h-[280px] font-mono text-sm bg-slate-900/50 border-slate-700 text-emerald-300 focus:border-emerald-500 focus:ring-emerald-500/20"
-                placeholder="Processed text will appear here..."
-              />
+            placeholder="Processed text will appear here..."
+          />
             </div>
             
             <div className="px-4 py-3 bg-slate-800 border-t border-slate-700">
               <p className="text-sm text-slate-400">
-                {processedText
+            {processedText
                   ? `✓ Successfully processed ${inputType.toUpperCase()} into clean, deduplicated text`
                   : 'Click the arrow button to process the input'}
               </p>

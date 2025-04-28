@@ -466,130 +466,130 @@ export default function AnswerGenerationDemo() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* User Query Selection */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5" />
-              Question Selection
-            </CardTitle>
-            <CardDescription>Choose a sample question to test</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600">
+          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5 text-emerald-400" />
+              <h3 className="text-slate-200 font-medium">Question Selection</h3>
+            </div>
+            <span className="text-xs text-slate-400">Choose a sample question to test</span>
+          </div>
+          <div className="p-5">
             <Select
               value={selectedQuestion}
               onValueChange={(value) => setSelectedQuestion(value as keyof typeof sampleQuestions)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                 <SelectValue placeholder="Select a question" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-slate-800 border-slate-700">
                 {Object.entries(sampleQuestions).map(([key, q]) => (
-                  <SelectItem key={key} value={key}>
+                  <SelectItem key={key} value={key} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
                     {q.text} - {q.description}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* LLM Behavior */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5" />
-              LLM Behavior
-            </CardTitle>
-            <CardDescription>How the model responds to the prompt</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600">
+          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-emerald-400" />
+              <h3 className="text-slate-200 font-medium">LLM Behavior</h3>
+            </div>
+            <span className="text-xs text-slate-400">How the model responds to the prompt</span>
+          </div>
+          <div className="p-5 space-y-4">
             <Select
               value={selectedBehavior}
               onValueChange={(value) => setSelectedBehavior(value as keyof typeof llmBehaviors)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                 <SelectValue placeholder="Select LLM behavior" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-slate-800 border-slate-700">
                 {Object.entries(llmBehaviors).map(([key, behavior]) => (
-                  <SelectItem key={key} value={key}>
+                  <SelectItem key={key} value={key} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
                     {behavior.name} - {behavior.description}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
-            <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md">
-              <h3 className="text-sm font-medium mb-2">Behavior Description</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
+            <div className="p-3 bg-slate-900/50 border border-slate-700 rounded-md">
+              <h3 className="text-sm font-medium mb-2 text-slate-300">Behavior Description</h3>
+              <p className="text-sm text-slate-400">
                 {llmBehaviors[selectedBehavior].description}
               </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Context Selection */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Info className="h-5 w-5" />
-              Context Selection
-            </CardTitle>
-            <CardDescription>The information retrieved for the query</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600">
+          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Info className="h-5 w-5 text-emerald-400" />
+              <h3 className="text-slate-200 font-medium">Context Selection</h3>
+            </div>
+            <span className="text-xs text-slate-400">The information retrieved for the query</span>
+          </div>
+          <div className="p-5 space-y-4">
             <Select
               value={selectedContext}
               onValueChange={(value) => setSelectedContext(value as keyof typeof sampleContexts)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                 <SelectValue placeholder="Select context type" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-slate-800 border-slate-700">
                 {Object.entries(sampleContexts).map(([key, context]) => (
-                  <SelectItem key={key} value={key}>
+                  <SelectItem key={key} value={key} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
                     {context.title}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
-            <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md max-h-[150px] overflow-y-auto">
-              <h3 className="text-sm font-medium mb-2">Context Preview</h3>
-              <p className="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap">
+            <div className="p-3 bg-slate-900/50 border border-slate-700 rounded-md max-h-[150px] overflow-y-auto">
+              <h3 className="text-sm font-medium mb-2 text-slate-300">Context Preview</h3>
+              <p className="text-xs text-slate-400 whitespace-pre-wrap">
                 {sampleContexts[selectedContext].content.length > 200
                   ? sampleContexts[selectedContext].content.substring(0, 200) + "..."
                   : sampleContexts[selectedContext].content}
               </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Prompting Technique */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5" />
-              Prompting Technique
-            </CardTitle>
-            <CardDescription>How to instruct the model</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600">
+          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5 text-emerald-400" />
+              <h3 className="text-slate-200 font-medium">Prompting Technique</h3>
+            </div>
+            <span className="text-xs text-slate-400">How to instruct the model</span>
+          </div>
+          <div className="p-5 space-y-4">
             <Select
               value={selectedTechnique}
               onValueChange={(value) => setSelectedTechnique(value as keyof typeof promptingTechniques)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                 <SelectValue placeholder="Select prompting technique" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-slate-800 border-slate-700">
                 {Object.entries(promptingTechniques).map(([key, technique]) => (
-                  <SelectItem key={key} value={key}>
+                  <SelectItem key={key} value={key} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
                     {technique.name} - {technique.description}
                   </SelectItem>
                 ))}
@@ -597,25 +597,30 @@ export default function AnswerGenerationDemo() {
             </Select>
 
             <div className="flex items-center space-x-2">
-              <Switch id="show-prompt" checked={showPrompt} onCheckedChange={setShowPrompt} />
-              <Label htmlFor="show-prompt">Show full prompt</Label>
+              <Switch id="show-prompt" checked={showPrompt} onCheckedChange={setShowPrompt}
+                className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500" />
+              <Label htmlFor="show-prompt" className="text-slate-300">Show full prompt</Label>
             </div>
 
             {showPrompt && (
-              <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md max-h-[150px] overflow-y-auto">
-                <h3 className="text-sm font-medium mb-2">Prompt Template</h3>
-                <p className="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap">
+              <div className="p-3 bg-slate-900/50 border border-slate-700 rounded-md max-h-[150px] overflow-y-auto">
+                <h3 className="text-sm font-medium mb-2 text-slate-300">Prompt Template</h3>
+                <p className="text-xs text-slate-400 whitespace-pre-wrap">
                   {promptingTechniques[selectedTechnique].template}
                 </p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Generate Button */}
       <div className="flex justify-center">
-        <Button onClick={handleGenerate} disabled={isGenerating} className="w-full md:w-1/3">
+        <Button
+          onClick={handleGenerate}
+          disabled={isGenerating}
+          className="w-full md:w-1/3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all disabled:opacity-50 disabled:pointer-events-none"
+        >
           {isGenerating ? "Generating..." : "Generate Answer"}
         </Button>
       </div>
@@ -623,42 +628,48 @@ export default function AnswerGenerationDemo() {
       {/* Full Prompt and Generated Answer Side by Side */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Full Prompt Preview */}
-        <Card className="h-full flex flex-col">
-          <CardHeader>
-            <CardTitle>Full Prompt & Context</CardTitle>
-            <CardDescription>What will be sent to the LLM</CardDescription>
-          </CardHeader>
-          <CardContent className="flex-grow">
-            <div className="border rounded-md p-4 bg-slate-50 dark:bg-slate-900 h-full overflow-y-auto whitespace-pre-wrap">
+        <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600 h-full flex flex-col">
+          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5 text-emerald-400" />
+              <h3 className="text-slate-200 font-medium">Full Prompt & Context</h3>
+            </div>
+            <span className="text-xs text-slate-400">What will be sent to the LLM</span>
+          </div>
+          <div className="p-5 flex-grow">
+            <div className="border border-slate-700 rounded-md p-4 bg-slate-900/50 h-full overflow-y-auto whitespace-pre-wrap text-slate-300">
               {generatePrompt()}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Generated Answer Section */}
-        <Card className="h-full flex flex-col">
-          <CardHeader>
-            <CardTitle>Generated Answer</CardTitle>
-            <CardDescription>The LLM's response to the user query</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 flex-grow">
+        <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600 h-full flex flex-col">
+          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-emerald-400" />
+              <h3 className="text-slate-200 font-medium">Generated Answer</h3>
+            </div>
+            <span className="text-xs text-slate-400">The LLM's response to the user query</span>
+          </div>
+          <div className="p-5 space-y-4 flex-grow">
             {!generatedAnswer ? (
-              <div className="text-center py-8 text-slate-500 dark:text-slate-400 h-full flex items-center justify-center">
+              <div className="text-center py-8 text-slate-400 h-full flex items-center justify-center">
                 Configure your settings and click "Generate Answer" to see a response
               </div>
             ) : (
               <div className="h-full flex flex-col">
-                <div className="border rounded-md p-4 bg-slate-50 dark:bg-slate-900 whitespace-pre-wrap flex-grow overflow-y-auto">
+                <div className="border border-slate-700 rounded-md p-4 bg-slate-900/50 whitespace-pre-wrap flex-grow overflow-y-auto text-slate-300">
                   {generatedAnswer.text}
                 </div>
 
                 {generatedAnswer.issues.length > 0 ? (
-                  <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg mt-4">
+                  <div className="p-4 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-lg mt-4">
                     <div className="flex items-start gap-2">
                       <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5" />
                       <div>
-                        <h3 className="font-medium text-amber-800 dark:text-amber-300">Issues Detected</h3>
-                        <ul className="mt-2 text-sm text-amber-700 dark:text-amber-300 space-y-1 list-disc pl-5">
+                        <h3 className="font-medium text-amber-300">Issues Detected</h3>
+                        <ul className="mt-2 text-sm space-y-1 list-disc pl-5">
                           {generatedAnswer.issues.map((issue, index) => (
                             <li key={index}>{issue}</li>
                           ))}
@@ -667,12 +678,12 @@ export default function AnswerGenerationDemo() {
                     </div>
                   </div>
                 ) : (
-                  <div className="p-4 border border-green-200 dark:border-green-900 bg-green-50 dark:bg-green-900/20 rounded-lg mt-4">
+                  <div className="p-4 bg-emerald-900/20 border border-emerald-500/50 text-emerald-300 rounded-lg mt-4">
                     <div className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                      <CheckCircle className="h-5 w-5 text-emerald-500 mt-0.5" />
                       <div>
-                        <h3 className="font-medium text-green-800 dark:text-green-300">Good Response</h3>
-                        <p className="mt-1 text-sm text-green-700 dark:text-green-300">
+                        <h3 className="font-medium text-emerald-300">Good Response</h3>
+                        <p className="mt-1 text-sm">
                           This response appropriately uses the provided context and follows the prompting
                           instructions.
                         </p>
@@ -682,55 +693,54 @@ export default function AnswerGenerationDemo() {
                 )}
 
                 <div className="grid grid-cols-3 gap-2 mt-4">
-                  <Badge className="justify-center">{sampleContexts[selectedContext].title}</Badge>
-                  <Badge className="justify-center">{promptingTechniques[selectedTechnique].name}</Badge>
-                  <Badge className="justify-center">{llmBehaviors[selectedBehavior].name}</Badge>
+                  <Badge className="justify-center bg-slate-700 hover:bg-slate-600 text-slate-200">{sampleContexts[selectedContext].title}</Badge>
+                  <Badge className="justify-center bg-slate-700 hover:bg-slate-600 text-slate-200">{promptingTechniques[selectedTechnique].name}</Badge>
+                  <Badge className="justify-center bg-slate-700 hover:bg-slate-600 text-slate-200">{llmBehaviors[selectedBehavior].name}</Badge>
                 </div>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Answer Generation Best Practices</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                Clear Instructions
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
-                Provide explicit instructions about how to use the context, handle uncertainty, and format the
-                response. Specify whether to admit knowledge gaps or stick strictly to provided information.
-              </p>
-            </div>
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                Encourage Source Attribution
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
-                Ask the model to cite or reference the sources of information in its response. This improves
-                transparency and helps users verify information accuracy.
-              </p>
-            </div>
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                Validate Outputs
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
-                Implement post-processing to check answers against the context. Flag responses that contain
-                information not present in the retrieved documents to catch potential hallucinations.
-              </p>
-            </div>
+      <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
+        <div className="px-2 py-3 flex items-center gap-2 mb-4">
+          <Sparkles className="h-5 w-5 text-emerald-400" />
+          <h3 className="text-slate-200 font-medium">Answer Generation Best Practices</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg hover:border-emerald-500/30 transition-all">
+            <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
+              <CheckCircle className="h-5 w-5 text-emerald-400" />
+              Clear Instructions
+            </h3>
+            <p className="text-sm text-slate-400">
+              Provide explicit instructions about how to use the context, handle uncertainty, and format the
+              response. Specify whether to admit knowledge gaps or stick strictly to provided information.
+            </p>
           </div>
-        </CardContent>
-      </Card>
+          <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg hover:border-emerald-500/30 transition-all">
+            <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
+              <CheckCircle className="h-5 w-5 text-emerald-400" />
+              Encourage Source Attribution
+            </h3>
+            <p className="text-sm text-slate-400">
+              Ask the model to cite or reference the sources of information in its response. This improves
+              transparency and helps users verify information accuracy.
+            </p>
+          </div>
+          <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg hover:border-emerald-500/30 transition-all">
+            <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
+              <CheckCircle className="h-5 w-5 text-emerald-400" />
+              Validate Outputs
+            </h3>
+            <p className="text-sm text-slate-400">
+              Implement post-processing to check answers against the context. Flag responses that contain
+              information not present in the retrieved documents to catch potential hallucinations.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -294,27 +294,27 @@ export default function FilteringPermissionChecksDemo() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="demo" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="demo">Filtering Demo</TabsTrigger>
-          <TabsTrigger value="permissions">Permission Checks</TabsTrigger>
-          <TabsTrigger value="challenges">Common Challenges</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 bg-slate-800 border border-slate-700 p-1">
+          <TabsTrigger value="demo" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Filtering Demo</TabsTrigger>
+          <TabsTrigger value="permissions" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Permission Checks</TabsTrigger>
+          <TabsTrigger value="challenges" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Common Challenges</TabsTrigger>
         </TabsList>
 
         {/* Filtering Demo Tab */}
         <TabsContent value="demo" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* User and Query Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                  <User className="h-5 w-5 text-emerald-400" />
                   User & Query
-                </CardTitle>
-                <CardDescription>Configure the user role and search query</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </h3>
+                <p className="text-sm text-slate-400">Configure the user role and search query</p>
+              </div>
+              <div className="p-5 space-y-4">
                 <div className="space-y-2">
-                  <Label>User Role</Label>
+                  <Label className="text-slate-300">User Role</Label>
                   <Select
                     value={selectedUserRole.id}
                     onValueChange={(value) => {
@@ -322,12 +322,12 @@ export default function FilteringPermissionChecksDemo() {
                       if (role) setSelectedUserRole(role)
                     }}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                       <SelectValue placeholder="Select user role" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-slate-800 border-slate-700">
                       {userRoles.map(role => (
-                        <SelectItem key={role.id} value={role.id}>
+                        <SelectItem key={role.id} value={role.id} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
                           {role.name}
                         </SelectItem>
                       ))}
@@ -336,11 +336,11 @@ export default function FilteringPermissionChecksDemo() {
                   <p className="text-xs text-slate-500">{selectedUserRole.description}</p>
                 </div>
 
-                <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md">
-                  <h3 className="text-sm font-medium mb-2">Access Levels</h3>
+                <div className="p-3 bg-slate-800/50 border border-slate-700 rounded-md">
+                  <h3 className="text-sm font-medium mb-2 text-slate-300">Access Levels</h3>
                   <div className="flex flex-wrap gap-1">
                     {selectedUserRole.accessLevels.map(level => (
-                      <Badge key={level} className="bg-emerald-100 dark:bg-emerald-900/20">
+                      <Badge key={level} className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">
                         {level}
                       </Badge>
                     ))}
@@ -348,53 +348,54 @@ export default function FilteringPermissionChecksDemo() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Search Query</Label>
+                  <Label className="text-slate-300">Search Query</Label>
                   <Input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Enter your query..."
+                    className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
-              </CardContent>
-              <CardFooter>
+
                 <Button
                   onClick={performSearch}
                   disabled={isSearching || !query.trim()}
-                  className="w-full"
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
                 >
                   {isSearching ? "Searching..." : "Search & Filter"}
                 </Button>
-              </CardFooter>
-            </Card>
+              </div>
+            </div>
 
             {/* Filter Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Filter className="h-5 w-5" />
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                  <Filter className="h-5 w-5 text-emerald-400" />
                   Filter Configuration
-                </CardTitle>
-                <CardDescription>Configure how results are filtered</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                </h3>
+                <p className="text-sm text-slate-400">Configure how results are filtered</p>
+              </div>
+              <div className="p-5 space-y-4">
                 {/* Relevance Filter */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="relevance-filter" className="flex items-center gap-2">
-                      <Tag className="h-4 w-4" />
+                    <Label htmlFor="relevance-filter" className="flex items-center gap-2 text-slate-300">
+                      <Tag className="h-4 w-4 text-emerald-400" />
                       Relevance Filter
                     </Label>
                     <Switch
                       id="relevance-filter"
                       checked={enableRelevanceFilter}
                       onCheckedChange={setEnableRelevanceFilter}
+                      className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                     />
                   </div>
                   {enableRelevanceFilter && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm">Minimum Relevance Score</span>
-                        <span className="text-sm font-medium">{relevanceThreshold.toFixed(2)}</span>
+                        <span className="text-sm text-slate-300">Minimum Relevance Score</span>
+                        <span className="text-sm font-medium text-emerald-400">{relevanceThreshold.toFixed(2)}</span>
                       </div>
                       <Slider
                         value={[relevanceThreshold]}
@@ -402,6 +403,7 @@ export default function FilteringPermissionChecksDemo() {
                         max={1}
                         step={0.05}
                         onValueChange={(value) => setRelevanceThreshold(value[0])}
+                        className="[&_[role=slider]]:bg-emerald-500"
                       />
                       <div className="flex justify-between text-xs text-slate-500">
                         <span>Low (0.0)</span>
@@ -415,21 +417,22 @@ export default function FilteringPermissionChecksDemo() {
                 {/* Date Filter */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="date-filter" className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
+                    <Label htmlFor="date-filter" className="flex items-center gap-2 text-slate-300">
+                      <Calendar className="h-4 w-4 text-emerald-400" />
                       Date Filter
                     </Label>
                     <Switch
                       id="date-filter"
                       checked={enableDateFilter}
                       onCheckedChange={setEnableDateFilter}
+                      className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                     />
                   </div>
                   {enableDateFilter && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm">Maximum Age (months)</span>
-                        <span className="text-sm font-medium">{dateThreshold} months</span>
+                        <span className="text-sm text-slate-300">Maximum Age (months)</span>
+                        <span className="text-sm font-medium text-emerald-400">{dateThreshold} months</span>
                       </div>
                       <Slider
                         value={[dateThreshold]}
@@ -437,6 +440,7 @@ export default function FilteringPermissionChecksDemo() {
                         max={24}
                         step={1}
                         onValueChange={(value) => setDateThreshold(value[0])}
+                        className="[&_[role=slider]]:bg-emerald-500"
                       />
                       <div className="flex justify-between text-xs text-slate-500">
                         <span>Recent (1)</span>
@@ -450,14 +454,15 @@ export default function FilteringPermissionChecksDemo() {
                 {/* Category Filter */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="category-filter" className="flex items-center gap-2">
-                      <FileText className="h-4 w-4" />
+                    <Label htmlFor="category-filter" className="flex items-center gap-2 text-slate-300">
+                      <FileText className="h-4 w-4 text-emerald-400" />
                       Category Filter
                     </Label>
                     <Switch
                       id="category-filter"
                       checked={enableCategoryFilter}
                       onCheckedChange={setEnableCategoryFilter}
+                      className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                     />
                   </div>
                   {enableCategoryFilter && (
@@ -466,12 +471,12 @@ export default function FilteringPermissionChecksDemo() {
                         value={selectedCategory}
                         onValueChange={setSelectedCategory}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-slate-800 border-slate-700">
                           {getUniqueCategories().map(category => (
-                            <SelectItem key={category} value={category}>
+                            <SelectItem key={category} value={category} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
                               {category}
                             </SelectItem>
                           ))}
@@ -484,40 +489,41 @@ export default function FilteringPermissionChecksDemo() {
                 {/* Permission Checks */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="permission-checks" className="flex items-center gap-2">
-                      <Shield className="h-4 w-4" />
+                    <Label htmlFor="permission-checks" className="flex items-center gap-2 text-slate-300">
+                      <Shield className="h-4 w-4 text-emerald-400" />
                       Permission Checks
                     </Label>
                     <Switch
                       id="permission-checks"
                       checked={enablePermissionChecks}
                       onCheckedChange={setEnablePermissionChecks}
+                      className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                     />
                   </div>
                   <p className="text-xs text-slate-500">
                     When enabled, only documents the user has permission to access will be included.
                   </p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Filtering Results */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Search className="h-5 w-5" />
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                <Search className="h-5 w-5 text-emerald-400" />
                 Search & Filtering Results
-              </CardTitle>
-              <CardDescription>
+              </h3>
+              <p className="text-sm text-slate-400">
                 {hasSearched
                   ? `${filteredResults.length} results after filtering (${retrievedResults.length} before filtering)`
                   : "Run a search to see results"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </p>
+            </div>
+            <div className="p-5 space-y-4">
               {!hasSearched ? (
-                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                <div className="text-center py-8 text-slate-400">
                   Configure your search parameters and click "Search & Filter" to see results
                 </div>
               ) : (
@@ -525,38 +531,38 @@ export default function FilteringPermissionChecksDemo() {
                   {/* Filtering Statistics */}
                   {stats && (
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                      <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-slate-700 dark:text-slate-200">{stats.retrievedCount}</div>
-                        <div className="text-sm text-slate-500">Retrieved Results</div>
+                      <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
+                        <div className="text-2xl font-bold text-slate-200">{stats.retrievedCount}</div>
+                        <div className="text-sm text-slate-400">Retrieved Results</div>
                       </div>
-                      <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{stats.filteredCount}</div>
-                        <div className="text-sm text-slate-500">Filtered Results</div>
+                      <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
+                        <div className="text-2xl font-bold text-emerald-400">{stats.filteredCount}</div>
+                        <div className="text-sm text-slate-400">Filtered Results</div>
                       </div>
-                      <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{stats.removedCount}</div>
-                        <div className="text-sm text-slate-500">Removed Results</div>
+                      <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
+                        <div className="text-2xl font-bold text-amber-400">{stats.removedCount}</div>
+                        <div className="text-sm text-slate-400">Removed Results</div>
                       </div>
-                      <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-slate-700 dark:text-slate-200">{stats.removalPercentage}%</div>
-                        <div className="text-sm text-slate-500">Removal Rate</div>
+                      <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
+                        <div className="text-2xl font-bold text-slate-200">{stats.removalPercentage}%</div>
+                        <div className="text-sm text-slate-400">Removal Rate</div>
                       </div>
                     </div>
                   )}
 
                   {/* Filtered Results */}
                   <div className="space-y-4">
-                    <h3 className="font-medium">Filtered Results</h3>
+                    <h3 className="font-medium text-slate-200">Filtered Results</h3>
                     {filteredResults.length === 0 ? (
-                      <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+                      <div className="p-4 bg-amber-900/20 border border-amber-500/30 rounded-lg">
                         <div className="flex items-start gap-2">
-                          <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
+                          <AlertCircle className="h-5 w-5 text-amber-300 mt-0.5" />
                           <div>
-                            <h3 className="font-medium text-amber-800 dark:text-amber-300">No Results After Filtering</h3>
-                            <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                            <h3 className="font-medium text-amber-300">No Results After Filtering</h3>
+                            <p className="text-sm text-amber-300 mt-1">
                               All retrieved results were filtered out. This could be due to:
                             </p>
-                            <ul className="text-sm text-amber-700 dark:text-amber-300 mt-1 list-disc pl-5">
+                            <ul className="text-sm text-amber-300 mt-1 list-disc pl-5">
                               <li>Overly strict relevance threshold</li>
                               <li>Date filter excluding relevant content</li>
                               <li>Category filter removing matching documents</li>
@@ -567,25 +573,25 @@ export default function FilteringPermissionChecksDemo() {
                       </div>
                     ) : (
                       filteredResults.map(result => (
-                        <div key={result.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                        <div key={result.id} className="p-4 bg-slate-800/50 border border-slate-700 hover:border-emerald-500/30 rounded-lg transition-all">
                           <div className="flex justify-between items-start mb-2">
-                            <h4 className="font-medium">{result.metadata.source}</h4>
-                            <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300">
+                            <h4 className="font-medium text-slate-200">{result.metadata.source}</h4>
+                            <Badge className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">
                               Score: {result.metadata.relevanceScore.toFixed(2)}
                             </Badge>
                           </div>
-                          <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">{result.text}</p>
+                          <p className="text-sm text-slate-300 mb-3">{result.text}</p>
                           <div className="flex flex-wrap gap-1">
-                            <Badge className="text-xs">
+                            <Badge className="text-xs bg-slate-700 text-slate-300">
                               {result.metadata.category}
                             </Badge>
-                            <Badge className="text-xs">
+                            <Badge className="text-xs bg-slate-700 text-slate-300">
                               {result.metadata.date.toLocaleDateString()}
                             </Badge>
-                            <Badge className="text-xs">
+                            <Badge className="text-xs bg-slate-700 text-slate-300">
                               {result.metadata.confidentiality}
                             </Badge>
-                            <Badge className="text-xs">
+                            <Badge className="text-xs bg-slate-700 text-slate-300">
                               {result.metadata.accessLevel}
                             </Badge>
                           </div>
@@ -597,44 +603,44 @@ export default function FilteringPermissionChecksDemo() {
                   {/* Removed Results */}
                   {retrievedResults.length > filteredResults.length && (
                     <div className="space-y-4 mt-8">
-                      <h3 className="font-medium flex items-center gap-2">
+                      <h3 className="font-medium text-slate-200 flex items-center gap-2">
                         <EyeOff className="h-4 w-4 text-slate-400" />
                         Filtered Out Results
                       </h3>
                       {retrievedResults
                         .filter(r => !filteredResults.some(f => f.id === r.id))
                         .map(result => (
-                          <div key={result.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-slate-50 dark:bg-slate-900/50 opacity-60">
+                          <div key={result.id} className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg opacity-60">
                             <div className="flex justify-between items-start mb-2">
-                              <h4 className="font-medium">{result.metadata.source}</h4>
+                              <h4 className="font-medium text-slate-300">{result.metadata.source}</h4>
                               <div className="flex items-center gap-2">
-                                <Badge className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300">
+                                <Badge className="bg-red-900/20 border border-red-500/30 text-red-300">
                                   Filtered Out
                                 </Badge>
-                                <Badge>
+                                <Badge className="bg-slate-700 text-slate-300">
                                   Score: {result.metadata.relevanceScore.toFixed(2)}
                                 </Badge>
                               </div>
                             </div>
-                            <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">{result.text}</p>
+                            <p className="text-sm text-slate-400 mb-3">{result.text}</p>
                             <div className="flex flex-wrap gap-1">
-                              <Badge className="text-xs">
+                              <Badge className="text-xs bg-slate-700 text-slate-300">
                                 {result.metadata.category}
                               </Badge>
-                              <Badge className="text-xs">
+                              <Badge className="text-xs bg-slate-700 text-slate-300">
                                 {result.metadata.date.toLocaleDateString()}
                               </Badge>
-                              <Badge className="text-xs">
+                              <Badge className="text-xs bg-slate-700 text-slate-300">
                                 {result.metadata.confidentiality}
                               </Badge>
-                              <Badge className="text-xs">
+                              <Badge className="text-xs bg-slate-700 text-slate-300">
                                 {result.metadata.accessLevel}
                               </Badge>
                             </div>
 
                             {/* Reason for filtering */}
-                            <div className="mt-3 p-2 bg-red-50 dark:bg-red-900/10 rounded border border-red-100 dark:border-red-900/20">
-                              <p className="text-xs text-red-600 dark:text-red-400">
+                            <div className="mt-3 p-2 bg-red-900/10 border border-red-900/20 rounded">
+                              <p className="text-xs text-red-400">
                                 <span className="font-medium">Reason for filtering: </span>
                                 {enableRelevanceFilter && result.metadata.relevanceScore < relevanceThreshold &&
                                   "Relevance score below threshold. "
@@ -659,32 +665,32 @@ export default function FilteringPermissionChecksDemo() {
                   )}
                 </>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Permission Checks Tab */}
         <TabsContent value="permissions" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                <Shield className="h-5 w-5 text-emerald-400" />
                 Permission Checks
-              </CardTitle>
-              <CardDescription>Explore how permission checks work in RAG systems</CardDescription>
-            </CardHeader>
-            <CardContent>
+              </h3>
+              <p className="text-sm text-slate-400">Explore how permission checks work in RAG systems</p>
+            </div>
+            <div className="p-5">
               <div className="space-y-6">
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-3">How Permission Checks Work</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
+                  <h3 className="font-medium mb-3 text-slate-200">How Permission Checks Work</h3>
+                  <p className="text-sm text-slate-300 mb-4">
                     Permission checks ensure that users only see information they're authorized to access. This is crucial for maintaining security and compliance in enterprise RAG systems.
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <h4 className="text-sm font-medium">Common Implementation Approaches:</h4>
-                      <ul className="text-sm text-slate-600 dark:text-slate-300 list-disc pl-5 space-y-1">
+                      <h4 className="text-sm font-medium text-slate-200">Common Implementation Approaches:</h4>
+                      <ul className="text-sm text-slate-300 list-disc pl-5 space-y-1">
                         <li>Metadata-based filtering using access control lists</li>
                         <li>Integration with identity providers (e.g., OAuth, SAML)</li>
                         <li>Role-based access control (RBAC)</li>
@@ -694,8 +700,8 @@ export default function FilteringPermissionChecksDemo() {
                     </div>
 
                     <div className="space-y-2">
-                      <h4 className="text-sm font-medium">When Permission Checks Happen:</h4>
-                      <ul className="text-sm text-slate-600 dark:text-slate-300 list-disc pl-5 space-y-1">
+                      <h4 className="text-sm font-medium text-slate-200">When Permission Checks Happen:</h4>
+                      <ul className="text-sm text-slate-300 list-disc pl-5 space-y-1">
                         <li><strong>Pre-retrieval:</strong> Limit search scope to authorized documents only</li>
                         <li><strong>Post-retrieval:</strong> Filter out unauthorized documents from results</li>
                         <li><strong>Hybrid approach:</strong> Combine both for efficiency and security</li>
@@ -705,17 +711,17 @@ export default function FilteringPermissionChecksDemo() {
                 </div>
 
                 {/* Simulation Controls */}
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-3">Filtering Simulation</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
+                  <h3 className="font-medium mb-3 text-slate-200">Filtering Simulation</h3>
+                  <p className="text-sm text-slate-300 mb-4">
                     Simulate common filtering issues to see their impact on search results.
                   </p>
 
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label htmlFor="over-filtering" className="flex items-center gap-2">
-                          <AlertCircle className="h-4 w-4 text-amber-500" />
+                        <Label htmlFor="over-filtering" className="flex items-center gap-2 text-slate-300">
+                          <AlertCircle className="h-4 w-4 text-amber-300" />
                           Simulate Over-Filtering
                         </Label>
                         <Switch
@@ -725,17 +731,18 @@ export default function FilteringPermissionChecksDemo() {
                             setSimulateOverFiltering(checked)
                             if (checked) setSimulateUnderFiltering(false)
                           }}
+                          className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                         />
                       </div>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         When enabled, applies extremely strict filters that remove most results, even relevant ones.
                       </p>
                     </div>
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <Label htmlFor="under-filtering" className="flex items-center gap-2">
-                          <AlertCircle className="h-4 w-4 text-red-500" />
+                        <Label htmlFor="under-filtering" className="flex items-center gap-2 text-slate-300">
+                          <AlertCircle className="h-4 w-4 text-red-300" />
                           Simulate Under-Filtering
                         </Label>
                         <Switch
@@ -745,39 +752,40 @@ export default function FilteringPermissionChecksDemo() {
                             setSimulateUnderFiltering(checked)
                             if (checked) setSimulateOverFiltering(false)
                           }}
+                          className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                         />
                       </div>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-400">
                         When enabled, skips permission checks entirely, potentially exposing sensitive information.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Common Challenges Tab */}
         <TabsContent value="challenges" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5" />
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 text-emerald-400" />
                 Common Filtering Challenges
-              </CardTitle>
-              <CardDescription>Understanding the balance between security and usability</CardDescription>
-            </CardHeader>
-            <CardContent>
+              </h3>
+              <p className="text-sm text-slate-400">Understanding the balance between security and usability</p>
+            </div>
+            <div className="p-5">
               <div className="space-y-6">
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-3">Over-Filtering</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
+                  <h3 className="font-medium mb-3 text-slate-200">Over-Filtering</h3>
+                  <p className="text-sm text-slate-300 mb-4">
                     Over-filtering occurs when filters are too strict, removing too many potentially relevant documents.
                   </p>
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium">Common Causes:</h4>
-                    <ul className="text-sm text-slate-600 dark:text-slate-300 list-disc pl-5 space-y-1">
+                    <h4 className="text-sm font-medium text-slate-200">Common Causes:</h4>
+                    <ul className="text-sm text-slate-300 list-disc pl-5 space-y-1">
                       <li>Relevance threshold set too high</li>
                       <li>Overly restrictive date filters</li>
                       <li>Too many filters applied simultaneously</li>
@@ -786,14 +794,14 @@ export default function FilteringPermissionChecksDemo() {
                   </div>
                 </div>
 
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-3">Under-Filtering</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
+                  <h3 className="font-medium mb-3 text-slate-200">Under-Filtering</h3>
+                  <p className="text-sm text-slate-300 mb-4">
                     Under-filtering occurs when not enough filtering is applied, potentially exposing sensitive information.
                   </p>
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium">Common Causes:</h4>
-                    <ul className="text-sm text-slate-600 dark:text-slate-300 list-disc pl-5 space-y-1">
+                    <h4 className="text-sm font-medium text-slate-200">Common Causes:</h4>
+                    <ul className="text-sm text-slate-300 list-disc pl-5 space-y-1">
                       <li>Ignoring permission checks for performance reasons</li>
                       <li>Insufficient permissions metadata</li>
                       <li>Bugs in access control implementation</li>
@@ -802,11 +810,11 @@ export default function FilteringPermissionChecksDemo() {
                   </div>
                 </div>
 
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-3">Best Practices</h3>
+                <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
+                  <h3 className="font-medium mb-3 text-slate-200">Best Practices</h3>
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium">Balancing Security and Utility:</h4>
-                    <ul className="text-sm text-slate-600 dark:text-slate-300 list-disc pl-5 space-y-1">
+                    <h4 className="text-sm font-medium text-slate-200">Balancing Security and Utility:</h4>
+                    <ul className="text-sm text-slate-300 list-disc pl-5 space-y-1">
                       <li>Apply permission checks before relevance filtering</li>
                       <li>Use adaptive thresholds based on the number of results</li>
                       <li>Provide clear explanations when results are filtered out</li>
@@ -816,8 +824,8 @@ export default function FilteringPermissionChecksDemo() {
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

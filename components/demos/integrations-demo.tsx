@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { AlertCircle, CheckCircle2, Database, FileText, Cpu, BrainCircuit, ArrowRight } from "lucide-react"
+import { AlertCircle, CheckCircle2, Database, FileText, Cpu, BrainCircuit, ArrowRight, Settings, AlertTriangle } from "lucide-react"
 
 export default function IntegrationsDemo() {
   // Define the components of our RAG pipeline
@@ -175,248 +175,268 @@ export default function IntegrationsDemo() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Pipeline Visualization */}
+      <div className="bg-slate-800/80 border border-slate-700 rounded-xl p-6 shadow-lg">
+        <h2 className="text-xl font-semibold text-slate-200 mb-4 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+            <path d="M16 16l-4-4 4-4" />
+            <path d="M20 16l-4-4 4-4" />
+          </svg>
+          RAG Pipeline Flow
+        </h2>
+        
+        <div className="relative">
+          {/* Pipeline status indicator */}
+          <div className="absolute -top-2 right-0">
+            {pipelineStatus.success && (
+              <Badge className="bg-green-500/20 text-green-400 border border-green-500/30">
+                <CheckCircle2 className="h-3 w-3 mr-1" /> Integration Successful
+              </Badge>
+            )}
+            {pipelineStatus.errors.length > 0 && (
+              <Badge className="bg-red-500/20 text-red-400 border border-red-500/30">
+                <AlertCircle className="h-3 w-3 mr-1" /> Integration Issues
+              </Badge>
+            )}
+          </div>
+          
+          {/* Pipeline visualization */}
+          <div className="flex flex-wrap justify-center items-center gap-2 py-6">
+            {components
+              .filter((c) => componentConfigs[c.id].enabled)
+              .map((component, index, array) => (
+                <div key={component.id} className="flex items-center">
+                  <div
+                    className={`relative flex flex-col items-center justify-center p-4 rounded-lg 
+                    ${pipelineStatus.errors.some((e) => e.componentId === component.id)
+                        ? "bg-red-900/20 border border-red-500/50"
+                        : "bg-slate-700/50 border border-slate-600 hover:border-emerald-500/30 transition-colors"
+                    }`}
+                  >
+                    {pipelineStatus.errors.some((e) => e.componentId === component.id) && (
+                      <div className="absolute -top-2 -right-2">
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                          !
+                        </span>
+                      </div>
+                    )}
+                    <component.icon className="h-10 w-10 mb-2 text-emerald-400" />
+                    <span className="text-sm text-slate-200 font-medium">{component.name}</span>
+                    <span className="text-xs text-slate-400 mt-1">{componentConfigs[component.id].outputFormat}</span>
+                  </div>
+                  {index < array.length - 1 && (
+                    <div className="px-2">
+                      <ArrowRight className={`h-6 w-6 ${
+                        pipelineStatus.errors.some((e) => e.componentId === array[index + 1]?.id)
+                          ? "text-red-400"
+                          : "text-emerald-500"
+                      }`} />
+                    </div>
+                  )}
+                </div>
+              ))}
+          </div>
+          
+          {/* Run button */}
+          <div className="flex justify-center mt-4">
+            <Button 
+              onClick={runPipeline} 
+              disabled={pipelineStatus.running}
+              className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
+            >
+              {pipelineStatus.running ? (
+                <>
+                  <svg className="animate-spin h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Running Pipeline...
+                </>
+              ) : "Test Pipeline Integration"}
+            </Button>
+          </div>
+        </div>
+        
+        {/* Error messages */}
+        {pipelineStatus.errors.length > 0 && (
+          <div className="mt-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg">
+            <h3 className="text-red-400 font-medium flex items-center mb-2">
+              <AlertTriangle className="h-4 w-4 mr-2" />
+              Integration Issues Detected
+            </h3>
+            <ul className="space-y-2 text-sm">
+              {pipelineStatus.errors.map((error, index) => (
+                <li key={index} className="flex items-start gap-2 text-slate-300">
+                  <AlertCircle className="h-4 w-4 mt-0.5 text-red-400 flex-shrink-0" />
+                  <span>{error.message}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        
+        {/* Success message */}
+        {pipelineStatus.success && (
+          <div className="mt-6 p-4 bg-green-900/20 border border-green-500/50 rounded-lg">
+            <h3 className="text-green-400 font-medium flex items-center mb-2">
+              <CheckCircle2 className="h-4 w-4 mr-2" />
+              Pipeline Integration Successful
+            </h3>
+            <p className="text-sm text-slate-300">
+              All components are properly connected. Data flows smoothly through the entire pipeline.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Component Configuration */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>RAG Pipeline Components</CardTitle>
-            <CardDescription>Configure and connect your RAG pipeline components</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
             {components.map((component) => (
               <div
                 key={component.id}
-                className={`p-4 border rounded-lg ${
-                  pipelineStatus.errors.some((e) => e.componentId === component.id)
-                    ? "border-red-500 bg-red-50 dark:bg-red-900/20"
-                    : "border-gray-200 dark:border-gray-700"
+            className={`bg-slate-800/80 border rounded-xl overflow-hidden shadow-lg transition-colors
+              ${pipelineStatus.errors.some((e) => e.componentId === component.id)
+                ? "border-red-500/50"
+                : "border-slate-700 hover:border-slate-600"
                 }`}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <component.icon className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                    <span className="font-medium">{component.name}</span>
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <component.icon className="h-5 w-5 text-emerald-400" />
+                <h3 className="font-medium text-slate-200">{component.name}</h3>
                   </div>
                   <div className="flex items-center gap-2">
                     <Switch
                       id={`${component.id}-switch`}
                       checked={componentConfigs[component.id].enabled}
                       onCheckedChange={() => toggleComponent(component.id)}
+                  className="data-[state=checked]:bg-emerald-500"
                     />
-                    <Label htmlFor={`${component.id}-switch`}>
+                <Label htmlFor={`${component.id}-switch`} className="text-sm text-slate-300">
                       {componentConfigs[component.id].enabled ? "Enabled" : "Disabled"}
                     </Label>
                   </div>
                 </div>
-                <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">{component.description}</p>
-                <div className="flex flex-wrap gap-2">
+            
+            <div className="p-5">
+              <p className="text-sm text-slate-300 mb-4">{component.description}</p>
+              
+              <div className="space-y-3">
                   {component.expectedInput && (
-                    <Badge className="bg-slate-100 dark:bg-slate-800">
-                      Input: {component.expectedInput}
-                    </Badge>
-                  )}
                   <div className="flex items-center gap-2">
+                    <span className="text-xs text-slate-400">Expected Input:</span>
+                    <Badge className="bg-slate-700 text-slate-300 hover:bg-slate-700">
+                      {component.expectedInput}
+                    </Badge>
+                  </div>
+                  )}
+                
+                  <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-400">Output Format:</span>
                     <Badge
                       className={
                         componentConfigs[component.id].outputFormat !== component.outputFormat
-                          ? "bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300"
-                          : "bg-slate-100 dark:bg-slate-800"
+                        ? "bg-amber-500/20 text-amber-300 hover:bg-amber-500/30"
+                        : "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
                       }
                     >
-                      Output: {componentConfigs[component.id].outputFormat}
+                    {componentConfigs[component.id].outputFormat}
                     </Badge>
+                  
                     {componentConfigs[component.id].outputFormat !== component.outputFormat && (
                       <Button
-                        variant="ghost"
+                      variant="outline"
                         size="sm"
                         onClick={() => changeOutputFormat(component.id, component.outputFormat)}
+                      className="h-7 text-xs border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
                       >
                         Reset
                       </Button>
                     )}
                   </div>
                 </div>
+              
                 {pipelineStatus.errors.some((e) => e.componentId === component.id) && (
-                  <div className="mt-2 p-2 bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-300 rounded text-sm flex items-start gap-2">
+                <div className="mt-4 p-3 bg-red-900/20 border border-red-500/50 rounded-lg text-xs text-red-300 flex items-start gap-2">
                     <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                     <span>{pipelineStatus.errors.find((e) => e.componentId === component.id)?.message}</span>
-                  </div>
-                )}
-              </div>
-            ))}
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button variant="outline" onClick={introduceIssue}>
-              Introduce Issue
-            </Button>
-            <Button variant="outline" onClick={resetPipeline}>
-              Reset All
-            </Button>
-          </CardFooter>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Pipeline Status</CardTitle>
-            <CardDescription>Test the integration between components</CardDescription>
-          </CardHeader>
-          <CardContent className="min-h-[300px] flex flex-col">
-            <div className="flex-1 mb-4">
-              {!pipelineStatus.running && !pipelineStatus.success && pipelineStatus.errors.length === 0 && (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6">
-                  <div className="mb-4">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="64"
-                      height="64"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-slate-400"
-                    >
-                      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                      <path d="M12 8v4l3 3" />
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-medium mb-2">Ready to Test</h3>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm">
-                    Click "Run Pipeline" to test the integration between components. Try enabling/disabling components
-                    or introducing issues to see how they affect the pipeline.
-                  </p>
-                </div>
-              )}
-
-              {pipelineStatus.running && (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6">
-                  <div className="mb-4">
-                    <svg
-                      className="animate-spin h-12 w-12 text-emerald-600 dark:text-emerald-400"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                  </div>
-                  <h3 className="text-lg font-medium mb-2">Running Pipeline</h3>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm">
-                    Testing the integration between components...
-                  </p>
-                </div>
-              )}
-
-              {!pipelineStatus.running && pipelineStatus.success && (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6">
-                  <div className="mb-4 text-green-500">
-                    <CheckCircle2 size={48} />
-                  </div>
-                  <h3 className="text-lg font-medium mb-2">Pipeline Successful</h3>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm">
-                    All components are properly integrated and the data flows correctly through the pipeline.
-                  </p>
-                </div>
-              )}
-
-              {!pipelineStatus.running && pipelineStatus.errors.length > 0 && (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6">
-                  <div className="mb-4 text-red-500">
-                    <AlertCircle size={48} />
-                  </div>
-                  <h3 className="text-lg font-medium mb-2">Integration Issues Detected</h3>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">
-                    There are issues with the integration between components. Check the highlighted components for
-                    details.
-                  </p>
-                  <div className="w-full max-w-md bg-red-50 dark:bg-red-900/20 p-3 rounded-lg">
-                    <ul className="text-left text-sm text-red-800 dark:text-red-300 space-y-2">
-                      {pipelineStatus.errors.map((error, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                          <span>{error.message}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
                 </div>
               )}
             </div>
-
-            <div className="flex flex-col space-y-2">
-              <div className="flex items-center justify-center space-x-2">
-                {components
-                  .filter((c) => componentConfigs[c.id].enabled)
-                  .map((component, index, array) => (
-                    <div key={component.id} className="flex items-center">
-                      <div
-                        className={`flex flex-col items-center justify-center p-2 rounded-lg ${
-                          pipelineStatus.errors.some((e) => e.componentId === component.id)
-                            ? "bg-red-100 dark:bg-red-900/20"
-                            : "bg-slate-100 dark:bg-slate-800"
-                        }`}
-                      >
-                        <component.icon className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                        <span className="text-xs mt-1">{component.name}</span>
-                      </div>
-                      {index < array.length - 1 && <ArrowRight className="h-5 w-5 mx-1 text-slate-400" />}
                     </div>
                   ))}
               </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button onClick={runPipeline} disabled={pipelineStatus.running} className="w-full">
-              {pipelineStatus.running ? "Running..." : "Run Pipeline"}
+      
+      {/* Action buttons */}
+      <div className="flex flex-wrap gap-4 justify-center">
+        <Button
+          variant="outline"
+          onClick={introduceIssue}
+          className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
+        >
+          <Settings className="h-4 w-4 mr-2" />
+          Introduce Issue
+        </Button>
+        
+        <Button
+          variant="outline"
+          onClick={resetPipeline}
+          className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
+          Reset All
             </Button>
-          </CardFooter>
-        </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Integration Best Practices</CardTitle>
-          <CardDescription>Tips for successful RAG pipeline integration</CardDescription>
-        </CardHeader>
-        <CardContent>
+      {/* Best Practices */}
+      <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5">
+        <h3 className="text-sm font-medium text-emerald-400 mb-4">Integration Best Practices</h3>
+        
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="font-medium mb-2">Use Standardized Interfaces</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
-                Ensure components use compatible data formats and APIs. Consider using frameworks like LangChain or
-                LlamaIndex that provide standardized interfaces.
-              </p>
+          <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg transition-all hover:border-emerald-500/30">
+            <div className="flex items-center gap-2 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+              </svg>
+              <h4 className="font-medium text-slate-200">Standardized Interfaces</h4>
             </div>
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="font-medium mb-2">Implement Error Handling</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
-                Add robust error handling at each integration point. Gracefully handle failures and provide clear error
-                messages for troubleshooting.
-              </p>
-            </div>
-            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-              <h3 className="font-medium mb-2">Unified Monitoring</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
-                Implement centralized logging and monitoring across all components to quickly identify and resolve
-                integration issues.
-              </p>
-            </div>
+            <p className="text-sm text-slate-400">
+              Ensure components use compatible data formats and APIs. Consider frameworks like LangChain or LlamaIndex that provide standardized interfaces.
+            </p>
           </div>
-        </CardContent>
-      </Card>
+          
+          <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg transition-all hover:border-emerald-500/30">
+            <div className="flex items-center gap-2 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 8v4l3 3" />
+                <circle cx="12" cy="12" r="10" />
+              </svg>
+              <h4 className="font-medium text-slate-200">Error Handling</h4>
+            </div>
+            <p className="text-sm text-slate-400">
+              Add robust error handling at each integration point. Gracefully handle failures and provide clear error messages for troubleshooting.
+            </p>
+          </div>
+          
+          <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg transition-all hover:border-emerald-500/30">
+            <div className="flex items-center gap-2 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 3v18h18" />
+                <path d="m3 15 5-5 5 5 8-8" />
+              </svg>
+              <h4 className="font-medium text-slate-200">Unified Monitoring</h4>
+            </div>
+            <p className="text-sm text-slate-400">
+              Implement centralized logging and monitoring across all components to quickly identify and resolve integration issues.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -243,32 +243,37 @@ export default function ContextAssemblyDemo() {
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Context Assembly Demo</CardTitle>
-        <CardDescription>
-          Explore how different context assembly strategies affect the final prompt sent to the LLM
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-8">
+    <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg w-full">
+      <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-medium text-slate-200">Context Assembly Demo</h2>
+          <p className="text-slate-400 mt-1">
+            Explore how different context assembly strategies affect the final prompt sent to the LLM
+          </p>
+        </div>
+      </div>
+      <div className="p-6 space-y-8">
         {/* Row 1: Query, Settings and Retrieved Chunks */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Query and Settings */}
           <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-medium mb-2">User Query</h3>
+              <h3 className="text-lg font-medium text-slate-200 mb-2">User Query</h3>
               <Textarea
                 value={userQuery}
                 onChange={(e) => setUserQuery(e.target.value)}
                 placeholder="Enter your query here..."
-                className="min-h-[160px]"
+                disabled={true}
+                className="min-h-[160px] bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
               />
             </div>
 
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <Label>Token Limit: {tokenLimit}</Label>
-                <Badge className={`ml-2 ${tokenWarning ? "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80" : "text-foreground"}`}>
+                <Label className="text-slate-300">Token Limit: {tokenLimit}</Label>
+                <Badge className={`ml-2 ${tokenWarning
+                  ? "bg-red-900/20 border border-red-500/30 text-red-300"
+                  : "bg-slate-800 text-slate-300 border-slate-700"}`}>
                   {tokenCount} / {tokenLimit} tokens
                 </Badge>
               </div>
@@ -278,17 +283,28 @@ export default function ContextAssemblyDemo() {
                 max={4096}
                 step={256}
                 onValueChange={(value) => setTokenLimit(value[0])}
+                className="data-[active]:bg-emerald-500"
               />
             </div>
 
             <div className="flex items-center space-x-2">
-              <Switch id="show-metadata" checked={showMetadata} onCheckedChange={setShowMetadata} />
-              <Label htmlFor="show-metadata">Include metadata in context</Label>
+              <Switch
+                id="show-metadata"
+                checked={showMetadata}
+                onCheckedChange={setShowMetadata}
+                className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+              />
+              <Label htmlFor="show-metadata" className="text-slate-300">Include metadata in context</Label>
             </div>
 
             <div className="flex items-center space-x-2">
-              <Switch id="order-relevance" checked={orderByRelevance} onCheckedChange={setOrderByRelevance} />
-              <Label htmlFor="order-relevance">
+              <Switch
+                id="order-relevance"
+                checked={orderByRelevance}
+                onCheckedChange={setOrderByRelevance}
+                className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+              />
+              <Label htmlFor="order-relevance" className="text-slate-300">
                 {orderByRelevance ? "Order by relevance score" : "Order by recency"}
               </Label>
             </div>
@@ -296,23 +312,29 @@ export default function ContextAssemblyDemo() {
 
           {/* Retrieved Chunks */}
           <div>
-            <h3 className="text-lg font-medium mb-2">Retrieved Chunks</h3>
+            <h3 className="text-lg font-medium text-slate-200 mb-2">Retrieved Chunks</h3>
             <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
               {retrievedChunks.map((chunk) => (
                 <div
                   key={chunk.id}
-                  className={`border rounded-md p-3 cursor-pointer transition-colors ${selectedChunks.includes(chunk.id)
-                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                      : "hover:border-gray-400"
+                  className={`border rounded-md p-3 cursor-pointer transition-all duration-150 hover:shadow-md ${selectedChunks.includes(chunk.id)
+                    ? "border-emerald-500/50 bg-emerald-900/20 dark:bg-emerald-900/20 hover:border-emerald-400"
+                    : "border-slate-700 bg-slate-900/50 hover:border-slate-600 hover:bg-slate-900/70"
                     }`}
                   onClick={() => toggleChunk(chunk.id)}
                 >
                   <div className="flex justify-between items-start mb-1">
-                    <div className="font-medium">{chunk.source}</div>
-                    <Badge className="text-foreground">{chunk.score.toFixed(2)}</Badge>
+                    <div className="font-medium text-slate-200">{chunk.source}</div>
+                    <Badge className={
+                      selectedChunks.includes(chunk.id)
+                        ? "bg-emerald-900/30 border-emerald-500/50 text-emerald-300"
+                        : "bg-slate-800 text-slate-300 border-slate-700"
+                    }>
+                      {chunk.score.toFixed(2)}
+                    </Badge>
                   </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 line-clamp-2">{chunk.text}</p>
-                  <div className="flex justify-between text-xs text-gray-500">
+                  <p className="text-sm text-slate-400 mb-2 line-clamp-2">{chunk.text}</p>
+                  <div className="flex justify-between text-xs text-slate-500">
                     <span>{chunk.tokens} tokens</span>
                     <span>{chunk.metadata.date}</span>
                   </div>
@@ -326,26 +348,26 @@ export default function ContextAssemblyDemo() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Assembly Strategy */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium mb-2">Assembly Strategy</h3>
+            <h3 className="text-lg font-medium text-slate-200 mb-2">Assembly Strategy</h3>
             <Select value={assemblyStrategy} onValueChange={setAssemblyStrategy}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20 transition-colors duration-150 hover:border-slate-600">
                 <SelectValue placeholder="Select assembly strategy" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-slate-800 border-slate-700">
                 {Object.entries(assemblyStrategies).map(([key, strategy]) => (
-                  <SelectItem key={key} value={key}>
+                  <SelectItem key={key} value={key} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
                     {strategy.name} - {strategy.description}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md p-4 min-h-[300px] overflow-y-auto">
+
+            <div className="bg-amber-900/20 border border-amber-500/30 rounded-md p-4 min-h-[300px] overflow-y-auto">
               <div className="flex items-start">
-                <Info className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mr-2 mt-0.5" />
+                <Info className="h-5 w-5 text-amber-400 mr-2 mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-yellow-800 dark:text-yellow-300">Assembly Strategy Notes</h4>
-                  <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+                  <h4 className="font-medium text-amber-300">Assembly Strategy Notes</h4>
+                  <p className="text-sm text-amber-300/90 mt-1">
                     {assemblyStrategy === "simple" &&
                       "Simple concatenation preserves all information but may include redundancies and exceed token limits with many chunks."}
                     {assemblyStrategy === "deduplicated" &&
@@ -363,13 +385,16 @@ export default function ContextAssemblyDemo() {
           {/* Assembled Context */}
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">Assembled Context</h3>
+              <h3 className="text-lg font-medium text-slate-200">Assembled Context</h3>
               <div className="flex items-center space-x-2">
-                <Badge className={tokenWarning ? "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80" : "text-foreground"}>
+                <Badge className={tokenWarning
+                  ? "bg-red-900/20 border border-red-500/30 text-red-300"
+                  : "bg-slate-800 text-slate-300 border-slate-700"
+                }>
                   {tokenCount} / {tokenLimit} tokens
                 </Badge>
                 {tokenWarning && (
-                  <div className="flex items-center text-red-500 text-sm">
+                  <div className="flex items-center text-red-300 text-sm">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     Token limit exceeded
                   </div>
@@ -377,7 +402,7 @@ export default function ContextAssemblyDemo() {
               </div>
             </div>
 
-            <div className="border rounded-md p-4 bg-gray-50 dark:bg-gray-900 min-h-[400px] max-h-[600px] overflow-y-auto whitespace-pre-wrap">
+            <div className="border border-slate-700 rounded-md p-4 bg-slate-900/50 min-h-[400px] max-h-[600px] overflow-y-auto whitespace-pre-wrap text-slate-300 transition-all duration-200 hover:border-slate-600 focus-within:border-emerald-500/50">
               {assembledContext}
             </div>
           </div>
@@ -387,26 +412,26 @@ export default function ContextAssemblyDemo() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Prompt Template */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium mb-2">Prompt Template</h3>
+            <h3 className="text-lg font-medium text-slate-200 mb-2">Prompt Template</h3>
             <Select value={promptTemplate} onValueChange={setPromptTemplate}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20 transition-colors duration-150 hover:border-slate-600">
                 <SelectValue placeholder="Select prompt template" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-slate-800 border-slate-700">
                 {Object.entries(promptTemplates).map(([key, template]) => (
-                  <SelectItem key={key} value={key}>
+                  <SelectItem key={key} value={key} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
                     {template.name} - {template.description}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4 min-h-[300px] overflow-y-auto">
+            <div className="bg-emerald-900/20 border border-emerald-500/50 rounded-md p-4 min-h-[300px] overflow-y-auto">
               <div className="flex items-start">
-                <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" />
+                <Info className="h-5 w-5 text-emerald-400 mr-2 mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-blue-800 dark:text-blue-300">Prompt Template Notes</h4>
-                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                  <h4 className="font-medium text-emerald-300">Prompt Template Notes</h4>
+                  <p className="text-sm text-emerald-300/90 mt-1">
                     {promptTemplate === "basic" &&
                       "Basic templates are simple but may not provide enough guidance to the LLM about how to use the context or handle missing information."}
                     {promptTemplate === "detailed" &&
@@ -422,13 +447,16 @@ export default function ContextAssemblyDemo() {
           {/* Final Prompt */}
           <div>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">Final Prompt to LLM</h3>
+              <h3 className="text-lg font-medium text-slate-200">Final Prompt to LLM</h3>
               <div className="flex items-center space-x-2">
-                <Badge className={tokenWarning ? "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80" : "text-foreground"}>
+                <Badge className={tokenWarning
+                  ? "bg-red-900/20 border border-red-500/30 text-red-300"
+                  : "bg-slate-800 text-slate-300 border-slate-700"
+                }>
                   {tokenCount} / {tokenLimit} tokens
                 </Badge>
                 {tokenWarning && (
-                  <div className="flex items-center text-red-500 text-sm">
+                  <div className="flex items-center text-red-300 text-sm">
                     <AlertCircle className="h-4 w-4 mr-1" />
                     Token limit exceeded
                   </div>
@@ -436,12 +464,26 @@ export default function ContextAssemblyDemo() {
               </div>
             </div>
 
-            <div className="border rounded-md p-4 bg-gray-50 dark:bg-gray-900 min-h-[400px] max-h-[600px] overflow-y-auto whitespace-pre-wrap">
+            <div className="border border-slate-700 rounded-md p-4 bg-slate-900/50 min-h-[400px] max-h-[600px] overflow-y-auto whitespace-pre-wrap text-slate-300 transition-all duration-200 hover:border-slate-600 focus-within:border-emerald-500/50">
               {finalPrompt}
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Info Panel */}
+        <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8 transition-all duration-200 hover:bg-slate-800/70 hover:border-slate-600">
+          <div className="flex items-start">
+            <Info className="h-5 w-5 text-emerald-400 mr-2 mt-0.5" />
+            <div>
+              <h4 className="font-medium text-slate-200">About Context Assembly</h4>
+              <p className="text-sm text-slate-400 mt-1">
+                Context assembly is a critical step in RAG pipelines. The way context is structured, formatted, and presented to the LLM
+                can significantly impact the quality and accuracy of responses. Experiment with different strategies to see what works best for your use case.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

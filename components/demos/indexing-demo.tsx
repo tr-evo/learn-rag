@@ -174,6 +174,47 @@ export default function IndexingDemo() {
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    
+    // Draw grid
+    const gridSize = 20
+    const gridColor = "rgba(148, 163, 184, 0.1)" // Light slate color with low opacity
+    const axisColor = "rgba(148, 163, 184, 0.2)" // Slightly more visible for axes
+    
+    // Draw grid lines
+    ctx.strokeStyle = gridColor
+    ctx.lineWidth = 1
+    
+    // Vertical grid lines
+    for (let x = 0; x <= canvas.width; x += gridSize) {
+      ctx.beginPath()
+      ctx.moveTo(x, 0)
+      ctx.lineTo(x, canvas.height)
+      ctx.stroke()
+    }
+    
+    // Horizontal grid lines
+    for (let y = 0; y <= canvas.height; y += gridSize) {
+      ctx.beginPath()
+      ctx.moveTo(0, y)
+      ctx.lineTo(canvas.width, y)
+      ctx.stroke()
+    }
+    
+    // Draw axes
+    ctx.strokeStyle = axisColor
+    ctx.lineWidth = 2
+    
+    // X-axis (horizontal middle)
+    ctx.beginPath()
+    ctx.moveTo(0, canvas.height / 2)
+    ctx.lineTo(canvas.width, canvas.height / 2)
+    ctx.stroke()
+    
+    // Y-axis (vertical middle)
+    ctx.beginPath()
+    ctx.moveTo(canvas.width / 2, 0)
+    ctx.lineTo(canvas.width / 2, canvas.height)
+    ctx.stroke()
 
     // We'll visualize only the first two dimensions of the vectors for simplicity
     const drawVector = (vector: number[], color: string, size = 5) => {
@@ -181,6 +222,7 @@ export default function IndexingDemo() {
       const x = (vector[0] + 1) * (canvas.width / 2)
       const y = (vector[1] + 1) * (canvas.height / 2)
 
+      // Draw the point
       ctx.fillStyle = color
       ctx.beginPath()
       ctx.arc(x, y, size, 0, Math.PI * 2)
@@ -269,65 +311,72 @@ export default function IndexingDemo() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="search" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="search">Vector Search</TabsTrigger>
-          <TabsTrigger value="config">Index Configuration</TabsTrigger>
-          <TabsTrigger value="issues">Common Issues</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-3 bg-slate-800 p-1">
+          <TabsTrigger value="search" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-200">Vector Search</TabsTrigger>
+          <TabsTrigger value="config" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-200">Index Configuration</TabsTrigger>
+          <TabsTrigger value="issues" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-200">Common Issues</TabsTrigger>
         </TabsList>
 
         {/* Vector Search Tab */}
         <TabsContent value="search" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Vector Visualization */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Database className="h-5 w-5" />
-                  Vector Space Visualization
-                </CardTitle>
-                <CardDescription>
-                  2D projection of vectors (green = indexed chunks, blue = query, orange = results)
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="border rounded-md p-1 bg-slate-50 dark:bg-slate-900">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <div>
+                  <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                    <Database className="h-5 w-5 text-emerald-400" />
+                    Vector Space Visualization
+                  </h3>
+                  <p className="text-slate-400 text-sm mt-1">
+                    2D projection of vectors (green = indexed chunks, blue = query, orange = results)
+                  </p>
+                </div>
+              </div>
+              <div className="p-5">
+                <div className="border border-slate-700 rounded-md p-1 bg-slate-900/50">
                   <canvas ref={canvasRef} width={400} height={300} className="w-full h-[300px] rounded"></canvas>
                 </div>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <div className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
+              </div>
+              <div className="px-5 py-4 border-t border-slate-700 flex justify-between items-center">
+                <div className="text-sm text-slate-400 flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-emerald-400" />
                   Last refreshed: {lastRefreshed.toLocaleTimeString()}
                 </div>
-                <Button size="sm" onClick={refreshIndex} className="flex items-center gap-2">
+                <Button 
+                  onClick={refreshIndex} 
+                  className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all flex items-center gap-2"
+                >
                   <RefreshCw className="h-4 w-4" />
                   Refresh Index
                 </Button>
-              </CardFooter>
-            </Card>
+              </div>
+            </div>
 
             {/* Search Controls */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Search className="h-5 w-5" />
-                  Vector Search
-                </CardTitle>
-                <CardDescription>Search the vector index for similar content</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+              <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+                <div>
+                  <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                    <Search className="h-5 w-5 text-emerald-400" />
+                    Vector Search
+                  </h3>
+                  <p className="text-slate-400 text-sm mt-1">Search the vector index for similar content</p>
+                </div>
+              </div>
+              <div className="p-5 space-y-4">
                 <div className="space-y-2">
-                  <Label>Select a query</Label>
+                  <Label className="text-slate-300">Select a query</Label>
                   <Select
                     value={selectedQuery === sampleQueries[0] ? "0" : selectedQuery === sampleQueries[1] ? "1" : "2"}
                     onValueChange={(value) => setSelectedQuery(sampleQueries[Number.parseInt(value)])}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                       <SelectValue placeholder="Select a query" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-slate-800 border-slate-700">
                       {sampleQueries.map((query, index) => (
-                        <SelectItem key={index} value={index.toString()}>
+                        <SelectItem key={index} value={index.toString()} className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">
                           {query.text}
                         </SelectItem>
                       ))}
@@ -337,22 +386,26 @@ export default function IndexingDemo() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <Badge className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-900/50 border-slate-700 text-slate-300 hover:bg-slate-800">
                       Index Size: {indexedChunks.length} chunks
                     </Badge>
-                    <Badge className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-900/50 border-slate-700 text-slate-300 hover:bg-slate-800">
                       Metric: {indexConfig.distanceMetric === "cosine" ? "Cosine Similarity" : "Euclidean Distance"}
                     </Badge>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge className={indexConfig.approximateSearch ? "" : ""}>
+                    <Badge className={`bg-slate-900/50 border-slate-700 text-slate-300 hover:bg-slate-800 ${indexConfig.approximateSearch ? "border-emerald-500/30" : ""}`}>
                       {indexConfig.approximateSearch ? "Approximate" : "Exact"} Search
                     </Badge>
                   </div>
                 </div>
-              </CardContent>
-              <CardFooter>
-                <Button onClick={performSearch} disabled={isSearching} className="w-full flex items-center gap-2">
+              </div>
+              <div className="px-5 py-4 border-t border-slate-700">
+                <Button 
+                  onClick={performSearch} 
+                  disabled={isSearching} 
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all flex items-center gap-2 disabled:opacity-70"
+                >
                   {isSearching ? (
                     <>Searching...</>
                   ) : (
@@ -362,41 +415,45 @@ export default function IndexingDemo() {
                     </>
                   )}
                 </Button>
-              </CardFooter>
-            </Card>
+              </div>
+            </div>
           </div>
 
           {/* Search Results */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">Search Results</CardTitle>
-              <CardDescription>
-                {searchResults.length > 0
-                  ? `Found ${searchResults.length} similar chunks in ${searchTime.toFixed(1)}ms`
-                  : "Run a search to see results"}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <div>
+                <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                  Search Results
+                </h3>
+                <p className="text-slate-400 text-sm mt-1">
+                  {searchResults.length > 0
+                    ? `Found ${searchResults.length} similar chunks in ${searchTime.toFixed(1)}ms`
+                    : "Run a search to see results"}
+                </p>
+              </div>
+            </div>
+            <div className="p-5">
               {searchResults.length === 0 ? (
-                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                <div className="text-center py-8 text-slate-400">
                   No search results yet. Click "Search Vector Index" to find similar content.
                 </div>
               ) : (
                 <div className="space-y-4">
                   {searchResults.map((result, index) => (
-                    <div key={result.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                    <div key={result.id} className="p-4 border border-slate-700 rounded-lg bg-slate-900/50 hover:border-slate-600 transition-colors">
                       <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-medium">Result #{index + 1}</h3>
-                        <Badge>
+                        <h3 className="text-slate-200 font-medium">Result #{index + 1}</h3>
+                        <Badge className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">
                           {indexConfig.distanceMetric === "cosine"
                             ? `Similarity: ${result.similarity.toFixed(3)}`
                             : `Distance: ${(-result.similarity).toFixed(3)}`}
                         </Badge>
                       </div>
-                      <p className="text-slate-600 dark:text-slate-300 mb-2">{result.text}</p>
+                      <p className="text-slate-300 mb-2">{result.text}</p>
                       <div className="flex flex-wrap gap-1">
                         {Object.entries(result.metadata).map(([key, value]) => (
-                          <Badge key={key} className="text-xs">
+                          <Badge key={key} className="text-xs bg-slate-800 text-slate-300 border-slate-700">
                             {key}: {value as string}
                           </Badge>
                         ))}
@@ -405,37 +462,39 @@ export default function IndexingDemo() {
                   ))}
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Index Configuration Tab */}
         <TabsContent value="config">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Settings className="h-5 w-5" />
-                Index Configuration
-              </CardTitle>
-              <CardDescription>Configure your vector index parameters</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <div>
+                <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                  <Settings className="h-5 w-5 text-emerald-400" />
+                  Index Configuration
+                </h3>
+                <p className="text-slate-400 text-sm mt-1">Configure your vector index parameters</p>
+              </div>
+            </div>
+            <div className="p-5 space-y-6">
               {/* Distance Metric */}
               <div className="space-y-2">
-                <Label>Distance Metric</Label>
+                <Label className="text-slate-300">Distance Metric</Label>
                 <Select
                   value={indexConfig.distanceMetric}
                   onValueChange={(value) => setIndexConfig({ ...indexConfig, distanceMetric: value })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                     <SelectValue placeholder="Select distance metric" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="cosine">Cosine Similarity</SelectItem>
-                    <SelectItem value="euclidean">Euclidean Distance</SelectItem>
+                  <SelectContent className="bg-slate-800 border-slate-700">
+                    <SelectItem value="cosine" className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">Cosine Similarity</SelectItem>
+                    <SelectItem value="euclidean" className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">Euclidean Distance</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-sm text-slate-400">
                   {indexConfig.distanceMetric === "cosine"
                     ? "Cosine similarity measures the angle between vectors, focusing on direction rather than magnitude."
                     : "Euclidean distance measures the straight-line distance between vectors in the embedding space."}
@@ -445,14 +504,15 @@ export default function IndexingDemo() {
               {/* Search Type */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="approximate-search">Approximate Search</Label>
+                  <Label htmlFor="approximate-search" className="text-slate-300">Approximate Search</Label>
                   <Switch
                     id="approximate-search"
                     checked={indexConfig.approximateSearch}
                     onCheckedChange={(checked) => setIndexConfig({ ...indexConfig, approximateSearch: checked })}
+                    className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                   />
                 </div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-sm text-slate-400">
                   {indexConfig.approximateSearch
                     ? "Approximate search (ANN) trades perfect accuracy for significant speed improvements, essential for large datasets."
                     : "Exact search guarantees finding the true nearest neighbors but can be slower on large datasets."}
@@ -462,8 +522,8 @@ export default function IndexingDemo() {
               {/* Index Size */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label>Index Size (chunks)</Label>
-                  <span className="text-sm font-medium">{indexConfig.indexSize}</span>
+                  <Label className="text-slate-300">Index Size (chunks)</Label>
+                  <span className="text-sm font-medium text-slate-300">{indexConfig.indexSize}</span>
                 </div>
                 <Slider
                   value={[indexConfig.indexSize]}
@@ -471,8 +531,9 @@ export default function IndexingDemo() {
                   max={1000}
                   step={5}
                   onValueChange={(value) => setIndexConfig({ ...indexConfig, indexSize: value[0] })}
+                  className="[&>span]:bg-emerald-500"
                 />
-                <div className="flex justify-between text-xs text-slate-500">
+                <div className="flex justify-between text-xs text-slate-400">
                   <span>Small (5)</span>
                   <span>Medium (100)</span>
                   <span>Large (1000)</span>
@@ -482,8 +543,8 @@ export default function IndexingDemo() {
               {/* Refresh Interval */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label>Refresh Interval (seconds)</Label>
-                  <span className="text-sm font-medium">{indexConfig.refreshInterval}s</span>
+                  <Label className="text-slate-300">Refresh Interval (seconds)</Label>
+                  <span className="text-sm font-medium text-slate-300">{indexConfig.refreshInterval}s</span>
                 </div>
                 <Slider
                   value={[indexConfig.refreshInterval]}
@@ -491,15 +552,16 @@ export default function IndexingDemo() {
                   max={120}
                   step={5}
                   onValueChange={(value) => setIndexConfig({ ...indexConfig, refreshInterval: value[0] })}
+                  className="[&>span]:bg-emerald-500"
                 />
-                <div className="flex justify-between text-xs text-slate-500">
+                <div className="flex justify-between text-xs text-slate-400">
                   <span>Frequent (5s)</span>
                   <span>Medium (60s)</span>
                   <span>Infrequent (120s)</span>
                 </div>
               </div>
-            </CardContent>
-            <CardFooter className="flex justify-between">
+            </div>
+            <div className="px-5 py-4 border-t border-slate-700 flex justify-between items-center">
               <Button
                 variant="outline"
                 onClick={() => {
@@ -510,55 +572,61 @@ export default function IndexingDemo() {
                     refreshInterval: 30,
                   })
                 }}
+                className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
               >
                 Reset to Defaults
               </Button>
-              <Button onClick={refreshIndex} className="flex items-center gap-2">
+              <Button 
+                onClick={refreshIndex} 
+                className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all flex items-center gap-2"
+              >
                 <RefreshCw className="h-4 w-4" />
                 Apply & Refresh Index
               </Button>
-            </CardFooter>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Index Performance Characteristics</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg mt-6">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <div>
+                <h3 className="text-slate-200 font-medium">Index Performance Characteristics</h3>
+              </div>
+            </div>
+            <div className="p-5">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <Zap className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50">
+                  <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-emerald-400" />
                     Search Speed
                   </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                  <p className="text-sm text-slate-300">
                     {indexConfig.approximateSearch
                       ? "Fast, scales well to large datasets due to approximate search algorithms."
                       : "Slower on large datasets as exact search examines all vectors."}
                     {indexConfig.indexSize > 500 && !indexConfig.approximateSearch && (
-                      <span className="block mt-2 text-amber-600 dark:text-amber-400">
+                      <span className="block mt-2 text-amber-300">
                         Warning: Exact search on large indices may cause performance issues.
                       </span>
                     )}
                   </p>
                 </div>
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50">
+                  <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
                     Result Quality
                   </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                  <p className="text-sm text-slate-300">
                     {indexConfig.approximateSearch
                       ? "Good but not perfect. May occasionally miss the absolute best match."
                       : "Highest quality results, guaranteed to find the true nearest neighbors."}
                   </p>
                 </div>
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <RefreshCw className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50">
+                  <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
+                    <RefreshCw className="h-5 w-5 text-emerald-400" />
                     Freshness
                   </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                  <p className="text-sm text-slate-300">
                     {indexConfig.refreshInterval < 15
                       ? "Very fresh data with frequent updates, but higher system load."
                       : indexConfig.refreshInterval < 60
@@ -567,36 +635,43 @@ export default function IndexingDemo() {
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </TabsContent>
 
         {/* Common Issues Tab */}
         <TabsContent value="issues">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5" />
-                Common Indexing Issues
-              </CardTitle>
-              <CardDescription>Simulate and understand common problems with vector indices</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <div>
+                <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                  <AlertCircle className="h-5 w-5 text-emerald-400" />
+                  Common Indexing Issues
+                </h3>
+                <p className="text-slate-400 text-sm mt-1">Simulate and understand common problems with vector indices</p>
+              </div>
+            </div>
+            <div className="p-5 space-y-6">
               {/* Stale Index */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="stale-index" className="flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-amber-500" />
+                  <Label htmlFor="stale-index" className="flex items-center gap-2 text-slate-300">
+                    <AlertCircle className="h-4 w-4 text-amber-400" />
                     Simulate Stale Index
                   </Label>
-                  <Switch id="stale-index" checked={simulateStaleIndex} onCheckedChange={setSimulateStaleIndex} />
+                  <Switch 
+                    id="stale-index" 
+                    checked={simulateStaleIndex} 
+                    onCheckedChange={setSimulateStaleIndex} 
+                    className="data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+                  />
                 </div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-sm text-slate-400">
                   When enabled, the index won't update when refreshed, simulating an outdated index that returns stale
                   results.
                 </p>
                 {simulateStaleIndex && (
-                  <div className="p-3 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300 rounded-md text-sm flex items-start gap-2">
+                  <div className="p-3 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-md text-sm flex items-start gap-2">
                     <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                     <span>
                       Stale index detected! The index is not being updated with new or changed documents. This can lead
@@ -609,18 +684,23 @@ export default function IndexingDemo() {
               {/* Partial Index */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="partial-index" className="flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-amber-500" />
+                  <Label htmlFor="partial-index" className="flex items-center gap-2 text-slate-300">
+                    <AlertCircle className="h-4 w-4 text-amber-400" />
                     Simulate Partial Index
                   </Label>
-                  <Switch id="partial-index" checked={simulatePartialIndex} onCheckedChange={setSimulatePartialIndex} />
+                  <Switch 
+                    id="partial-index" 
+                    checked={simulatePartialIndex} 
+                    onCheckedChange={setSimulatePartialIndex} 
+                    className="data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+                  />
                 </div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-sm text-slate-400">
                   When enabled, some documents will be missing from the index, simulating failed indexing or incomplete
                   data.
                 </p>
                 {simulatePartialIndex && (
-                  <div className="p-3 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300 rounded-md text-sm flex items-start gap-2">
+                  <div className="p-3 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-md text-sm flex items-start gap-2">
                     <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                     <span>
                       Partial index detected! Some documents are missing from the index. This can lead to incomplete
@@ -633,18 +713,23 @@ export default function IndexingDemo() {
               {/* Slow Search */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="slow-search" className="flex items-center gap-2">
-                    <AlertCircle className="h-4 w-4 text-amber-500" />
+                  <Label htmlFor="slow-search" className="flex items-center gap-2 text-slate-300">
+                    <AlertCircle className="h-4 w-4 text-amber-400" />
                     Simulate Slow Search
                   </Label>
-                  <Switch id="slow-search" checked={simulateSlowSearch} onCheckedChange={setSimulateSlowSearch} />
+                  <Switch 
+                    id="slow-search" 
+                    checked={simulateSlowSearch} 
+                    onCheckedChange={setSimulateSlowSearch} 
+                    className="data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
+                  />
                 </div>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-sm text-slate-400">
                   When enabled, searches will take longer, simulating performance issues with large or poorly configured
                   indices.
                 </p>
                 {simulateSlowSearch && (
-                  <div className="p-3 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-300 rounded-md text-sm flex items-start gap-2">
+                  <div className="p-3 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-md text-sm flex items-start gap-2">
                     <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                     <span>
                       Slow search performance detected! This could be due to a large index size, inefficient index
@@ -653,49 +738,70 @@ export default function IndexingDemo() {
                   </div>
                 )}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Best Practices for Vector Indexing</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg mt-6">
+            <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
+              <div>
+                <h3 className="text-slate-200 font-medium">Best Practices for Vector Indexing</h3>
+              </div>
+            </div>
+            <div className="p-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2">Choose the Right Index Type</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50 hover:border-slate-600 transition-colors">
+                  <h3 className="text-slate-200 font-medium mb-2">Choose the Right Index Type</h3>
+                  <p className="text-sm text-slate-300">
                     Different vector databases offer various index types (HNSW, IVF, etc.). Choose based on your dataset
                     size, query patterns, and accuracy requirements. For large datasets, approximate nearest neighbor
                     (ANN) algorithms are usually necessary.
                   </p>
                 </div>
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2">Implement Regular Refresh Cycles</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50 hover:border-slate-600 transition-colors">
+                  <h3 className="text-slate-200 font-medium mb-2">Implement Regular Refresh Cycles</h3>
+                  <p className="text-sm text-slate-300">
                     Set up automated index refresh processes that align with your data update frequency. For rapidly
                     changing data, consider incremental updates rather than full rebuilds to maintain freshness without
                     excessive overhead.
                   </p>
                 </div>
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2">Monitor Index Health</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50 hover:border-slate-600 transition-colors">
+                  <h3 className="text-slate-200 font-medium mb-2">Monitor Index Health</h3>
+                  <p className="text-sm text-slate-300">
                     Implement monitoring for index size, query latency, and indexing errors. Set up alerts for failed
                     indexing jobs or performance degradation to catch issues before they affect users.
                   </p>
                 </div>
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2">Plan for Scale</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50 hover:border-slate-600 transition-colors">
+                  <h3 className="text-slate-200 font-medium mb-2">Plan for Scale</h3>
+                  <p className="text-sm text-slate-300">
                     Design your indexing strategy with future growth in mind. Consider sharding, partitioning, or
                     clustering strategies that will allow your index to scale horizontally as your data volume
                     increases.
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+          
+          <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
+            <h3 className="text-slate-200 font-medium mb-3 flex items-center gap-2">
+              <Database className="h-5 w-5 text-emerald-400" />
+              Vector Database Resources
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="text-sm text-slate-300">
+                <p>Optimizing vector search configurations requires balancing search speed, result quality, and resource usage based on your specific use case needs.</p>
+              </div>
+              <div>
+                <Button 
+                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
+                >
+                  Learn More About Vector Databases
+                </Button>
+              </div>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
