@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
+import { AlertCircle } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 // Sample documents for the demo
 const sampleDocuments = [
@@ -263,6 +265,10 @@ const retrievalMethods2 = {
   hybrid: [2, 1, 3, 5, 4], // Document IDs for hybrid search
 }
 
+// For TypeScript - extend the document type with rrf_score
+type EnhancedDocument = typeof sampleDocuments[0] & { rrf_score?: number }
+type RerankedDocument = typeof documents[0] & { rrf_score?: number }
+
 export default function RerankingFusionDemo() {
   const [activeTab, setActiveTab] = useState("reranking")
   const [rerankingMethod, setRerankingMethod] = useState("reciprocal-rank")
@@ -276,7 +282,7 @@ export default function RerankingFusionDemo() {
   const [hasQueried, setHasQueried] = useState(false)
 
   // State for retrieval methods
-  const [initialResults, setInitialResults] = useState<typeof sampleDocuments>([])
+  const [initialResults, setInitialResults] = useState<EnhancedDocument[]>([])
 
   // State for reranking and fusion configuration
   const [enableReranking, setEnableReranking] = useState(true)
@@ -285,7 +291,7 @@ export default function RerankingFusionDemo() {
   const [secondaryRetrievalMethod, setSecondaryRetrievalMethod] = useState("keyword")
 
   // State for the final results
-  const [finalResults, setFinalResults] = useState<typeof sampleDocuments>([])
+  const [finalResults, setFinalResults] = useState<EnhancedDocument[]>([])
 
   // Simulation options
   const [simulateLatency, setSimulateLatency] = useState(false)
@@ -293,8 +299,13 @@ export default function RerankingFusionDemo() {
 
   // Calculate reranked documents based on selected method and weights
   const getRankedDocuments = () => {
-    let rankedDocs = [...documents]
+    let rankedDocs = [...documents] as RerankedDocument[]
 
+    // First, use base retrieval method to get initial ordering
+    const orderedIds = retrievalMethods2[retrievalMethod as keyof typeof retrievalMethods2]
+    rankedDocs = orderedIds.map((id) => documents.find((doc) => doc.id === id)!) as RerankedDocument[]
+    
+    // Only apply reranking if it's enabled
     if (useReranking) {
       if (rerankingMethod === "weighted-score") {
         rankedDocs.sort((a, b) => {
@@ -305,16 +316,31 @@ export default function RerankingFusionDemo() {
           return scoreB - scoreA
         })
       } else if (rerankingMethod === "reciprocal-rank") {
-        // Simulate reciprocal rank fusion
-        rankedDocs.sort((a, b) => b.relevanceScore + b.semanticScore - (a.relevanceScore + a.semanticScore))
+        // Apply RRF to the rankedDocs, but only if reranking is enabled
+        // First, assign initial RRF scores based on position
+        rankedDocs.forEach((doc, index) => {
+          const rank = index + 1;
+          doc.rrf_score = 1.0 / (rank + 60); // k=60 is common in RRF
+        });
+        
+        // Create a second ranking based on recency
+        const recencyRanking = [...rankedDocs].sort((a, b) => b.recencyScore - a.recencyScore);
+        
+        // Add RRF scores from recency ranking
+        recencyRanking.forEach((doc, index) => {
+          const rank = index + 1;
+          const docInResults = rankedDocs.find(d => d.id === doc.id);
+          if (docInResults) {
+            docInResults.rrf_score = (docInResults.rrf_score || 0) + 1.0 / (rank + 60);
+          }
+        });
+        
+        // Sort by combined RRF scores
+        rankedDocs.sort((a, b) => ((b.rrf_score || 0) - (a.rrf_score || 0)));
       }
-    } else {
-      // Use base retrieval method without reranking
-      const orderedIds = retrievalMethods2[retrievalMethod as keyof typeof retrievalMethods2]
-      rankedDocs = orderedIds.map((id) => documents.find((doc) => doc.id === id)!)
     }
 
-    return rankedDocs
+    return rankedDocs;
   }
 
   // Get documents for fusion demonstration
@@ -346,7 +372,7 @@ export default function RerankingFusionDemo() {
     // Sort by fused scores
     const sortedIds = [...fusedScores.entries()].sort((a, b) => b[1] - a[1]).map((entry) => entry[0])
 
-    return sortedIds.map((id) => documents.find((doc) => doc.id === id)!)
+    return sortedIds.map((id) => documents.find((doc) => doc.id === id)!) as RerankedDocument[]
   }
 
   const displayedDocuments = activeTab === "fusion" ? getFusedDocuments() : getRankedDocuments()
@@ -362,7 +388,7 @@ export default function RerankingFusionDemo() {
     await new Promise((resolve) => setTimeout(resolve, retrievalDelay))
 
     // Get initial results based on selected method
-    let results = [...sampleDocuments]
+    let results: EnhancedDocument[] = [...sampleDocuments]
       .sort((a, b) => {
         return b.scores[retrievalMethod as keyof typeof b.scores] - a.scores[retrievalMethod as keyof typeof a.scores]
       })
@@ -476,18 +502,43 @@ export default function RerankingFusionDemo() {
             0.6 * b.features.queryOverlap + 0.25 * b.features.documentRecency + 0.15 * b.features.documentAuthority
           return scoreB - scoreA
         })
-      } else if (rerankingMethod === "reciprocalRank") {
-        // Keep the existing order but add simulated RRF scores
+      } else if (rerankingMethod === "reciprocal-rank") {
+        // Actually implement reciprocal rank fusion
+        
+        // In a real system, RRF combines results from multiple retrievers
+        // For this demo, we'll simulate two rankings:
+        // 1. The current ranking based on the retrievalMethod
+        // 2. A ranking based on document recency
+        
+        // First, assign RRF scores based on current positions
         results.forEach((doc, index) => {
-          doc.rrf_score = 1.0 / (index + 1)
+          const rank = index + 1
+          doc.rrf_score = 1.0 / (rank + 60) // k=60 is common in RRF
         })
+        
+        // Create a second ranking based on document recency
+        const recencyRanking = [...results].sort((a, b) => 
+          b.features.documentRecency - a.features.documentRecency
+        )
+        
+        // Add RRF scores from recency ranking
+        recencyRanking.forEach((doc, index) => {
+          const rank = index + 1
+          const docInResults = results.find(d => d.id === doc.id)
+          if (docInResults) {
+            docInResults.rrf_score = (docInResults.rrf_score || 0) + 1.0 / (rank + 60)
+          }
+        })
+        
+        // Sort by combined RRF scores
+        results.sort((a, b) => (b.rrf_score || 0) - (a.rrf_score || 0))
       }
     }
 
     // Simulate conflicting results if enabled
     if (simulateConflictingResults) {
       // Create a conflicting document
-      const conflictDoc = {
+      const conflictDoc: EnhancedDocument = {
         id: 100,
         title: "Conflicting Information on Vector Databases",
         content:
@@ -505,11 +556,10 @@ export default function RerankingFusionDemo() {
           documentRecency: 1.0,
           documentAuthority: 0.5,
         },
-        isConflicting: true,
       }
 
       // Add to the beginning of results
-      results.unshift(conflictDoc as any)
+      results.unshift(conflictDoc)
       results = results.slice(0, 5) // Keep top 5
     }
 
@@ -531,7 +581,7 @@ export default function RerankingFusionDemo() {
         time += 500 // Cross-encoder is slow
       } else if (rerankingMethod === "linearCombination") {
         time += 200 // Feature combination is medium
-      } else if (rerankingMethod === "reciprocalRank") {
+      } else if (rerankingMethod === "reciprocal-rank") {
         time += 50 // RRF is fast
       }
     }
@@ -610,6 +660,23 @@ export default function RerankingFusionDemo() {
                       </Select>
                     </div>
 
+                    {rerankingMethod === "reciprocal-rank" && (
+                      <Alert>
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Reciprocal Rank Fusion (RRF)</AlertTitle>
+                        <AlertDescription>
+                          <p className="text-sm mt-2">
+                            RRF combines results from multiple ranked lists based on document positions rather than scores.
+                            For each document, its RRF score is calculated as: Σ 1/(rank + k) across all lists.
+                          </p>
+                          <p className="text-sm mt-2">
+                            In production, RRF is used to merge results from different retrieval methods (BM25, vector search).
+                            This demo simulates this by using initial ranks and a secondary ranking based on document recency.
+                          </p>
+                        </AlertDescription>
+                      </Alert>
+                    )}
+
                     {rerankingMethod === "weighted-score" && (
                       <div className="space-y-4">
                         <div className="space-y-2">
@@ -663,7 +730,7 @@ export default function RerankingFusionDemo() {
                     <div key={doc.id} className="border rounded-md p-3">
                       <div className="flex justify-between items-start">
                         <h4 className="font-medium">{doc.title}</h4>
-                        <Badge variant="outline">Rank {index + 1}</Badge>
+                        <Badge className="bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100">Rank {index + 1}</Badge>
                       </div>
                       <p className="text-sm text-gray-500 mt-1 line-clamp-2">{doc.content}</p>
                       {useReranking && rerankingMethod === "weighted-score" && (
@@ -671,6 +738,18 @@ export default function RerankingFusionDemo() {
                           <div>Relevance: {doc.relevanceScore.toFixed(2)}</div>
                           <div>Semantic: {doc.semanticScore.toFixed(2)}</div>
                           <div>Recency: {doc.recencyScore.toFixed(2)}</div>
+                        </div>
+                      )}
+                      {useReranking && rerankingMethod === "reciprocal-rank" && doc.rrf_score && (
+                        <div className="mt-2 text-xs">
+                          <div>RRF Score: {doc.rrf_score.toFixed(3)}</div>
+                          {/* Display features only for search results that have them */}
+                          {'features' in doc && (
+                            <div className="mt-1 grid grid-cols-2 gap-2">
+                              <div>Recency: {(doc as any).features.documentRecency.toFixed(2)}</div>
+                              <div>Query Overlap: {(doc as any).features.queryOverlap.toFixed(2)}</div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -697,7 +776,7 @@ export default function RerankingFusionDemo() {
                         <div key={`bm25-${id}`} className="border rounded-md p-2">
                           <div className="flex justify-between items-start">
                             <h4 className="font-medium text-sm">{doc.title}</h4>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge className="bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100 text-xs">
                               Rank {index + 1}
                             </Badge>
                           </div>
@@ -716,7 +795,7 @@ export default function RerankingFusionDemo() {
                         <div key={`semantic-${id}`} className="border rounded-md p-2">
                           <div className="flex justify-between items-start">
                             <h4 className="font-medium text-sm">{doc.title}</h4>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge className="bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100 text-xs">
                               Rank {index + 1}
                             </Badge>
                           </div>
@@ -734,7 +813,7 @@ export default function RerankingFusionDemo() {
                     <div key={doc.id} className="border rounded-md p-3">
                       <div className="flex justify-between items-start">
                         <h4 className="font-medium">{doc.title}</h4>
-                        <Badge variant="outline">Rank {index + 1}</Badge>
+                        <Badge className="bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-100">Rank {index + 1}</Badge>
                       </div>
                       <p className="text-sm text-gray-500 mt-1 line-clamp-2">{doc.content}</p>
                     </div>

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
@@ -198,8 +197,7 @@ export default function ContextAssemblyDemo() {
         context = usedChunks
           .map(
             (chunk, index) =>
-              `[${index + 1}] ${chunk.text}\nSource: ${chunk.source}${
-                showMetadata ? ` (${chunk.metadata.date}, ${chunk.metadata.category})` : ""
+              `[${index + 1}] ${chunk.text}\nSource: ${chunk.source}${showMetadata ? ` (${chunk.metadata.date}, ${chunk.metadata.category})` : ""
               }`,
           )
           .join("\n\n")
@@ -252,199 +250,197 @@ export default function ContextAssemblyDemo() {
           Explore how different context assembly strategies affect the final prompt sent to the LLM
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="configuration" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="configuration">Configuration</TabsTrigger>
-            <TabsTrigger value="assembled-context">Assembled Context</TabsTrigger>
-            <TabsTrigger value="final-prompt">Final Prompt</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="configuration" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-medium mb-2">User Query</h3>
-                  <Textarea
-                    value={userQuery}
-                    onChange={(e) => setUserQuery(e.target.value)}
-                    placeholder="Enter your query here..."
-                    className="min-h-[80px]"
-                  />
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-medium mb-2">Assembly Strategy</h3>
-                  <Select value={assemblyStrategy} onValueChange={setAssemblyStrategy}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select assembly strategy" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(assemblyStrategies).map(([key, strategy]) => (
-                        <SelectItem key={key} value={key}>
-                          {strategy.name} - {strategy.description}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-medium mb-2">Prompt Template</h3>
-                  <Select value={promptTemplate} onValueChange={setPromptTemplate}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select prompt template" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(promptTemplates).map(([key, template]) => (
-                        <SelectItem key={key} value={key}>
-                          {template.name} - {template.description}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <Label>Token Limit: {tokenLimit}</Label>
-                    <Badge variant={tokenWarning ? "destructive" : "outline"} className="ml-2">
-                      {tokenCount} / {tokenLimit} tokens
-                    </Badge>
-                  </div>
-                  <Slider
-                    value={[tokenLimit]}
-                    min={256}
-                    max={4096}
-                    step={256}
-                    onValueChange={(value) => setTokenLimit(value[0])}
-                  />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch id="show-metadata" checked={showMetadata} onCheckedChange={setShowMetadata} />
-                  <Label htmlFor="show-metadata">Include metadata in context</Label>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch id="order-relevance" checked={orderByRelevance} onCheckedChange={setOrderByRelevance} />
-                  <Label htmlFor="order-relevance">
-                    {orderByRelevance ? "Order by relevance score" : "Order by recency"}
-                  </Label>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-medium mb-2">Retrieved Chunks</h3>
-                <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
-                  {retrievedChunks.map((chunk) => (
-                    <div
-                      key={chunk.id}
-                      className={`border rounded-md p-3 cursor-pointer transition-colors ${
-                        selectedChunks.includes(chunk.id)
-                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                          : "hover:border-gray-400"
-                      }`}
-                      onClick={() => toggleChunk(chunk.id)}
-                    >
-                      <div className="flex justify-between items-start mb-1">
-                        <div className="font-medium">{chunk.source}</div>
-                        <Badge variant="outline">{chunk.score.toFixed(2)}</Badge>
-                      </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 line-clamp-2">{chunk.text}</p>
-                      <div className="flex justify-between text-xs text-gray-500">
-                        <span>{chunk.tokens} tokens</span>
-                        <span>{chunk.metadata.date}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+      <CardContent className="space-y-8">
+        {/* Row 1: Query, Settings and Retrieved Chunks */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Query and Settings */}
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-lg font-medium mb-2">User Query</h3>
+              <Textarea
+                value={userQuery}
+                onChange={(e) => setUserQuery(e.target.value)}
+                placeholder="Enter your query here..."
+                className="min-h-[160px]"
+              />
             </div>
-          </TabsContent>
 
-          <TabsContent value="assembled-context">
-            <div className="space-y-4">
+            <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium">Assembled Context</h3>
-                <div className="flex items-center space-x-2">
-                  <Badge variant={tokenWarning ? "destructive" : "outline"}>
-                    {tokenCount} / {tokenLimit} tokens
-                  </Badge>
-                  {tokenWarning && (
-                    <div className="flex items-center text-red-500 text-sm">
-                      <AlertCircle className="h-4 w-4 mr-1" />
-                      Token limit exceeded
-                    </div>
-                  )}
-                </div>
+                <Label>Token Limit: {tokenLimit}</Label>
+                <Badge className={`ml-2 ${tokenWarning ? "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80" : "text-foreground"}`}>
+                  {tokenCount} / {tokenLimit} tokens
+                </Badge>
               </div>
+              <Slider
+                value={[tokenLimit]}
+                min={256}
+                max={4096}
+                step={256}
+                onValueChange={(value) => setTokenLimit(value[0])}
+              />
+            </div>
 
-              <div className="border rounded-md p-4 bg-gray-50 dark:bg-gray-900 min-h-[300px] whitespace-pre-wrap">
-                {assembledContext}
-              </div>
+            <div className="flex items-center space-x-2">
+              <Switch id="show-metadata" checked={showMetadata} onCheckedChange={setShowMetadata} />
+              <Label htmlFor="show-metadata">Include metadata in context</Label>
+            </div>
 
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md p-4">
-                <div className="flex items-start">
-                  <Info className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mr-2 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-yellow-800 dark:text-yellow-300">Assembly Strategy Notes</h4>
-                    <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                      {assemblyStrategy === "simple" &&
-                        "Simple concatenation preserves all information but may include redundancies and exceed token limits with many chunks."}
-                      {assemblyStrategy === "deduplicated" &&
-                        "Deduplication removes redundant information, which helps fit more unique content within token limits but may disrupt the flow of text."}
-                      {assemblyStrategy === "structured" &&
-                        "Structured formatting with clear source attribution helps the LLM understand where information comes from, but uses more tokens for formatting."}
-                      {assemblyStrategy === "summarized" &&
-                        "Summarization allows fitting more information within token limits but risks losing important details or nuance from the original text."}
-                    </p>
+            <div className="flex items-center space-x-2">
+              <Switch id="order-relevance" checked={orderByRelevance} onCheckedChange={setOrderByRelevance} />
+              <Label htmlFor="order-relevance">
+                {orderByRelevance ? "Order by relevance score" : "Order by recency"}
+              </Label>
+            </div>
+          </div>
+
+          {/* Retrieved Chunks */}
+          <div>
+            <h3 className="text-lg font-medium mb-2">Retrieved Chunks</h3>
+            <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+              {retrievedChunks.map((chunk) => (
+                <div
+                  key={chunk.id}
+                  className={`border rounded-md p-3 cursor-pointer transition-colors ${selectedChunks.includes(chunk.id)
+                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                      : "hover:border-gray-400"
+                    }`}
+                  onClick={() => toggleChunk(chunk.id)}
+                >
+                  <div className="flex justify-between items-start mb-1">
+                    <div className="font-medium">{chunk.source}</div>
+                    <Badge className="text-foreground">{chunk.score.toFixed(2)}</Badge>
                   </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 line-clamp-2">{chunk.text}</p>
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>{chunk.tokens} tokens</span>
+                    <span>{chunk.metadata.date}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Row 2: Assembly Strategy and Assembled Context */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Assembly Strategy */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium mb-2">Assembly Strategy</h3>
+            <Select value={assemblyStrategy} onValueChange={setAssemblyStrategy}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select assembly strategy" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(assemblyStrategies).map(([key, strategy]) => (
+                  <SelectItem key={key} value={key}>
+                    {strategy.name} - {strategy.description}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md p-4 min-h-[300px] overflow-y-auto">
+              <div className="flex items-start">
+                <Info className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mr-2 mt-0.5" />
+                <div>
+                  <h4 className="font-medium text-yellow-800 dark:text-yellow-300">Assembly Strategy Notes</h4>
+                  <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+                    {assemblyStrategy === "simple" &&
+                      "Simple concatenation preserves all information but may include redundancies and exceed token limits with many chunks."}
+                    {assemblyStrategy === "deduplicated" &&
+                      "Deduplication removes redundant information, which helps fit more unique content within token limits but may disrupt the flow of text."}
+                    {assemblyStrategy === "structured" &&
+                      "Structured formatting with clear source attribution helps the LLM understand where information comes from, but uses more tokens for formatting."}
+                    {assemblyStrategy === "summarized" &&
+                      "Summarization allows fitting more information within token limits but risks losing important details or nuance from the original text."}
+                  </p>
                 </div>
               </div>
             </div>
-          </TabsContent>
+          </div>
 
-          <TabsContent value="final-prompt">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium">Final Prompt to LLM</h3>
-                <div className="flex items-center space-x-2">
-                  <Badge variant={tokenWarning ? "destructive" : "outline"}>
-                    {tokenCount} / {tokenLimit} tokens
-                  </Badge>
-                  {tokenWarning && (
-                    <div className="flex items-center text-red-500 text-sm">
-                      <AlertCircle className="h-4 w-4 mr-1" />
-                      Token limit exceeded
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="border rounded-md p-4 bg-gray-50 dark:bg-gray-900 min-h-[400px] whitespace-pre-wrap">
-                {finalPrompt}
-              </div>
-
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4">
-                <div className="flex items-start">
-                  <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-blue-800 dark:text-blue-300">Prompt Template Notes</h4>
-                    <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                      {promptTemplate === "basic" &&
-                        "Basic templates are simple but may not provide enough guidance to the LLM about how to use the context or handle missing information."}
-                      {promptTemplate === "detailed" &&
-                        "Detailed templates with explicit instructions help guide the LLM's behavior but use more tokens for instructions rather than context."}
-                      {promptTemplate === "sourced" &&
-                        "Source attribution templates encourage the LLM to cite sources, which improves transparency but requires the context to include source information."}
-                    </p>
+          {/* Assembled Context */}
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium">Assembled Context</h3>
+              <div className="flex items-center space-x-2">
+                <Badge className={tokenWarning ? "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80" : "text-foreground"}>
+                  {tokenCount} / {tokenLimit} tokens
+                </Badge>
+                {tokenWarning && (
+                  <div className="flex items-center text-red-500 text-sm">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    Token limit exceeded
                   </div>
+                )}
+              </div>
+            </div>
+
+            <div className="border rounded-md p-4 bg-gray-50 dark:bg-gray-900 min-h-[400px] max-h-[600px] overflow-y-auto whitespace-pre-wrap">
+              {assembledContext}
+            </div>
+          </div>
+        </div>
+
+        {/* Row 3: Prompt Template and Final Prompt */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Prompt Template */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium mb-2">Prompt Template</h3>
+            <Select value={promptTemplate} onValueChange={setPromptTemplate}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select prompt template" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(promptTemplates).map(([key, template]) => (
+                  <SelectItem key={key} value={key}>
+                    {template.name} - {template.description}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4 min-h-[300px] overflow-y-auto">
+              <div className="flex items-start">
+                <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2 mt-0.5" />
+                <div>
+                  <h4 className="font-medium text-blue-800 dark:text-blue-300">Prompt Template Notes</h4>
+                  <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                    {promptTemplate === "basic" &&
+                      "Basic templates are simple but may not provide enough guidance to the LLM about how to use the context or handle missing information."}
+                    {promptTemplate === "detailed" &&
+                      "Detailed templates with explicit instructions help guide the LLM's behavior but use more tokens for instructions rather than context."}
+                    {promptTemplate === "sourced" &&
+                      "Source attribution templates encourage the LLM to cite sources, which improves transparency but requires the context to include source information."}
+                  </p>
                 </div>
               </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          </div>
+
+          {/* Final Prompt */}
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium">Final Prompt to LLM</h3>
+              <div className="flex items-center space-x-2">
+                <Badge className={tokenWarning ? "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80" : "text-foreground"}>
+                  {tokenCount} / {tokenLimit} tokens
+                </Badge>
+                {tokenWarning && (
+                  <div className="flex items-center text-red-500 text-sm">
+                    <AlertCircle className="h-4 w-4 mr-1" />
+                    Token limit exceeded
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="border rounded-md p-4 bg-gray-50 dark:bg-gray-900 min-h-[400px] max-h-[600px] overflow-y-auto whitespace-pre-wrap">
+              {finalPrompt}
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
   )

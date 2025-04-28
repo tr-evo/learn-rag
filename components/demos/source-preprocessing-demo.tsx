@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FileText, FileJson, FileCode, FileSpreadsheetIcon as FileCsv } from "lucide-react"
+import { FileText, FileJson, FileCode, FileSpreadsheetIcon as FileCsv, ArrowRight } from "lucide-react"
 
 export default function SourcePreprocessingDemo() {
   const [inputType, setInputType] = useState("text")
@@ -78,9 +78,9 @@ export default function SourcePreprocessingDemo() {
         case "html":
           // Simple HTML to text conversion
           processed = inputText
-            .replace(/<head>.*?<\/head>/s, "") // Remove head section
-            .replace(/<style>.*?<\/style>/s, "") // Remove style sections
-            .replace(/<script>.*?<\/script>/s, "") // Remove script sections
+            .replace(/<head>[\s\S]*?<\/head>/, "") // Remove head section
+            .replace(/<style>[\s\S]*?<\/style>/, "") // Remove style sections
+            .replace(/<script>[\s\S]*?<\/script>/, "") // Remove script sections
             .replace(/<[^>]*>/g, "\n") // Replace HTML tags with newlines
             .replace(/&nbsp;/g, " ") // Replace &nbsp; with spaces
             .replace(/&lt;/g, "<") // Replace &lt; with <
@@ -128,67 +128,142 @@ export default function SourcePreprocessingDemo() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            {getInputIcon()}
-            Input Source
-          </CardTitle>
-          <CardDescription>Select a source type and enter or modify the content</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="mb-4">
-            <Select value={inputType} onValueChange={handleInputTypeChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select input type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="text">Plain Text</SelectItem>
-                <SelectItem value="json">JSON</SelectItem>
-                <SelectItem value="html">HTML</SelectItem>
-                <SelectItem value="csv">CSV</SelectItem>
-              </SelectContent>
-            </Select>
+    <div className="flex flex-col space-y-6">
+      {/* Type selector with improved styling */}
+      <div className="bg-slate-700/30 p-4 rounded-lg mb-4">
+        <div className="text-lg font-medium text-slate-200 mb-3">Select Source Format</div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <button
+            onClick={() => handleInputTypeChange("text")}
+            className={`flex flex-col items-center p-3 rounded-lg border transition-all ${
+              inputType === "text"
+                ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                : "border-slate-600 bg-slate-800/50 text-slate-400 hover:bg-slate-700/30 hover:text-slate-300"
+            }`}
+          >
+            <FileText className="h-6 w-6 mb-2" />
+            <span>Plain Text</span>
+          </button>
+          
+          <button
+            onClick={() => handleInputTypeChange("json")}
+            className={`flex flex-col items-center p-3 rounded-lg border transition-all ${
+              inputType === "json"
+                ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                : "border-slate-600 bg-slate-800/50 text-slate-400 hover:bg-slate-700/30 hover:text-slate-300"
+            }`}
+          >
+            <FileJson className="h-6 w-6 mb-2" />
+            <span>JSON</span>
+          </button>
+          
+          <button
+            onClick={() => handleInputTypeChange("html")}
+            className={`flex flex-col items-center p-3 rounded-lg border transition-all ${
+              inputType === "html"
+                ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                : "border-slate-600 bg-slate-800/50 text-slate-400 hover:bg-slate-700/30 hover:text-slate-300"
+            }`}
+          >
+            <FileCode className="h-6 w-6 mb-2" />
+            <span>HTML</span>
+          </button>
+          
+          <button
+            onClick={() => handleInputTypeChange("csv")}
+            className={`flex flex-col items-center p-3 rounded-lg border transition-all ${
+              inputType === "csv"
+                ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                : "border-slate-600 bg-slate-800/50 text-slate-400 hover:bg-slate-700/30 hover:text-slate-300"
+            }`}
+          >
+            <FileCsv className="h-6 w-6 mb-2" />
+            <span>CSV</span>
+          </button>
+        </div>
+      </div>
+      
+      {/* Input and Output panels with processing flow */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-slate-800/80 rounded-xl border border-slate-700 overflow-hidden">
+          <div className="px-4 py-3 bg-slate-700/50 flex items-center justify-between">
+            <div className="flex items-center">
+              {getInputIcon()}
+              <span className="ml-2 font-medium text-slate-200">Source Input</span>
+            </div>
+            <div className="text-xs px-2 py-1 rounded-full bg-slate-600 text-slate-300">
+              {inputType.toUpperCase()}
+            </div>
           </div>
-          <Textarea
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            className="min-h-[300px] font-mono text-sm"
-            placeholder={`Enter ${inputType} content here...`}
-          />
-        </CardContent>
-        <CardFooter>
-          <Button onClick={processText} disabled={!inputText.trim() || isProcessing} className="w-full">
-            {isProcessing ? "Processing..." : "Process Source"}
-          </Button>
-        </CardFooter>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Processed Output
-          </CardTitle>
-          <CardDescription>Clean, deduplicated text ready for embedding</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            value={processedText}
-            readOnly
-            className="min-h-[300px] font-mono text-sm"
-            placeholder="Processed text will appear here..."
-          />
-        </CardContent>
-        <CardFooter>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            {processedText
-              ? `Successfully processed ${inputType.toUpperCase()} content into clean text.`
-              : 'Click "Process Source" to convert the input to clean text.'}
-          </p>
-        </CardFooter>
-      </Card>
+          
+          <div className="p-4">
+            <Textarea
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              className="min-h-[280px] font-mono text-sm bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
+              placeholder={`Enter ${inputType} content here...`}
+            />
+          </div>
+        </div>
+        
+        <div className="relative flex flex-col">
+          {/* Processing button in the middle on mobile, to the left on desktop */}
+          <div className="absolute left-1/2 md:left-0 top-1/2 -translate-x-1/2 md:-translate-x-[20px] -translate-y-1/2 z-10">
+            <button
+              onClick={processText}
+              disabled={!inputText.trim() || isProcessing}
+              className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg
+                disabled:opacity-50 disabled:cursor-not-allowed transition-transform hover:scale-110"
+            >
+              {isProcessing ? (
+                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              ) : (
+                <ArrowRight className="h-5 w-5" />
+              )}
+            </button>
+          </div>
+          
+          <div className="bg-slate-800/80 rounded-xl border border-slate-700 overflow-hidden h-full">
+            <div className="px-4 py-3 bg-slate-700/50 flex items-center justify-between">
+              <div className="flex items-center">
+                <FileText className="h-5 w-5 text-emerald-400" />
+                <span className="ml-2 font-medium text-slate-200">Processed Output</span>
+              </div>
+              <div className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">
+                CLEAN TEXT
+              </div>
+            </div>
+            
+            <div className="p-4">
+              <Textarea
+                value={processedText}
+                readOnly
+                className="min-h-[280px] font-mono text-sm bg-slate-900/50 border-slate-700 text-emerald-300 focus:border-emerald-500 focus:ring-emerald-500/20"
+                placeholder="Processed text will appear here..."
+              />
+            </div>
+            
+            <div className="px-4 py-3 bg-slate-800 border-t border-slate-700">
+              <p className="text-sm text-slate-400">
+                {processedText
+                  ? `✓ Successfully processed ${inputType.toUpperCase()} into clean, deduplicated text`
+                  : 'Click the arrow button to process the input'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Information panel about what's happening */}
+      <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-4">
+        <h3 className="text-sm font-medium text-emerald-400 mb-2">What's happening?</h3>
+        <p className="text-sm text-slate-400">
+          This demo shows how raw source data is preprocessed for a RAG system. The process removes duplicates, cleans up formatting, and extracts relevant text from structured formats - making the content ready for chunking and embedding.
+        </p>
+      </div>
     </div>
   )
 }

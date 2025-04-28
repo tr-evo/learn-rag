@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -186,7 +187,7 @@ export default function FilteringPermissionChecksDemo() {
   const [filteredResults, setFilteredResults] = useState<typeof retrievedChunks>([])
   const [isSearching, setIsSearching] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
-  
+
   // Filter configuration
   const [enableRelevanceFilter, setEnableRelevanceFilter] = useState(true)
   const [relevanceThreshold, setRelevanceThreshold] = useState(0.7)
@@ -195,11 +196,11 @@ export default function FilteringPermissionChecksDemo() {
   const [enableCategoryFilter, setEnableCategoryFilter] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState("All")
   const [enablePermissionChecks, setEnablePermissionChecks] = useState(true)
-  
+
   // Simulation settings
   const [simulateOverFiltering, setSimulateOverFiltering] = useState(false)
   const [simulateUnderFiltering, setSimulateUnderFiltering] = useState(false)
-  
+
   // Get unique categories from chunks
   const getUniqueCategories = () => {
     const categories = new Set<string>()
@@ -208,44 +209,44 @@ export default function FilteringPermissionChecksDemo() {
     })
     return ["All", ...Array.from(categories)]
   }
-  
+
   // Perform search and filtering
   const performSearch = () => {
     setIsSearching(true)
-    
+
     // Simulate search delay
     setTimeout(() => {
       // First, get all retrieved chunks (simulating the output from vector search)
       let results = [...retrievedChunks]
-      
+
       // Sort by relevance score (descending)
       results.sort((a, b) => b.metadata.relevanceScore - a.metadata.relevanceScore)
-      
+
       // Take top results
       results = results.slice(0, 7)
-      
+
       setRetrievedResults(results)
-      
+
       // Apply filters
       let filtered = [...results]
-      
+
       // Apply relevance filter
       if (enableRelevanceFilter && !simulateOverFiltering) {
         filtered = filtered.filter(chunk => chunk.metadata.relevanceScore >= relevanceThreshold)
       }
-      
+
       // Apply date filter
       if (enableDateFilter && !simulateOverFiltering) {
         const cutoffDate = new Date()
         cutoffDate.setMonth(cutoffDate.getMonth() - dateThreshold)
         filtered = filtered.filter(chunk => chunk.metadata.date >= cutoffDate)
       }
-      
+
       // Apply category filter
       if (enableCategoryFilter && selectedCategory !== "All" && !simulateOverFiltering) {
         filtered = filtered.filter(chunk => chunk.metadata.category === selectedCategory)
       }
-      
+
       // Apply permission checks
       if (enablePermissionChecks && !simulateUnderFiltering) {
         filtered = filtered.filter(chunk => {
@@ -253,33 +254,33 @@ export default function FilteringPermissionChecksDemo() {
           return selectedUserRole.accessLevels.includes(chunk.metadata.accessLevel)
         })
       }
-      
+
       // Simulate over-filtering
       if (simulateOverFiltering) {
         // Apply extremely strict filters that remove almost everything
-        filtered = filtered.filter(chunk => 
-          chunk.metadata.relevanceScore > 0.9 && 
+        filtered = filtered.filter(chunk =>
+          chunk.metadata.relevanceScore > 0.9 &&
           chunk.metadata.date >= new Date("2023-06-01") &&
           chunk.metadata.category === "Financial"
         )
       }
-      
+
       // Simulate under-filtering
       if (simulateUnderFiltering) {
         // Skip permission checks entirely
         filtered = [...results]
       }
-      
+
       setFilteredResults(filtered)
       setIsSearching(false)
       setHasSearched(true)
     }, 1000)
   }
-  
+
   // Calculate statistics
   const getFilteringStats = () => {
     if (!hasSearched) return null
-    
+
     return {
       retrievedCount: retrievedResults.length,
       filteredCount: filteredResults.length,
@@ -287,9 +288,9 @@ export default function FilteringPermissionChecksDemo() {
       removalPercentage: Math.round(((retrievedResults.length - filteredResults.length) / retrievedResults.length) * 100),
     }
   }
-  
+
   const stats = getFilteringStats()
-  
+
   return (
     <div className="space-y-6">
       <Tabs defaultValue="demo" className="w-full">
@@ -298,7 +299,7 @@ export default function FilteringPermissionChecksDemo() {
           <TabsTrigger value="permissions">Permission Checks</TabsTrigger>
           <TabsTrigger value="challenges">Common Challenges</TabsTrigger>
         </TabsList>
-        
+
         {/* Filtering Demo Tab */}
         <TabsContent value="demo" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -314,8 +315,8 @@ export default function FilteringPermissionChecksDemo() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>User Role</Label>
-                  <Select 
-                    value={selectedUserRole.id} 
+                  <Select
+                    value={selectedUserRole.id}
                     onValueChange={(value) => {
                       const role = userRoles.find(r => r.id === value)
                       if (role) setSelectedUserRole(role)
@@ -334,18 +335,18 @@ export default function FilteringPermissionChecksDemo() {
                   </Select>
                   <p className="text-xs text-slate-500">{selectedUserRole.description}</p>
                 </div>
-                
+
                 <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md">
                   <h3 className="text-sm font-medium mb-2">Access Levels</h3>
                   <div className="flex flex-wrap gap-1">
                     {selectedUserRole.accessLevels.map(level => (
-                      <Badge key={level} variant="outline" className="bg-emerald-100 dark:bg-emerald-900/20">
+                      <Badge key={level} className="bg-emerald-100 dark:bg-emerald-900/20">
                         {level}
                       </Badge>
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label>Search Query</Label>
                   <Input
@@ -356,16 +357,16 @@ export default function FilteringPermissionChecksDemo() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button 
-                  onClick={performSearch} 
-                  disabled={isSearching || !query.trim()} 
+                <Button
+                  onClick={performSearch}
+                  disabled={isSearching || !query.trim()}
                   className="w-full"
                 >
                   {isSearching ? "Searching..." : "Search & Filter"}
                 </Button>
               </CardFooter>
             </Card>
-            
+
             {/* Filter Configuration */}
             <Card>
               <CardHeader>
@@ -383,9 +384,9 @@ export default function FilteringPermissionChecksDemo() {
                       <Tag className="h-4 w-4" />
                       Relevance Filter
                     </Label>
-                    <Switch 
-                      id="relevance-filter" 
-                      checked={enableRelevanceFilter} 
+                    <Switch
+                      id="relevance-filter"
+                      checked={enableRelevanceFilter}
                       onCheckedChange={setEnableRelevanceFilter}
                     />
                   </div>
@@ -410,7 +411,7 @@ export default function FilteringPermissionChecksDemo() {
                     </div>
                   )}
                 </div>
-                
+
                 {/* Date Filter */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -418,9 +419,9 @@ export default function FilteringPermissionChecksDemo() {
                       <Calendar className="h-4 w-4" />
                       Date Filter
                     </Label>
-                    <Switch 
-                      id="date-filter" 
-                      checked={enableDateFilter} 
+                    <Switch
+                      id="date-filter"
+                      checked={enableDateFilter}
                       onCheckedChange={setEnableDateFilter}
                     />
                   </div>
@@ -445,7 +446,7 @@ export default function FilteringPermissionChecksDemo() {
                     </div>
                   )}
                 </div>
-                
+
                 {/* Category Filter */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -453,16 +454,16 @@ export default function FilteringPermissionChecksDemo() {
                       <FileText className="h-4 w-4" />
                       Category Filter
                     </Label>
-                    <Switch 
-                      id="category-filter" 
-                      checked={enableCategoryFilter} 
+                    <Switch
+                      id="category-filter"
+                      checked={enableCategoryFilter}
                       onCheckedChange={setEnableCategoryFilter}
                     />
                   </div>
                   {enableCategoryFilter && (
                     <div className="space-y-2">
-                      <Select 
-                        value={selectedCategory} 
+                      <Select
+                        value={selectedCategory}
                         onValueChange={setSelectedCategory}
                       >
                         <SelectTrigger>
@@ -479,7 +480,7 @@ export default function FilteringPermissionChecksDemo() {
                     </div>
                   )}
                 </div>
-                
+
                 {/* Permission Checks */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -487,9 +488,9 @@ export default function FilteringPermissionChecksDemo() {
                       <Shield className="h-4 w-4" />
                       Permission Checks
                     </Label>
-                    <Switch 
-                      id="permission-checks" 
-                      checked={enablePermissionChecks} 
+                    <Switch
+                      id="permission-checks"
+                      checked={enablePermissionChecks}
                       onCheckedChange={setEnablePermissionChecks}
                     />
                   </div>
@@ -500,7 +501,7 @@ export default function FilteringPermissionChecksDemo() {
               </CardContent>
             </Card>
           </div>
-          
+
           {/* Filtering Results */}
           <Card>
             <CardHeader>
@@ -509,7 +510,7 @@ export default function FilteringPermissionChecksDemo() {
                 Search & Filtering Results
               </CardTitle>
               <CardDescription>
-                {hasSearched 
+                {hasSearched
                   ? `${filteredResults.length} results after filtering (${retrievedResults.length} before filtering)`
                   : "Run a search to see results"}
               </CardDescription>
@@ -542,7 +543,7 @@ export default function FilteringPermissionChecksDemo() {
                       </div>
                     </div>
                   )}
-                  
+
                   {/* Filtered Results */}
                   <div className="space-y-4">
                     <h3 className="font-medium">Filtered Results</h3>
@@ -575,16 +576,16 @@ export default function FilteringPermissionChecksDemo() {
                           </div>
                           <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">{result.text}</p>
                           <div className="flex flex-wrap gap-1">
-                            <Badge variant="outline" className="text-xs">
+                            <Badge className="text-xs">
                               {result.metadata.category}
                             </Badge>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge className="text-xs">
                               {result.metadata.date.toLocaleDateString()}
                             </Badge>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge className="text-xs">
                               {result.metadata.confidentiality}
                             </Badge>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge className="text-xs">
                               {result.metadata.accessLevel}
                             </Badge>
                           </div>
@@ -592,7 +593,7 @@ export default function FilteringPermissionChecksDemo() {
                       ))
                     )}
                   </div>
-                  
+
                   {/* Removed Results */}
                   {retrievedResults.length > filteredResults.length && (
                     <div className="space-y-4 mt-8">
@@ -610,44 +611,44 @@ export default function FilteringPermissionChecksDemo() {
                                 <Badge className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300">
                                   Filtered Out
                                 </Badge>
-                                <Badge variant="outline">
+                                <Badge>
                                   Score: {result.metadata.relevanceScore.toFixed(2)}
                                 </Badge>
                               </div>
                             </div>
                             <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">{result.text}</p>
                             <div className="flex flex-wrap gap-1">
-                              <Badge variant="outline" className="text-xs">
+                              <Badge className="text-xs">
                                 {result.metadata.category}
                               </Badge>
-                              <Badge variant="outline" className="text-xs">
+                              <Badge className="text-xs">
                                 {result.metadata.date.toLocaleDateString()}
                               </Badge>
-                              <Badge variant="outline" className="text-xs">
+                              <Badge className="text-xs">
                                 {result.metadata.confidentiality}
                               </Badge>
-                              <Badge variant="outline" className="text-xs">
+                              <Badge className="text-xs">
                                 {result.metadata.accessLevel}
                               </Badge>
                             </div>
-                            
+
                             {/* Reason for filtering */}
                             <div className="mt-3 p-2 bg-red-50 dark:bg-red-900/10 rounded border border-red-100 dark:border-red-900/20">
                               <p className="text-xs text-red-600 dark:text-red-400">
                                 <span className="font-medium">Reason for filtering: </span>
-                                {enableRelevanceFilter && result.metadata.relevanceScore < relevanceThreshold && 
+                                {enableRelevanceFilter && result.metadata.relevanceScore < relevanceThreshold &&
                                   "Relevance score below threshold. "
                                 }
-                                {enableDateFilter && 
-                                  result.metadata.date < new Date(new Date().setMonth(new Date().getMonth() - dateThreshold)) && 
+                                {enableDateFilter &&
+                                  result.metadata.date < new Date(new Date().setMonth(new Date().getMonth() - dateThreshold)) &&
                                   "Document too old. "
                                 }
-                                {enableCategoryFilter && selectedCategory !== "All" && 
-                                  result.metadata.category !== selectedCategory && 
+                                {enableCategoryFilter && selectedCategory !== "All" &&
+                                  result.metadata.category !== selectedCategory &&
                                   "Category doesn't match filter. "
                                 }
-                                {enablePermissionChecks && 
-                                  !selectedUserRole.accessLevels.includes(result.metadata.accessLevel) && 
+                                {enablePermissionChecks &&
+                                  !selectedUserRole.accessLevels.includes(result.metadata.accessLevel) &&
                                   "User doesn't have permission to access this document."
                                 }
                               </p>
@@ -661,7 +662,7 @@ export default function FilteringPermissionChecksDemo() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         {/* Permission Checks Tab */}
         <TabsContent value="permissions" className="space-y-6">
           <Card>
@@ -679,7 +680,7 @@ export default function FilteringPermissionChecksDemo() {
                   <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
                     Permission checks ensure that users only see information they're authorized to access. This is crucial for maintaining security and compliance in enterprise RAG systems.
                   </p>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium">Common Implementation Approaches:</h4>
@@ -691,7 +692,7 @@ export default function FilteringPermissionChecksDemo() {
                         <li>Document-level or field-level security</li>
                       </ul>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <h4 className="text-sm font-medium">When Permission Checks Happen:</h4>
                       <ul className="text-sm text-slate-600 dark:text-slate-300 list-disc pl-5 space-y-1">
@@ -702,14 +703,14 @@ export default function FilteringPermissionChecksDemo() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Simulation Controls */}
                 <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                   <h3 className="font-medium mb-3">Filtering Simulation</h3>
                   <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
                     Simulate common filtering issues to see their impact on search results.
                   </p>
-                  
+
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -717,9 +718,9 @@ export default function FilteringPermissionChecksDemo() {
                           <AlertCircle className="h-4 w-4 text-amber-500" />
                           Simulate Over-Filtering
                         </Label>
-                        <Switch 
-                          id="over-filtering" 
-                          checked={simulateOverFiltering} 
+                        <Switch
+                          id="over-filtering"
+                          checked={simulateOverFiltering}
                           onCheckedChange={(checked) => {
                             setSimulateOverFiltering(checked)
                             if (checked) setSimulateUnderFiltering(false)
@@ -730,4 +731,95 @@ export default function FilteringPermissionChecksDemo() {
                         When enabled, applies extremely strict filters that remove most results, even relevant ones.
                       </p>
                     </div>
-                    \
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="under-filtering" className="flex items-center gap-2">
+                          <AlertCircle className="h-4 w-4 text-red-500" />
+                          Simulate Under-Filtering
+                        </Label>
+                        <Switch
+                          id="under-filtering"
+                          checked={simulateUnderFiltering}
+                          onCheckedChange={(checked) => {
+                            setSimulateUnderFiltering(checked)
+                            if (checked) setSimulateOverFiltering(false)
+                          }}
+                        />
+                      </div>
+                      <p className="text-xs text-slate-500">
+                        When enabled, skips permission checks entirely, potentially exposing sensitive information.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Common Challenges Tab */}
+        <TabsContent value="challenges" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5" />
+                Common Filtering Challenges
+              </CardTitle>
+              <CardDescription>Understanding the balance between security and usability</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium mb-3">Over-Filtering</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                    Over-filtering occurs when filters are too strict, removing too many potentially relevant documents.
+                  </p>
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium">Common Causes:</h4>
+                    <ul className="text-sm text-slate-600 dark:text-slate-300 list-disc pl-5 space-y-1">
+                      <li>Relevance threshold set too high</li>
+                      <li>Overly restrictive date filters</li>
+                      <li>Too many filters applied simultaneously</li>
+                      <li>Permissions systems that are too granular</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium mb-3">Under-Filtering</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                    Under-filtering occurs when not enough filtering is applied, potentially exposing sensitive information.
+                  </p>
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium">Common Causes:</h4>
+                    <ul className="text-sm text-slate-600 dark:text-slate-300 list-disc pl-5 space-y-1">
+                      <li>Ignoring permission checks for performance reasons</li>
+                      <li>Insufficient permissions metadata</li>
+                      <li>Bugs in access control implementation</li>
+                      <li>Permissions that don't align with actual needs</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+                  <h3 className="font-medium mb-3">Best Practices</h3>
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium">Balancing Security and Utility:</h4>
+                    <ul className="text-sm text-slate-600 dark:text-slate-300 list-disc pl-5 space-y-1">
+                      <li>Apply permission checks before relevance filtering</li>
+                      <li>Use adaptive thresholds based on the number of results</li>
+                      <li>Provide clear explanations when results are filtered out</li>
+                      <li>Monitor and audit filtered results to adjust settings</li>
+                      <li>Consider a tiered approach to permissions based on content sensitivity</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+}

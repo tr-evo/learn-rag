@@ -3,12 +3,10 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
 import { CheckCircle, MessageSquare, AlertTriangle, Info, Sparkles } from "lucide-react"
 
 // Sample contexts for different scenarios
@@ -133,6 +131,25 @@ const llmBehaviors = {
   },
 }
 
+// Sample questions
+const sampleQuestions = {
+  refund: {
+    id: "refund",
+    text: "What is your refund policy?",
+    description: "Question about returning products and getting money back"
+  },
+  shipping: {
+    id: "shipping",
+    text: "How long does shipping take?",
+    description: "Question about delivery timeframes"
+  },
+  warranty: {
+    id: "warranty",
+    text: "What warranty do you offer on your products?",
+    description: "Question about product guarantees and coverage"
+  }
+}
+
 // Pre-generated answers for different combinations
 const generateAnswer = (
   context: keyof typeof sampleContexts,
@@ -146,7 +163,7 @@ const generateAnswer = (
   // Default response
   let answer = {
     text: "I don't have a pre-generated answer for this specific combination.",
-    issues: [],
+    issues: [] as string[],
   }
 
   // Refund policy question answers
@@ -293,12 +310,135 @@ const generateAnswer = (
       }
     }
   }
+  // Shipping question answers
+  else if (question.toLowerCase().includes("shipping") || question.toLowerCase().includes("delivery")) {
+    if (context === "irrelevant") {
+      if (behavior === "ideal") {
+        if (technique === "basic") {
+          answer = {
+            text: "According to the provided information, standard shipping takes 3-5 business days within the continental United States. Express shipping (1-2 business days) is available for an additional fee. International shipping times vary by destination. Free shipping is available on orders over $75.",
+            issues: [],
+          }
+        } else if (technique === "cot") {
+          answer = {
+            text: "Let me analyze what the context says about shipping:\n\n1. For standard shipping within the continental US, it takes 3-5 business days.\n2. There's an express shipping option that takes 1-2 business days, but it costs extra.\n3. International shipping doesn't have a specific timeframe as it varies by destination.\n4. Orders over $75 qualify for free shipping.\n\nBased on this information, the standard shipping time is 3-5 business days for US orders, with faster options available at additional cost. International times vary, and you can get free shipping on orders over $75.",
+            issues: [],
+          }
+        } else if (technique === "rag") {
+          answer = {
+            text: "Based on the provided context, standard shipping takes 3-5 business days within the continental United States. Express shipping (1-2 business days) is available for an additional fee. International shipping times vary by destination. The context also mentions that free shipping is available on orders over $75.",
+            issues: [],
+          }
+        } else if (technique === "structured") {
+          answer = {
+            text: "- Summary: Standard shipping takes 3-5 business days in the US, with faster options available.\n\n- Details: The company offers standard shipping that takes 3-5 business days within the continental United States. An express shipping option (1-2 business days) is available for an additional fee. International shipping times are not specified as they vary by destination. Free shipping is offered on orders over $75.\n\n- Source: Website Help Section - Shipping Information",
+            issues: [],
+          }
+        }
+      } else if (behavior === "hallucinating") {
+        answer = {
+          text: "Based on the provided information, standard shipping takes 3-5 business days within the continental United States. For Prime members, we offer free next-day delivery on all orders. Our distribution centers are located in New York, California, and Texas, allowing us to provide 2-day shipping to most major cities. We also offer same-day delivery in select metropolitan areas for orders placed before noon. Our shipping partners include FedEx, UPS, and our own delivery fleet.",
+          issues: [
+            "Hallucinated Prime membership benefits",
+            "Made up distribution center locations",
+            "Fabricated same-day delivery option",
+            "Invented shipping partners information",
+          ],
+        }
+      } else if (behavior === "ignoring") {
+        answer = {
+          text: "Most e-commerce companies typically take 5-7 business days for standard shipping. Premium shipping options usually cost between $10-20 extra for 2-day delivery. You should check the order confirmation email for tracking information. Weather conditions and holidays can often delay shipping times. I recommend checking the tracking number if you're concerned about your delivery.",
+          issues: [
+            "Ignored specific shipping timeframes from context",
+            "Provided generic information instead of using available context",
+          ],
+        }
+      } else if (behavior === "verbose") {
+        answer = {
+          text: "I'm delighted to provide you with a comprehensive overview of our meticulously designed shipping logistics framework that has been optimized to ensure customer satisfaction through timely and reliable delivery services. According to the information provided in our website's help section, we have established a systematized shipping protocol that accommodates various customer needs and geographical considerations. For customers residing within the geographical boundaries of the continental United States, which encompasses the 48 contiguous states excluding Alaska and Hawaii, our standard shipping service operates within a predictable timeframe of approximately 3 to 5 business days from the point of order processing. It's important to note that business days are defined as Monday through Friday, excluding federally recognized holidays and weekends, during which shipping carriers maintain their regular operational schedules. For customers with more time-sensitive delivery requirements, we have implemented an enhanced shipping option categorized as 'Express Shipping.' This premium service substantially reduces the delivery timeline to a remarkably efficient 1 to 2 business days. This expedited service naturally incurs an additional financial consideration above the standard shipping rate, reflecting the prioritized handling and accelerated transportation methods employed to expedite the delivery process. For our valued international customers distributed across the global marketplace, we acknowledge the complex variables involved in cross-border shipping, including customs processing, international transit routes, and varying local delivery infrastructures. Consequently, the delivery timeframes for international destinations exhibit considerable variability depending on the specific geographical destination of the shipment. For precise delivery estimates for international orders, customers are encouraged to consult our interactive delivery estimation tool or contact our customer service representatives. In recognition of our appreciation for customers making substantial purchases, we have implemented a promotional shipping policy wherein orders exceeding a total merchandise value of $75 qualify for complimentary shipping services. This free shipping benefit represents our commitment to providing added value to customers while encouraging more comprehensive shopping experiences.",
+          issues: [
+            "Unnecessarily verbose and filled with excessive detail",
+            "Used overly complicated language for simple information",
+          ],
+        }
+      } else if (behavior === "misinterpreting") {
+        answer = {
+          text: "Based on the provided information, our exclusive members receive free 2-day shipping on all orders, while standard customers must pay for shipping on orders under $75. International shipping is unavailable due to current restrictions. Our warehouse processes orders within 3-5 days before shipping, and once shipped, delivery takes 1-2 days depending on your location.",
+          issues: [
+            "Misinterpreted standard shipping timeframe as processing time",
+            "Incorrectly stated international shipping is unavailable",
+            "Fabricated exclusive membership program",
+            "Confused the free shipping threshold with membership benefits",
+          ],
+        }
+      }
+    } else {
+      // For all other contexts (complete, partial, outdated, contradictory) when asking about shipping
+      if (behavior === "ideal" && technique === "rag") {
+        answer = {
+          text: "I don't have enough information to answer this question. The provided context doesn't include details about shipping or delivery timeframes.",
+          issues: [],
+        }
+      } else if (behavior === "hallucinating") {
+        answer = {
+          text: "Based on our shipping policy, standard orders are delivered within 3-5 business days. Express shipping is available for $9.99 and will arrive in 1-2 business days. We ship to all 50 states and most international locations. Free shipping is automatically applied to orders over $50. You can track your package using the link provided in your order confirmation email.",
+          issues: [
+            "Completely fabricated shipping information",
+            "Made up pricing for express shipping",
+            "Hallucinated free shipping threshold",
+            "Invented tracking system details",
+          ],
+        }
+      }
+    }
+  }
+  // Warranty question answers
+  else if (question.toLowerCase().includes("warranty")) {
+    // Default answers for warranty questions (for all contexts since none actually contain warranty info)
+    if (behavior === "ideal" && technique === "rag") {
+      answer = {
+        text: "I don't have enough information to answer this question. The provided context doesn't include details about product warranties or guarantees.",
+        issues: [],
+      }
+    } else if (behavior === "hallucinating") {
+      answer = {
+        text: "According to our warranty policy, all products come with a standard 2-year limited warranty covering manufacturing defects. Premium electronics have an extended 3-year warranty. To make a warranty claim, you'll need your original receipt and the product serial number. Our Platinum Protection Plan, available for an additional fee, extends coverage to 5 years and includes accidental damage protection. Warranty service is available through our certified repair centers located nationwide.",
+        issues: [
+          "Completely fabricated warranty information",
+          "Invented 2-year standard and 3-year premium warranties",
+          "Made up Platinum Protection Plan",
+          "Hallucinated warranty claim process",
+        ],
+      }
+    } else if (behavior === "ignoring") {
+      answer = {
+        text: "Most electronics typically come with a 1-year manufacturer warranty, while household appliances often have 2-3 year warranties. You should check your product documentation or receipt for specific details. Generally, warranties cover manufacturing defects but not accidental damage. Some retailers offer extended warranty plans for additional protection. I recommend contacting the manufacturer directly with your product serial number to verify your warranty status.",
+        issues: [
+          "Provided generic warranty information instead of acknowledging lack of relevant context",
+          "Failed to recognize that warranty information wasn't in the provided context",
+        ],
+      }
+    } else if (behavior === "verbose") {
+      answer = {
+        text: "I notice that the information provided doesn't specifically address warranty details, but I'd be happy to explain how product warranties typically function in retail environments. Generally speaking, warranty policies serve as contractual agreements between manufacturers or retailers and consumers, providing assurance regarding product quality and performance over a specified duration. These warranties typically encompass provisions for repair, replacement, or refund in cases where products exhibit defects attributable to the manufacturing process rather than user-induced damage. The specific terms, conditions, and duration of warranty coverage can vary significantly based on product category, price point, and manufacturer policies. Without specific information regarding the warranty policies applicable to this particular company or product range, I would recommend consulting product documentation, reviewing the company's warranty section on their website, or contacting their customer support channels for precise warranty details pertinent to your specific purchase.",
+        issues: [
+          "Unnecessarily verbose explanation of general warranty concepts",
+          "Failed to directly state that warranty information wasn't in the context",
+        ],
+      }
+    } else {
+      answer = {
+        text: "I don't see any information about warranties in the provided context. To learn about our warranty policies, you would need to check the product documentation, visit the warranty section of our website, or contact our customer service team.",
+        issues: [],
+      }
+    }
+  }
 
   return answer
 }
 
 export default function AnswerGenerationDemo() {
-  const [question, setQuestion] = useState("What is your refund policy?")
+  const [selectedQuestion, setSelectedQuestion] = useState<keyof typeof sampleQuestions>("refund")
   const [selectedContext, setSelectedContext] = useState<keyof typeof sampleContexts>("complete")
   const [selectedTechnique, setSelectedTechnique] = useState<keyof typeof promptingTechniques>("basic")
   const [selectedBehavior, setSelectedBehavior] = useState<keyof typeof llmBehaviors>("ideal")
@@ -309,7 +449,8 @@ export default function AnswerGenerationDemo() {
   // Generate the prompt based on selected template and context
   const generatePrompt = () => {
     const template = promptingTechniques[selectedTechnique].template
-    return template.replace("{context}", sampleContexts[selectedContext].content).replace("{question}", question)
+    const questionText = sampleQuestions[selectedQuestion].text
+    return template.replace("{context}", sampleContexts[selectedContext].content).replace("{question}", questionText)
   }
 
   // Handle answer generation
@@ -318,296 +459,278 @@ export default function AnswerGenerationDemo() {
 
     // Simulate API call delay
     setTimeout(() => {
-      const answer = generateAnswer(selectedContext, selectedTechnique, selectedBehavior, question)
+      const answer = generateAnswer(selectedContext, selectedTechnique, selectedBehavior, sampleQuestions[selectedQuestion].text)
       setGeneratedAnswer(answer)
       setIsGenerating(false)
     }, 1000)
   }
 
   return (
-    <div className="space-y-6">
-      <Tabs defaultValue="configuration" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="configuration">Configuration</TabsTrigger>
-          <TabsTrigger value="prompt">Prompt & Context</TabsTrigger>
-          <TabsTrigger value="answer">Generated Answer</TabsTrigger>
-        </TabsList>
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* User Query Selection */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5" />
+              Question Selection
+            </CardTitle>
+            <CardDescription>Choose a sample question to test</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Select
+              value={selectedQuestion}
+              onValueChange={(value) => setSelectedQuestion(value as keyof typeof sampleQuestions)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a question" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(sampleQuestions).map(([key, q]) => (
+                  <SelectItem key={key} value={key}>
+                    {q.text} - {q.description}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
 
-        {/* Configuration Tab */}
-        <TabsContent value="configuration" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* User Query */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5" />
-                  User Query
-                </CardTitle>
-                <CardDescription>The question the user is asking</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
-                  placeholder="Enter your question here..."
-                  className="min-h-[100px]"
-                />
-              </CardContent>
-            </Card>
+        {/* LLM Behavior */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5" />
+              LLM Behavior
+            </CardTitle>
+            <CardDescription>How the model responds to the prompt</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Select
+              value={selectedBehavior}
+              onValueChange={(value) => setSelectedBehavior(value as keyof typeof llmBehaviors)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select LLM behavior" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(llmBehaviors).map(([key, behavior]) => (
+                  <SelectItem key={key} value={key}>
+                    {behavior.name} - {behavior.description}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-            {/* LLM Behavior */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5" />
-                  LLM Behavior
-                </CardTitle>
-                <CardDescription>How the model responds to the prompt</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Select
-                  value={selectedBehavior}
-                  onValueChange={(value) => setSelectedBehavior(value as keyof typeof llmBehaviors)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select LLM behavior" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(llmBehaviors).map(([key, behavior]) => (
-                      <SelectItem key={key} value={key}>
-                        {behavior.name} - {behavior.description}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md">
+              <h3 className="text-sm font-medium mb-2">Behavior Description</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                {llmBehaviors[selectedBehavior].description}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-                <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md">
-                  <h3 className="text-sm font-medium mb-2">Behavior Description</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
-                    {llmBehaviors[selectedBehavior].description}
-                  </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Context Selection */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Info className="h-5 w-5" />
+              Context Selection
+            </CardTitle>
+            <CardDescription>The information retrieved for the query</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Select
+              value={selectedContext}
+              onValueChange={(value) => setSelectedContext(value as keyof typeof sampleContexts)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select context type" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(sampleContexts).map(([key, context]) => (
+                  <SelectItem key={key} value={key}>
+                    {context.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md max-h-[150px] overflow-y-auto">
+              <h3 className="text-sm font-medium mb-2">Context Preview</h3>
+              <p className="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap">
+                {sampleContexts[selectedContext].content.length > 200
+                  ? sampleContexts[selectedContext].content.substring(0, 200) + "..."
+                  : sampleContexts[selectedContext].content}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Prompting Technique */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5" />
+              Prompting Technique
+            </CardTitle>
+            <CardDescription>How to instruct the model</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Select
+              value={selectedTechnique}
+              onValueChange={(value) => setSelectedTechnique(value as keyof typeof promptingTechniques)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select prompting technique" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(promptingTechniques).map(([key, technique]) => (
+                  <SelectItem key={key} value={key}>
+                    {technique.name} - {technique.description}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className="flex items-center space-x-2">
+              <Switch id="show-prompt" checked={showPrompt} onCheckedChange={setShowPrompt} />
+              <Label htmlFor="show-prompt">Show full prompt</Label>
+            </div>
+
+            {showPrompt && (
+              <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md max-h-[150px] overflow-y-auto">
+                <h3 className="text-sm font-medium mb-2">Prompt Template</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap">
+                  {promptingTechniques[selectedTechnique].template}
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Generate Button */}
+      <div className="flex justify-center">
+        <Button onClick={handleGenerate} disabled={isGenerating} className="w-full md:w-1/3">
+          {isGenerating ? "Generating..." : "Generate Answer"}
+        </Button>
+      </div>
+
+      {/* Full Prompt and Generated Answer Side by Side */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Full Prompt Preview */}
+        <Card className="h-full flex flex-col">
+          <CardHeader>
+            <CardTitle>Full Prompt & Context</CardTitle>
+            <CardDescription>What will be sent to the LLM</CardDescription>
+          </CardHeader>
+          <CardContent className="flex-grow">
+            <div className="border rounded-md p-4 bg-slate-50 dark:bg-slate-900 h-full overflow-y-auto whitespace-pre-wrap">
+              {generatePrompt()}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Generated Answer Section */}
+        <Card className="h-full flex flex-col">
+          <CardHeader>
+            <CardTitle>Generated Answer</CardTitle>
+            <CardDescription>The LLM's response to the user query</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4 flex-grow">
+            {!generatedAnswer ? (
+              <div className="text-center py-8 text-slate-500 dark:text-slate-400 h-full flex items-center justify-center">
+                Configure your settings and click "Generate Answer" to see a response
+              </div>
+            ) : (
+              <div className="h-full flex flex-col">
+                <div className="border rounded-md p-4 bg-slate-50 dark:bg-slate-900 whitespace-pre-wrap flex-grow overflow-y-auto">
+                  {generatedAnswer.text}
                 </div>
-              </CardContent>
-            </Card>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Context Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Info className="h-5 w-5" />
-                  Context Selection
-                </CardTitle>
-                <CardDescription>The information retrieved for the query</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Select
-                  value={selectedContext}
-                  onValueChange={(value) => setSelectedContext(value as keyof typeof sampleContexts)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select context type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(sampleContexts).map(([key, context]) => (
-                      <SelectItem key={key} value={key}>
-                        {context.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md max-h-[150px] overflow-y-auto">
-                  <h3 className="text-sm font-medium mb-2">Context Preview</h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap">
-                    {sampleContexts[selectedContext].content.length > 200
-                      ? sampleContexts[selectedContext].content.substring(0, 200) + "..."
-                      : sampleContexts[selectedContext].content}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Prompting Technique */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5" />
-                  Prompting Technique
-                </CardTitle>
-                <CardDescription>How to instruct the model</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Select
-                  value={selectedTechnique}
-                  onValueChange={(value) => setSelectedTechnique(value as keyof typeof promptingTechniques)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select prompting technique" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(promptingTechniques).map(([key, technique]) => (
-                      <SelectItem key={key} value={key}>
-                        {technique.name} - {technique.description}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <div className="flex items-center space-x-2">
-                  <Switch id="show-prompt" checked={showPrompt} onCheckedChange={setShowPrompt} />
-                  <Label htmlFor="show-prompt">Show full prompt</Label>
-                </div>
-
-                {showPrompt && (
-                  <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-md max-h-[150px] overflow-y-auto">
-                    <h3 className="text-sm font-medium mb-2">Prompt Template</h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 whitespace-pre-wrap">
-                      {promptingTechniques[selectedTechnique].template}
-                    </p>
+                {generatedAnswer.issues.length > 0 ? (
+                  <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg mt-4">
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5" />
+                      <div>
+                        <h3 className="font-medium text-amber-800 dark:text-amber-300">Issues Detected</h3>
+                        <ul className="mt-2 text-sm text-amber-700 dark:text-amber-300 space-y-1 list-disc pl-5">
+                          {generatedAnswer.issues.map((issue, index) => (
+                            <li key={index}>{issue}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-4 border border-green-200 dark:border-green-900 bg-green-50 dark:bg-green-900/20 rounded-lg mt-4">
+                    <div className="flex items-start gap-2">
+                      <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                      <div>
+                        <h3 className="font-medium text-green-800 dark:text-green-300">Good Response</h3>
+                        <p className="mt-1 text-sm text-green-700 dark:text-green-300">
+                          This response appropriately uses the provided context and follows the prompting
+                          instructions.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
-              </CardContent>
-              <CardFooter>
-                <Button onClick={handleGenerate} disabled={isGenerating} className="w-full">
-                  {isGenerating ? "Generating..." : "Generate Answer"}
-                </Button>
-              </CardFooter>
-            </Card>
+
+                <div className="grid grid-cols-3 gap-2 mt-4">
+                  <Badge className="justify-center">{sampleContexts[selectedContext].title}</Badge>
+                  <Badge className="justify-center">{promptingTechniques[selectedTechnique].name}</Badge>
+                  <Badge className="justify-center">{llmBehaviors[selectedBehavior].name}</Badge>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Answer Generation Best Practices</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <h3 className="font-medium mb-2 flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                Clear Instructions
+              </h3>
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                Provide explicit instructions about how to use the context, handle uncertainty, and format the
+                response. Specify whether to admit knowledge gaps or stick strictly to provided information.
+              </p>
+            </div>
+            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <h3 className="font-medium mb-2 flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                Encourage Source Attribution
+              </h3>
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                Ask the model to cite or reference the sources of information in its response. This improves
+                transparency and helps users verify information accuracy.
+              </p>
+            </div>
+            <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
+              <h3 className="font-medium mb-2 flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                Validate Outputs
+              </h3>
+              <p className="text-sm text-slate-600 dark:text-slate-300">
+                Implement post-processing to check answers against the context. Flag responses that contain
+                information not present in the retrieved documents to catch potential hallucinations.
+              </p>
+            </div>
           </div>
-        </TabsContent>
-
-        {/* Prompt & Context Tab */}
-        <TabsContent value="prompt">
-          <Card>
-            <CardHeader>
-              <CardTitle>Full Prompt & Context</CardTitle>
-              <CardDescription>What will be sent to the LLM</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="border rounded-md p-4 bg-slate-50 dark:bg-slate-900 min-h-[400px] whitespace-pre-wrap">
-                {generatePrompt()}
-              </div>
-            </CardContent>
-            <CardFooter>
-              <div className="text-sm text-slate-500 flex items-center gap-2">
-                <Info className="h-4 w-4" />
-                This is the complete prompt that would be sent to the language model, including the context and
-                instructions.
-              </div>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-
-        {/* Generated Answer Tab */}
-        <TabsContent value="answer">
-          <Card>
-            <CardHeader>
-              <CardTitle>Generated Answer</CardTitle>
-              <CardDescription>The LLM's response to the user query</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {!generatedAnswer ? (
-                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                  Configure your settings and click "Generate Answer" to see a response
-                </div>
-              ) : (
-                <>
-                  <div className="border rounded-md p-4 bg-slate-50 dark:bg-slate-900 whitespace-pre-wrap">
-                    {generatedAnswer.text}
-                  </div>
-
-                  {generatedAnswer.issues.length > 0 ? (
-                    <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-                      <div className="flex items-start gap-2">
-                        <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5" />
-                        <div>
-                          <h3 className="font-medium text-amber-800 dark:text-amber-300">Issues Detected</h3>
-                          <ul className="mt-2 text-sm text-amber-700 dark:text-amber-300 space-y-1 list-disc pl-5">
-                            {generatedAnswer.issues.map((issue, index) => (
-                              <li key={index}>{issue}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="p-4 border border-green-200 dark:border-green-900 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                      <div className="flex items-start gap-2">
-                        <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
-                        <div>
-                          <h3 className="font-medium text-green-800 dark:text-green-300">Good Response</h3>
-                          <p className="mt-1 text-sm text-green-700 dark:text-green-300">
-                            This response appropriately uses the provided context and follows the prompting
-                            instructions.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </CardContent>
-            <CardFooter>
-              <div className="w-full">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Context Type:</span>
-                  <Badge variant="outline">{sampleContexts[selectedContext].title}</Badge>
-                </div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Prompting Technique:</span>
-                  <Badge variant="outline">{promptingTechniques[selectedTechnique].name}</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium">LLM Behavior:</span>
-                  <Badge variant="outline">{llmBehaviors[selectedBehavior].name}</Badge>
-                </div>
-              </div>
-            </CardFooter>
-          </Card>
-
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle>Answer Generation Best Practices</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                    Clear Instructions
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
-                    Provide explicit instructions about how to use the context, handle uncertainty, and format the
-                    response. Specify whether to admit knowledge gaps or stick strictly to provided information.
-                  </p>
-                </div>
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                    Encourage Source Attribution
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
-                    Ask the model to cite or reference the sources of information in its response. This improves
-                    transparency and helps users verify information accuracy.
-                  </p>
-                </div>
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
-                    Validate Outputs
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
-                    Implement post-processing to check answers against the context. Flag responses that contain
-                    information not present in the retrieved documents to catch potential hallucinations.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+        </CardContent>
+      </Card>
     </div>
   )
 }

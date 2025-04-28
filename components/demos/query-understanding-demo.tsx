@@ -264,13 +264,22 @@ export default function QueryUnderstandingDemo() {
   const [rewriteTechnique, setRewriteTechnique] = useState("expand-acronyms")
   const [searchResults, setSearchResults] = useState<typeof knowledgeBase>([])
   const [isProcessing, setIsProcessing] = useState(false)
-  
+
   // State for demo configuration
   const [enableQueryRewriting, setEnableQueryRewriting] = useState(true)
   const [enablePolicyCheck, setEnablePolicyCheck] = useState(true)
-  
+
   // Handle query selection
   const handleQuerySelect = (queryId: string) => {
+    if (queryId === "default") {
+      setSelectedQuery("default")
+      setActiveQuery("")
+      setCustomQuery("")
+      setRewrittenQuery("")
+      setSearchResults([])
+      return
+    }
+
     const query = sampleQueries.find(q => q.id === Number.parseInt(queryId))
     if (query) {
       setSelectedQuery(queryId)
@@ -280,7 +289,7 @@ export default function QueryUnderstandingDemo() {
       setSearchResults([])
     }
   }
-  
+
   // Handle custom query input
   const handleCustomQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCustomQuery(e.target.value)
@@ -289,17 +298,17 @@ export default function QueryUnderstandingDemo() {
     setRewrittenQuery("")
     setSearchResults([])
   }
-  
+
   // Process the query
   const processQuery = () => {
     if (!activeQuery.trim()) return
-    
+
     setIsProcessing(true)
-    
+
     // Simulate processing delay
     setTimeout(() => {
       let processedQuery = activeQuery
-      
+
       // Apply policy check if enabled
       if (enablePolicyCheck) {
         const policyCheckedQuery = rewriteQuery(processedQuery, "policy-check")
@@ -310,22 +319,22 @@ export default function QueryUnderstandingDemo() {
           return
         }
       }
-      
+
       // Apply query rewriting if enabled
       if (enableQueryRewriting) {
         processedQuery = rewriteQuery(processedQuery, rewriteTechnique)
       }
-      
+
       setRewrittenQuery(processedQuery)
-      
+
       // Simulate search with the processed query
       const results = simulateSearch(processedQuery, knowledgeBase)
       setSearchResults(results)
-      
+
       setIsProcessing(false)
     }, 1000)
   }
-  
+
   return (
     <div className="space-y-6">
       <Tabs defaultValue="demo" className="w-full">
@@ -334,7 +343,7 @@ export default function QueryUnderstandingDemo() {
           <TabsTrigger value="techniques">Rewriting Techniques</TabsTrigger>
           <TabsTrigger value="challenges">Common Challenges</TabsTrigger>
         </TabsList>
-        
+
         {/* Query Processing Tab */}
         <TabsContent value="demo" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -355,7 +364,7 @@ export default function QueryUnderstandingDemo() {
                       <SelectValue placeholder="Select a sample query" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">-- Select a query --</SelectItem>
+                      <SelectItem value="default">-- Select a query --</SelectItem>
                       {sampleQueries.map(query => (
                         <SelectItem key={query.id} value={query.id.toString()}>
                           {query.text} ({query.category})
@@ -364,22 +373,15 @@ export default function QueryUnderstandingDemo() {
                     </SelectContent>
                   </Select>
                 </div>
-                
-                <div className="space-y-2">
-                  <Label>Or Enter Your Own Query</Label>
-                  <Input
-                    placeholder="Type your query here..."
-                    value={customQuery}
-                    onChange={handleCustomQueryChange}
-                  />
-                </div>
-                
+
+
+
                 <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-md">
                   <h3 className="font-medium mb-2">Active Query</h3>
                   <p className="text-sm text-slate-600 dark:text-slate-300">
                     {activeQuery || "No query selected"}
                   </p>
-                  
+
                   {selectedQuery && (
                     <div className="mt-2">
                       <Badge className="mr-2">
@@ -393,16 +395,16 @@ export default function QueryUnderstandingDemo() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button 
-                  onClick={processQuery} 
-                  disabled={!activeQuery.trim() || isProcessing} 
+                <Button
+                  onClick={processQuery}
+                  disabled={!activeQuery.trim() || isProcessing}
                   className="w-full"
                 >
                   {isProcessing ? "Processing..." : "Process Query"}
                 </Button>
               </CardFooter>
             </Card>
-            
+
             {/* Query Processing Configuration */}
             <Card>
               <CardHeader>
@@ -419,9 +421,9 @@ export default function QueryUnderstandingDemo() {
                       <Lightbulb className="h-4 w-4 text-amber-500" />
                       Enable Query Rewriting
                     </Label>
-                    <Switch 
-                      id="query-rewriting" 
-                      checked={enableQueryRewriting} 
+                    <Switch
+                      id="query-rewriting"
+                      checked={enableQueryRewriting}
                       onCheckedChange={setEnableQueryRewriting}
                     />
                   </div>
@@ -429,7 +431,7 @@ export default function QueryUnderstandingDemo() {
                     When enabled, the system will attempt to improve the query by rewriting it.
                   </p>
                 </div>
-                
+
                 {enableQueryRewriting && (
                   <div className="space-y-2">
                     <Label>Rewriting Technique</Label>
@@ -452,16 +454,16 @@ export default function QueryUnderstandingDemo() {
                     </p>
                   </div>
                 )}
-                
+
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="policy-check" className="flex items-center gap-2">
                       <ShieldAlert className="h-4 w-4 text-amber-500" />
                       Enable Policy Check
                     </Label>
-                    <Switch 
-                      id="policy-check" 
-                      checked={enablePolicyCheck} 
+                    <Switch
+                      id="policy-check"
+                      checked={enablePolicyCheck}
                       onCheckedChange={setEnablePolicyCheck}
                     />
                   </div>
@@ -469,7 +471,7 @@ export default function QueryUnderstandingDemo() {
                     When enabled, the system will check if the query violates any policies.
                   </p>
                 </div>
-                
+
                 <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-md">
                   <h3 className="font-medium mb-2">What This Demo Shows</h3>
                   <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -485,7 +487,7 @@ export default function QueryUnderstandingDemo() {
               </CardContent>
             </Card>
           </div>
-          
+
           {/* Query Processing Results */}
           <Card>
             <CardHeader>
@@ -494,7 +496,7 @@ export default function QueryUnderstandingDemo() {
                 Processing Results
               </CardTitle>
               <CardDescription>
-                {rewrittenQuery 
+                {rewrittenQuery
                   ? "See how the query was processed and the resulting search"
                   : "Process a query to see results"}
               </CardDescription>
@@ -506,16 +508,15 @@ export default function QueryUnderstandingDemo() {
                     <h3 className="font-medium mb-2">Original Query</h3>
                     <p className="text-slate-600 dark:text-slate-300">{activeQuery}</p>
                   </div>
-                  
+
                   <div className="flex items-center justify-center">
                     <ArrowRight className="h-6 w-6 text-emerald-500" />
                   </div>
-                  
-                  <div className={`p-4 border rounded-lg ${
-                    rewrittenQuery.startsWith("[POLICY VIOLATION DETECTED]")
-                      ? "border-red-300 bg-red-50 dark:bg-red-900/20"
-                      : "border-emerald-300 bg-emerald-50 dark:bg-emerald-900/20"
-                  }`}>
+
+                  <div className={`p-4 border rounded-lg ${rewrittenQuery.startsWith("[POLICY VIOLATION DETECTED]")
+                    ? "border-red-300 bg-red-50 dark:bg-red-900/20"
+                    : "border-emerald-300 bg-emerald-50 dark:bg-emerald-900/20"
+                    }`}>
                     <h3 className="font-medium mb-2">Processed Query</h3>
                     <p className={
                       rewrittenQuery.startsWith("[POLICY VIOLATION DETECTED]")
@@ -525,13 +526,13 @@ export default function QueryUnderstandingDemo() {
                       {rewrittenQuery}
                     </p>
                   </div>
-                  
+
                   {!rewrittenQuery.startsWith("[POLICY VIOLATION DETECTED]") && (
                     <>
                       <div className="flex items-center justify-center">
                         <ArrowRight className="h-6 w-6 text-emerald-500" />
                       </div>
-                      
+
                       <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                         <h3 className="font-medium mb-2">Search Results</h3>
                         {searchResults.length === 0 ? (
@@ -558,7 +559,7 @@ export default function QueryUnderstandingDemo() {
                   )}
                 </div>
               )}
-              
+
               {rewrittenQuery && rewrittenQuery.startsWith("[POLICY VIOLATION DETECTED]") && (
                 <div className="p-4 border border-red-300 bg-red-50 dark:bg-red-900/20 rounded-lg">
                   <div className="flex items-start gap-2">
@@ -573,7 +574,7 @@ export default function QueryUnderstandingDemo() {
                   </div>
                 </div>
               )}
-              
+
               {!rewrittenQuery && (
                 <div className="text-center py-8 text-slate-500 dark:text-slate-400">
                   Select a query and click "Process Query" to see how query understanding works
@@ -582,7 +583,7 @@ export default function QueryUnderstandingDemo() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         {/* Rewriting Techniques Tab */}
         <TabsContent value="techniques">
           <Card>
@@ -615,7 +616,7 @@ export default function QueryUnderstandingDemo() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                     <h3 className="font-medium mb-2 flex items-center gap-2">
                       <Lightbulb className="h-5 w-5 text-amber-500" />
@@ -639,7 +640,7 @@ export default function QueryUnderstandingDemo() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                     <h3 className="font-medium mb-2 flex items-center gap-2">
@@ -663,7 +664,7 @@ export default function QueryUnderstandingDemo() {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                     <h3 className="font-medium mb-2 flex items-center gap-2">
                       <ShieldAlert className="h-5 w-5 text-amber-500" />
@@ -688,7 +689,7 @@ export default function QueryUnderstandingDemo() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="mt-6 p-4 border border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
                 <h3 className="font-medium text-emerald-800 dark:text-emerald-300 flex items-center gap-2 mb-2">
                   <CheckCircle2 className="h-5 w-5" />
@@ -714,7 +715,7 @@ export default function QueryUnderstandingDemo() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         {/* Common Challenges Tab */}
         <TabsContent value="challenges">
           <Card>
@@ -756,7 +757,7 @@ export default function QueryUnderstandingDemo() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
                   <h3 className="font-medium text-amber-800 dark:text-amber-300 flex items-center gap-2 mb-2">
                     <AlertCircle className="h-5 w-5" />

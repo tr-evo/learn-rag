@@ -279,11 +279,10 @@ export default function MetadataTaggingDemo() {
               {sampleDocuments.map((doc) => (
                 <div
                   key={doc.id}
-                  className={`p-3 border rounded-md cursor-pointer ${
-                    selectedDocument.id === doc.id
-                      ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                      : "border-gray-200 dark:border-gray-700 hover:border-emerald-300"
-                  }`}
+                  className={`p-3 border rounded-md cursor-pointer ${selectedDocument.id === doc.id
+                    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                    : "border-gray-200 dark:border-gray-700 hover:border-emerald-300"
+                    }`}
                   onClick={() => handleSelectDocument(doc)}
                 >
                   <h3 className="font-medium">{doc.title}</h3>
@@ -480,9 +479,8 @@ export default function MetadataTaggingDemo() {
                       <Badge
                         key={level}
                         variant={activeFilters.confidentiality === level ? "default" : "outline"}
-                        className={`cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ${
-                          level === "Confidential" ? "border-red-300 text-red-600 dark:text-red-400" : ""
-                        }`}
+                        className={`cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ${level === "Confidential" ? "border-red-300 text-red-600 dark:text-red-400" : ""
+                          }`}
                         onClick={() =>
                           toggleFilter("confidentiality", activeFilters.confidentiality === level ? null : level)
                         }

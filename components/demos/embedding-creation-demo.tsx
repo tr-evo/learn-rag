@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -133,9 +134,9 @@ export default function EmbeddingCreationDemo() {
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<Array<{ id: number, similarity: number }>>([])
   const [isSearching, setIsSearching] = useState(false)
+  const [showQueryBubble, setShowQueryBubble] = useState(false)
 
-  // State for simulating issues
-  const [simulateOutdatedEmbeddings, setSimulateOutdatedEmbeddings] = useState(false)
+  // State for simulating issues (only keeping what's needed for model comparison)
   const [simulateModelChange, setSimulateModelChange] = useState(false)
   const [simulateIncompleteEmbeddings, setSimulateIncompleteEmbeddings] = useState(false)
 
@@ -145,6 +146,9 @@ export default function EmbeddingCreationDemo() {
   // Generate embeddings for all chunks
   const generateAllEmbeddings = () => {
     setIsGenerating(true)
+    
+    // Clear any existing search results when regenerating embeddings
+    clearSearch()
 
     // Simulate processing delay
     setTimeout(() => {
@@ -165,32 +169,18 @@ export default function EmbeddingCreationDemo() {
     }, 1000)
   }
 
-  // Update a specific chunk and its embedding
-  const updateChunk = (chunkId: number) => {
-    if (chunkId === 5) {
-      // Update chunk 5 with new content
-      setChunks(prev => prev.map(chunk =>
-        chunk.id === 5 ? updatedChunk5 : chunk
-      ))
-
-      // If not simulating outdated embeddings, also update the embedding
-      if (!simulateOutdatedEmbeddings) {
-        setEmbeddings(prev => ({
-          ...prev,
-          5: generateEmbedding(updatedChunk5.text, selectedModel.id)
-        }))
-      }
-    }
-  }
-
   // Perform search using embeddings
-  const performSearch = () => {
-    if (!searchQuery.trim() || Object.keys(embeddings).length === 0) return
+  const performSearch = (queryText?: string) => {
+    const queryToUse = queryText ?? searchQuery;
+    
+    if (!queryToUse.trim() || Object.keys(embeddings).length === 0) return
 
     setIsSearching(true)
+    setShowQueryBubble(true)
+    setSearchQuery(queryToUse) // Update input field if queryText is provided
 
     // Generate embedding for the search query
-    const queryEmbedding = generateEmbedding(searchQuery, selectedModel.id)
+    const queryEmbedding = generateEmbedding(queryToUse, selectedModel.id)
 
     // Calculate similarity with all chunk embeddings
     setTimeout(() => {
@@ -207,6 +197,13 @@ export default function EmbeddingCreationDemo() {
       setSearchResults(results.slice(0, 3))
       setIsSearching(false)
     }, 500)
+  }
+
+  // Clear search results and query bubble
+  const clearSearch = () => {
+    setSearchQuery("")
+    setSearchResults([])
+    setShowQueryBubble(false)
   }
 
   // Effect to visualize embeddings in 2D
@@ -239,19 +236,81 @@ export default function EmbeddingCreationDemo() {
     }
 
     // Function to project high-dimensional vector to 2D
-    const projectTo2D = (vector: number[]) => {
-      // Simple projection - just use first two dimensions
-      // In reality, you'd use PCA, t-SNE, or UMAP
-      const x = (Math.sin(vector[0] * 10) * 0.5 + 0.5) * canvas.width * 0.8 + canvas.width * 0.1
-      const y = (Math.sin(vector[1] * 10) * 0.5 + 0.5) * canvas.height * 0.8 + canvas.height * 0.1
+    const projectTo2D = (vector: number[], index: number = 0) => {
+      // Use a more varied projection to avoid overlap
+      // Add some jitter based on the index to prevent points from stacking
+      const jitterX = index * 0.05
+      const jitterY = index * 0.03
+      
+      const x = (Math.sin(vector[0] * 10 + jitterX) * 0.5 + 0.5) * canvas.width * 0.7 + canvas.width * 0.15
+      const y = (Math.sin(vector[1] * 10 + jitterY) * 0.5 + 0.5) * canvas.height * 0.7 + canvas.height * 0.15
       return { x, y }
     }
 
+    // Create a map to track occupied positions
+    const occupiedPositions: Array<{x: number, y: number}> = []
+    
+    // Find a non-overlapping position
+    const findNonOverlappingPosition = (baseX: number, baseY: number, radius: number = 20) => {
+      // Check if position overlaps with any existing point
+      const isOverlapping = () => {
+        return occupiedPositions.some(pos => {
+          const distance = Math.sqrt(Math.pow(pos.x - baseX, 2) + Math.pow(pos.y - baseY, 2))
+          return distance < radius
+        })
+      }
+      
+      // If no overlap, use original position
+      if (!isOverlapping()) {
+        occupiedPositions.push({x: baseX, y: baseY})
+        return {x: baseX, y: baseY}
+      }
+      
+      // Try adjusting the position outward in a spiral
+      let angle = 0
+      let distance = radius
+      let attempts = 0
+      const maxAttempts = 10
+      
+      while (attempts < maxAttempts) {
+        const newX = baseX + Math.cos(angle) * distance
+        const newY = baseY + Math.sin(angle) * distance
+        
+        // Check if this new position is within canvas and doesn't overlap
+        if (newX > 20 && newX < canvas.width - 20 && 
+            newY > 20 && newY < canvas.height - 20) {
+          baseX = newX
+          baseY = newY
+          
+          if (!isOverlapping()) {
+            occupiedPositions.push({x: baseX, y: baseY})
+            return {x: baseX, y: baseY}
+          }
+        }
+        
+        angle += Math.PI / 4
+        if (angle >= Math.PI * 2) {
+          angle = 0
+          distance += radius / 2
+        }
+        attempts++
+      }
+      
+      // If we can't find a non-overlapping position, just return the original
+      occupiedPositions.push({x: baseX, y: baseY})
+      return {x: baseX, y: baseY}
+    }
+
     // Draw embeddings
-    Object.entries(embeddings).forEach(([idStr, embedding]) => {
+    Object.entries(embeddings).forEach(([idStr, embedding], index) => {
       const id = Number.parseInt(idStr)
       const chunk = chunks.find(c => c.id === id)
-      const { x, y } = projectTo2D(embedding)
+      let { x, y } = projectTo2D(embedding, index)
+      
+      // Adjust position to avoid overlap
+      const position = findNonOverlappingPosition(x, y)
+      x = position.x
+      y = position.y
 
       // Draw point
       ctx.fillStyle = chunk?.category === "Technical"
@@ -271,9 +330,14 @@ export default function EmbeddingCreationDemo() {
     })
 
     // Draw search query if available
-    if (searchQuery && isSearching) {
+    if (searchQuery && showQueryBubble) {
       const queryEmbedding = generateEmbedding(searchQuery, selectedModel.id)
-      const { x, y } = projectTo2D(queryEmbedding)
+      let { x, y } = projectTo2D(queryEmbedding)
+      
+      // Adjust position to avoid overlap
+      const position = findNonOverlappingPosition(x, y)
+      x = position.x
+      y = position.y
 
       ctx.fillStyle = "rgba(220, 38, 38, 0.8)"
       ctx.beginPath()
@@ -284,7 +348,7 @@ export default function EmbeddingCreationDemo() {
       ctx.font = "10px Arial"
       ctx.fillText("Query", x + 10, y)
     }
-  }, [embeddings, chunks, searchQuery, isSearching, selectedModel.id])
+  }, [embeddings, chunks, searchQuery, isSearching, showQueryBubble, selectedModel.id])
 
   // Effect to handle model change simulation
   useEffect(() => {
@@ -298,9 +362,8 @@ export default function EmbeddingCreationDemo() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="creation" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="creation">Embedding Creation</TabsTrigger>
-          <TabsTrigger value="refresh">Embedding Refresh</TabsTrigger>
           <TabsTrigger value="comparison">Model Comparison</TabsTrigger>
         </TabsList>
 
@@ -361,7 +424,7 @@ export default function EmbeddingCreationDemo() {
                       <div key={chunk.id} className="p-2 border border-gray-200 dark:border-gray-700 rounded-md">
                         <div className="flex justify-between items-start">
                           <span className="font-medium text-sm">Chunk #{chunk.id}</span>
-                          <Badge variant="outline">{chunk.category}</Badge>
+                          <Badge>{chunk.category}</Badge>
                         </div>
                         <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2">{chunk.text}</p>
                         <div className="text-xs text-slate-500 mt-1">
@@ -443,18 +506,67 @@ export default function EmbeddingCreationDemo() {
               <CardDescription>See how embeddings enable semantic search</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-md mb-4">
+                <h3 className="font-medium mb-2">How Search Works in This Demo</h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300">
+                  This demo uses a simplified simulation of vector search. Instead of a real embedding model, we use a 
+                  deterministic algorithm that converts text to vectors based on character codes and text patterns.
+                  When you search, we:
+                </p>
+                <ol className="list-decimal ml-5 mt-2 text-sm text-slate-600 dark:text-slate-300 space-y-1">
+                  <li>Generate a simulated vector for your query using our simplified algorithm</li>
+                  <li>Compare it to the simulated vectors of each text chunk using cosine similarity</li>
+                  <li>Return the chunks with the highest similarity scores</li>
+                </ol>
+                <p className="text-sm text-slate-600 dark:text-slate-300 mt-2">
+                  This demonstrates the core concept of semantic search while being fast enough to run entirely in your browser.
+                </p>
+              </div>
+              
+              <div className="p-4 border-l-4 border-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-r-md mb-4">
+                <h3 className="font-medium mb-2 text-blue-700 dark:text-blue-300">Try These Example Queries</h3>
+                <div className="grid grid-cols-2 gap-2 mt-3">
+                  {["semantic understanding", "vector dimensions", "performance improvement", "revenue report", "RAG system"].map((query) => (
+                    <Button 
+                      key={query} 
+                      variant="outline" 
+                      size="sm" 
+                      className="justify-start text-xs"
+                      onClick={() => performSearch(query)}
+                      disabled={Object.keys(embeddings).length === 0}
+                    >
+                      <Search className="mr-2 h-3 w-3" />
+                      {query}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              
               <div className="flex gap-2">
                 <Input
                   placeholder="Enter search query..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      performSearch();
+                    }
+                  }}
                 />
                 <Button
-                  onClick={performSearch}
+                  onClick={() => performSearch()}
                   disabled={isSearching || !searchQuery.trim() || Object.keys(embeddings).length === 0}
                 >
                   {isSearching ? "Searching..." : "Search"}
                 </Button>
+                {searchResults.length > 0 && (
+                  <Button 
+                    variant="outline" 
+                    onClick={clearSearch}
+                  >
+                    Clear
+                  </Button>
+                )}
               </div>
 
               {Object.keys(embeddings).length === 0 && (
@@ -481,190 +593,6 @@ export default function EmbeddingCreationDemo() {
                   })}
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Embedding Refresh Tab */}
-        <TabsContent value="refresh" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Refresh Simulation */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <RefreshCw className="h-5 w-5" />
-                  Embedding Refresh
-                </CardTitle>
-                <CardDescription>Simulate content changes and embedding updates</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-md">
-                  <h3 className="font-medium mb-2">Financial Report (Chunk #5)</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
-                    {chunks.find(c => c.id === 5)?.text}
-                  </p>
-                  <Button onClick={() => updateChunk(5)} size="sm">Update Content</Button>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="outdated-embeddings" className="flex items-center gap-2">
-                      <AlertCircle className="h-4 w-4 text-amber-500" />
-                      Simulate Outdated Embeddings
-                    </Label>
-                    <Switch
-                      id="outdated-embeddings"
-                      checked={simulateOutdatedEmbeddings}
-                      onCheckedChange={setSimulateOutdatedEmbeddings}
-                    />
-                  </div>
-                  <p className="text-xs text-slate-500">
-                    When enabled, content updates won't refresh embeddings, simulating outdated embeddings.
-                  </p>
-                </div>
-
-                <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-md">
-                  <h3 className="font-medium mb-2">Embedding Refresh Status</h3>
-                  {lastRefreshed ? (
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">Last Full Refresh:</span>
-                        <span className="font-medium">{lastRefreshed.toLocaleTimeString()}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">Embedding Count:</span>
-                        <span className="font-medium">{Object.keys(embeddings).length} / {chunks.length}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm">Status:</span>
-                        {simulateOutdatedEmbeddings ? (
-                          <Badge variant="outline" className="bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-300">
-                            Potentially Outdated
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline" className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300">
-                            Up to Date
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="text-sm text-slate-500">No embeddings generated yet.</p>
-                  )}
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button
-                  onClick={generateAllEmbeddings}
-                  disabled={isGenerating}
-                  className="w-full flex items-center gap-2"
-                >
-                  <RefreshCw className="h-4 w-4" />
-                  {isGenerating ? "Refreshing..." : "Refresh All Embeddings"}
-                </Button>
-              </CardFooter>
-            </Card>
-
-            {/* Embedding Drift Visualization */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="h-5 w-5" />
-                  Embedding Drift
-                </CardTitle>
-                <CardDescription>Visualize how content changes affect search results</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-md">
-                  <h3 className="font-medium mb-2">Search for "dividend"</h3>
-                  <div className="flex items-center gap-2 mb-4">
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        setSearchQuery("dividend")
-                        performSearch()
-                      }}
-                      disabled={Object.keys(embeddings).length === 0}
-                    >
-                      Run Search
-                    </Button>
-                    <span className="text-sm text-slate-500">See how results change after content update</span>
-                  </div>
-
-                  {searchResults.length > 0 && searchQuery.toLowerCase().includes("dividend") && (
-                    <div className="space-y-3">
-                      {searchResults.map(result => {
-                        const chunk = chunks.find(c => c.id === result.id)
-                        return chunk ? (
-                          <div key={result.id} className="p-3 border border-gray-200 dark:border-gray-700 rounded-md">
-                            <div className="flex justify-between items-start">
-                              <span className="font-medium">Chunk #{chunk.id}</span>
-                              <Badge>{(result.similarity * 100).toFixed(1)}% match</Badge>
-                            </div>
-                            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{chunk.text}</p>
-                          </div>
-                        ) : null
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                {simulateOutdatedEmbeddings && chunks.find(c => c.id === 5)?.text.includes("postpone") && (
-                  <div className="p-4 border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                    <h3 className="font-medium text-red-800 dark:text-red-300 flex items-center gap-2 mb-2">
-                      <AlertCircle className="h-5 w-5" />
-                      Embedding Drift Detected
-                    </h3>
-                    <p className="text-sm text-red-700 dark:text-red-300">
-                      The content about dividends has changed (they're now postponed), but the embedding hasn't been updated.
-                      This causes the search to still return this document for "dividend" queries with high confidence,
-                      potentially leading to incorrect information being provided.
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Refresh Challenges */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Common Refresh Challenges</CardTitle>
-              <CardDescription>Issues to consider when managing embedding updates</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                    Refresh Frequency
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
-                    Determining how often to refresh embeddings is a balancing act. Too frequent updates waste resources,
-                    while infrequent updates risk outdated information. Consider content change frequency and criticality.
-                  </p>
-                </div>
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <Layers className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                    Model Compatibility
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
-                    Changing embedding models requires careful planning. Different models produce incompatible vectors,
-                    necessitating a full reindex. Version your embeddings to track which model generated each vector.
-                  </p>
-                </div>
-                <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                    Cost Management
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
-                    Embedding generation can be expensive at scale. Implement incremental updates to only refresh changed
-                    content, and consider batching updates to reduce API costs and computational overhead.
-                  </p>
-                </div>
-              </div>
             </CardContent>
           </Card>
         </TabsContent>

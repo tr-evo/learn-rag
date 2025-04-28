@@ -335,31 +335,17 @@ export default function IndexingDemo() {
                   </Select>
                 </div>
 
-                <div className="space-y-2">
-                  <Label>Or enter your own query</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Type a query..."
-                      value={customQuery}
-                      onChange={(e) => setCustomQuery(e.target.value)}
-                    />
-                    <Button variant="outline" disabled={!customQuery}>
-                      Use
-                    </Button>
-                  </div>
-                </div>
-
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-100 dark:bg-slate-800">
                       Index Size: {indexedChunks.length} chunks
                     </Badge>
-                    <Badge variant="outline" className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-100 dark:bg-slate-800">
                       Metric: {indexConfig.distanceMetric === "cosine" ? "Cosine Similarity" : "Euclidean Distance"}
                     </Badge>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge variant={indexConfig.approximateSearch ? "default" : "outline"}>
+                    <Badge className={indexConfig.approximateSearch ? "" : ""}>
                       {indexConfig.approximateSearch ? "Approximate" : "Exact"} Search
                     </Badge>
                   </div>
@@ -410,7 +396,7 @@ export default function IndexingDemo() {
                       <p className="text-slate-600 dark:text-slate-300 mb-2">{result.text}</p>
                       <div className="flex flex-wrap gap-1">
                         {Object.entries(result.metadata).map(([key, value]) => (
-                          <Badge key={key} variant="outline" className="text-xs">
+                          <Badge key={key} className="text-xs">
                             {key}: {value as string}
                           </Badge>
                         ))}

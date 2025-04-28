@@ -73,8 +73,8 @@ export default function IntegrationsDemo() {
   // Check for integration issues
   useEffect(() => {
     if (pipelineStatus.running) {
-      const errors = []
-      let previousComponent = null
+      const errors: { componentId: string; message: string }[] = []
+      let previousComponent: typeof components[0] | null = null
 
       // Simulate data flow through the pipeline
       for (const component of components) {
@@ -85,7 +85,7 @@ export default function IntegrationsDemo() {
 
         // Check if this component expects input from a previous component
         if (component.expectedInput && previousComponent) {
-          const previousOutput = componentConfigs[previousComponent.id].outputFormat
+          const previousOutput: string = componentConfigs[previousComponent.id].outputFormat
 
           // Check if the output format matches what this component expects
           if (previousOutput !== component.expectedInput) {
@@ -211,13 +211,12 @@ export default function IntegrationsDemo() {
                 <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">{component.description}</p>
                 <div className="flex flex-wrap gap-2">
                   {component.expectedInput && (
-                    <Badge variant="outline" className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-100 dark:bg-slate-800">
                       Input: {component.expectedInput}
                     </Badge>
                   )}
                   <div className="flex items-center gap-2">
                     <Badge
-                      variant="outline"
                       className={
                         componentConfigs[component.id].outputFormat !== component.outputFormat
                           ? "bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-300"

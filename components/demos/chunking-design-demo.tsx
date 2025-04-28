@@ -191,8 +191,10 @@ const chunkText = (
     const sentences = text.split(/(?<=[.!?])\s+/)
     let currentChunk = ""
     let currentTokens = 0
+    let lastChunkEndIndex = 0; // Track the end index of the last completed chunk
 
-    for (const sentence of sentences) {
+    for (let i = 0; i < sentences.length; i++) {
+      const sentence = sentences[i];
       const sentenceTokens = countTokens(sentence)
 
       if (currentTokens + sentenceTokens <= chunkSize) {
@@ -203,20 +205,55 @@ const chunkText = (
         // Current chunk is full, start a new one
         if (currentChunk) {
           addChunk(currentChunk)
-        }
-
-        // If a single sentence is too large, we might need to split it further
-        if (sentenceTokens > chunkSize) {
-          const words = sentence.split(/\s+/)
-          const wordsPerChunk = Math.floor(chunkSize / 1.3)
-
-          for (let i = 0; i < words.length; i += wordsPerChunk) {
-            const chunkWords = words.slice(i, i + wordsPerChunk)
-            addChunk(chunkWords.join(" "))
+          
+          // Apply overlap: look back to include some sentences from previous chunk
+          if (overlapSize > 0 && i > 0) {
+            let overlapChunk = "";
+            let overlapTokens = 0;
+            let j = i - 1;
+            
+            // Go backwards until we have enough overlap or hit the start of the last chunk
+            while (j >= lastChunkEndIndex && overlapTokens < overlapSize) {
+              const prevSentence = sentences[j];
+              const prevSentenceTokens = countTokens(prevSentence);
+              
+              // If adding this sentence would exceed the chunk size, stop
+              if (sentenceTokens + overlapTokens + prevSentenceTokens > chunkSize) {
+                break;
+              }
+              
+              overlapChunk = prevSentence + (overlapChunk ? " " : "") + overlapChunk;
+              overlapTokens += prevSentenceTokens;
+              j--;
+            }
+            
+            // Start new chunk with overlap + current sentence
+            currentChunk = overlapChunk + (overlapChunk ? " " : "") + sentence;
+            currentTokens = overlapTokens + sentenceTokens;
+          } else {
+            currentChunk = sentence;
+            currentTokens = sentenceTokens;
           }
+          
+          lastChunkEndIndex = i;
         } else {
-          currentChunk = sentence
-          currentTokens = sentenceTokens
+          // If a single sentence is too large, split it into smaller pieces
+          if (sentenceTokens > chunkSize) {
+            const words = sentence.split(/\s+/)
+            const wordsPerChunk = Math.floor(chunkSize / 1.3)
+            const overlapWords = Math.floor(overlapSize / 1.3)
+
+            for (let j = 0; j < words.length; j += wordsPerChunk - overlapWords) {
+              const chunkWords = words.slice(j, j + wordsPerChunk)
+              addChunk(chunkWords.join(" "))
+            }
+            
+            currentChunk = "";
+            currentTokens = 0;
+          } else {
+            currentChunk = sentence
+            currentTokens = sentenceTokens
+          }
         }
       }
     }
@@ -283,8 +320,25 @@ const chunkText = (
           if (currentChunk) {
             addChunk(currentChunk)
           }
-          currentChunk = paragraph
-          currentTokens = paragraphTokens
+          
+          // If paragraph is too large to fit in a chunk, we should apply the overlapSize
+          if (paragraphTokens > chunkSize) {
+            // Split paragraph using fixed-size with overlap
+            const words = paragraph.split(/\s+/)
+            const wordsPerChunk = Math.floor(chunkSize / 1.3)
+            const overlapWords = Math.floor(overlapSize / 1.3)
+
+            for (let i = 0; i < words.length; i += wordsPerChunk - overlapWords) {
+              const chunkWords = words.slice(i, i + wordsPerChunk)
+              addChunk(chunkWords.join(" "))
+            }
+            
+            currentChunk = "";
+            currentTokens = 0;
+          } else {
+            currentChunk = paragraph
+            currentTokens = paragraphTokens
+          }
         }
       }
     }
@@ -310,6 +364,7 @@ export default function ChunkingDesignDemo() {
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<number[]>([])
   const [isSearching, setIsSearching] = useState(false)
+  const [isOverlapApplicable, setIsOverlapApplicable] = useState(true)
 
   // Effect to update chunks when configuration changes
   useEffect(() => {
@@ -323,6 +378,23 @@ export default function ChunkingDesignDemo() {
     setChunks(newChunks)
     setTokenCounts(newTokenCounts)
   }, [selectedDocument, chunkingStrategy, chunkSize, overlapSize, respectParagraphs])
+
+  // Effect to determine if overlap is applicable for the current strategy
+  useEffect(() => {
+    // Overlap is applicable for fixed-size and when paragraphs need to be split
+    const applicable = 
+      chunkingStrategy === "fixed-size" || 
+      chunkingStrategy === "sentence" ||
+      (chunkingStrategy === "paragraph" && !respectParagraphs) ||
+      chunkingStrategy === "semantic";
+    
+    setIsOverlapApplicable(applicable);
+    
+    // If switching to a strategy where overlap doesn't apply, reset to 0
+    if (!applicable && overlapSize > 0) {
+      setOverlapSize(0);
+    }
+  }, [chunkingStrategy, respectParagraphs]);
 
   // Function to perform a search
   const performSearch = () => {
@@ -466,23 +538,42 @@ export default function ChunkingDesignDemo() {
                     max={100}
                     step={5}
                     onValueChange={(value) => setOverlapSize(value[0])}
+                    disabled={!isOverlapApplicable}
+                    className={!isOverlapApplicable ? "opacity-50" : ""}
                   />
                   <div className="flex justify-between text-xs text-slate-500">
                     <span>None (0)</span>
                     <span>Medium (50)</span>
                     <span>Large (100)</span>
                   </div>
+                  {!isOverlapApplicable && (
+                    <div className="mt-2 text-sm text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                      <AlertCircle className="h-4 w-4" />
+                      <span>
+                        Overlap is not applicable for this configuration. 
+                        {chunkingStrategy === "paragraph" && respectParagraphs 
+                          ? " Enable 'Split large paragraphs' to use overlap." 
+                          : ""}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Respect Paragraphs */}
                 {chunkingStrategy === "paragraph" && (
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="respect-paragraphs"
-                      checked={respectParagraphs}
-                      onCheckedChange={setRespectParagraphs}
-                    />
-                    <Label htmlFor="respect-paragraphs">Respect paragraph boundaries</Label>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="respect-paragraphs"
+                        checked={respectParagraphs}
+                        onCheckedChange={setRespectParagraphs}
+                      />
+                      <Label htmlFor="respect-paragraphs">Respect paragraph boundaries</Label>
+                    </div>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 ml-6">
+                      When enabled, paragraphs are kept intact and combined until they reach the chunk size limit.
+                      When disabled, large paragraphs are split into smaller chunks using the overlap setting.
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -510,7 +601,7 @@ export default function ChunkingDesignDemo() {
                   <div key={index} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-medium">Chunk #{index + 1}</h3>
-                      <Badge variant="outline">{tokenCounts[index]} tokens</Badge>
+                      <Badge className="bg-secondary text-secondary-foreground">{tokenCounts[index]} tokens</Badge>
                     </div>
                     <p className="text-sm text-slate-600 dark:text-slate-300 whitespace-pre-line">{chunk}</p>
                   </div>
@@ -550,16 +641,32 @@ export default function ChunkingDesignDemo() {
                 <div className="space-y-2">
                   <Label>Current Chunking Strategy</Label>
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-100 dark:bg-slate-800">
                       Strategy: {chunkingStrategy}
                     </Badge>
-                    <Badge variant="outline" className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-100 dark:bg-slate-800">
                       Chunk Size: {chunkSize} tokens
                     </Badge>
-                    <Badge variant="outline" className="bg-slate-100 dark:bg-slate-800">
+                    <Badge className="bg-slate-100 dark:bg-slate-800">
                       Overlap: {overlapSize} tokens
                     </Badge>
                   </div>
+                </div>
+                
+                <div className="p-4 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-900/20 rounded-lg mb-4">
+                  <h3 className="font-medium mb-2 flex items-center gap-2">
+                    <AlertCircle className="h-5 w-5 text-amber-800 dark:text-amber-300" />
+                    Simulation Note
+                  </h3>
+                  <p className="text-sm text-amber-700 dark:text-amber-300">
+                    This is a simplified search simulation using exact keyword matching. In a real RAG system:
+                  </p>
+                  <ul className="text-sm text-amber-700 dark:text-amber-300 mt-2 list-disc pl-5">
+                    <li>Text would be converted to vector embeddings</li>
+                    <li>Search would use vector similarity (cosine, dot product, etc.) instead of keyword matching</li>
+                    <li>Semantic meaning would be captured, not just exact text matches</li>
+                    <li>Retrieval would rank chunks by relevance scores</li>
+                  </ul>
                 </div>
 
                 <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-lg">
@@ -605,7 +712,7 @@ export default function ChunkingDesignDemo() {
                       <div key={index} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                         <div className="flex justify-between items-start mb-2">
                           <h3 className="font-medium">Chunk #{index + 1}</h3>
-                          <Badge variant="outline">{tokenCounts[index]} tokens</Badge>
+                          <Badge className="bg-secondary text-secondary-foreground">{tokenCounts[index]} tokens</Badge>
                         </div>
                         <p
                           className="text-sm text-slate-600 dark:text-slate-300"
@@ -822,16 +929,16 @@ export default function ChunkingDesignDemo() {
                       Small chunks improve precision by targeting specific information but may lose context.
                     </p>
                     <div className="flex items-center gap-2 mt-3">
-                      <div className="flex-1 h-2 bg-emerald-500 rounded"></div>
-                      <span className="text-xs">Precision</span>
+                      <div style={{ width: '100%' }} className="h-2 bg-emerald-500 rounded"></div>
+                      <span className="text-xs w-20">Precision</span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 h-2 bg-red-500 rounded w-1/3"></div>
-                      <span className="text-xs">Context</span>
+                      <div style={{ width: '33%' }} className="h-2 bg-red-500 rounded"></div>
+                      <span className="text-xs w-20">Context</span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 h-2 bg-amber-500 rounded w-1/2"></div>
-                      <span className="text-xs">Storage Efficiency</span>
+                      <div style={{ width: '40%' }} className="h-2 bg-amber-500 rounded"></div>
+                      <span className="text-xs w-20">Storage Efficiency</span>
                     </div>
                   </div>
 
@@ -841,16 +948,16 @@ export default function ChunkingDesignDemo() {
                       Medium chunks balance precision and context, suitable for most general use cases.
                     </p>
                     <div className="flex items-center gap-2 mt-3">
-                      <div className="flex-1 h-2 bg-emerald-500 rounded w-2/3"></div>
-                      <span className="text-xs">Precision</span>
+                      <div style={{ width: '75%' }} className="h-2 bg-emerald-500 rounded"></div>
+                      <span className="text-xs w-20">Precision</span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 h-2 bg-red-500 rounded w-2/3"></div>
-                      <span className="text-xs">Context</span>
+                      <div style={{ width: '67%' }} className="h-2 bg-red-500 rounded"></div>
+                      <span className="text-xs w-20">Context</span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 h-2 bg-amber-500 rounded w-4/5"></div>
-                      <span className="text-xs">Storage Efficiency</span>
+                      <div style={{ width: '70%' }} className="h-2 bg-amber-500 rounded"></div>
+                      <span className="text-xs w-20">Storage Efficiency</span>
                     </div>
                   </div>
 
@@ -860,17 +967,31 @@ export default function ChunkingDesignDemo() {
                       Large chunks preserve more context but may reduce precision and hit embedding model limits.
                     </p>
                     <div className="flex items-center gap-2 mt-3">
-                      <div className="flex-1 h-2 bg-emerald-500 rounded w-1/3"></div>
-                      <span className="text-xs">Precision</span>
+                      <div style={{ width: '50%' }} className="h-2 bg-emerald-500 rounded"></div>
+                      <span className="text-xs w-20">Precision</span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 h-2 bg-red-500 rounded w-full"></div>
-                      <span className="text-xs">Context</span>
+                      <div style={{ width: '100%' }} className="h-2 bg-red-500 rounded"></div>
+                      <span className="text-xs w-20">Context</span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 h-2 bg-amber-500 rounded w-full"></div>
-                      <span className="text-xs">Storage Efficiency</span>
+                      <div style={{ width: '90%' }} className="h-2 bg-amber-500 rounded"></div>
+                      <span className="text-xs w-20">Storage Efficiency</span>
                     </div>
+                  </div>
+                  
+                  <div className="p-4 border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                    <h3 className="font-medium mb-2">About Storage Efficiency</h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-300">
+                      Storage efficiency generally increases with chunk size because:
+                    </p>
+                    <ul className="text-sm text-slate-600 dark:text-slate-300 mt-2 list-disc pl-5">
+                      <li>Each chunk requires metadata overhead (IDs, timestamps, etc.)</li>
+                      <li>More chunks (from smaller chunking) means more total overhead</li>
+                      <li>Vector embeddings typically have fixed dimensionality regardless of text length</li>
+                      <li>Large chunks may store more content with the same embedding size</li>
+                      <li>Very large chunks can hit diminishing returns due to model token limits</li>
+                    </ul>
                   </div>
                 </div>
               </CardContent>
