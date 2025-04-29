@@ -324,7 +324,7 @@ export default function EmbeddingCreationDemo() {
       ctx.fill()
 
       // Draw label
-      ctx.fillStyle = "#000000"
+      ctx.fillStyle = "#ffffff"
       ctx.font = "10px Arial"
       ctx.fillText(`#${id}`, x + 10, y)
     })
@@ -344,7 +344,7 @@ export default function EmbeddingCreationDemo() {
       ctx.arc(x, y, 8, 0, Math.PI * 2)
       ctx.fill()
 
-      ctx.fillStyle = "#000000"
+      ctx.fillStyle = "#ffffff"
       ctx.font = "10px Arial"
       ctx.fillText("Query", x + 10, y)
     }

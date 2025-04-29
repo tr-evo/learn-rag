@@ -485,7 +485,7 @@ export default function ChunkingDesignDemo() {
                     <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
                       <SelectValue placeholder="Select chunking strategy" />
                     </SelectTrigger>
-                    <SelectContent className="bg-slate-900 border-slate-700">
+                    <SelectContent className="bg-slate-800 border-slate-700 text-slate-300">
                       <SelectItem value="fixed-size">Fixed Size (Token Count)</SelectItem>
                       <SelectItem value="paragraph">Paragraph-based</SelectItem>
                       <SelectItem value="sentence">Sentence-based</SelectItem>
