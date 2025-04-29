@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, ArrowRight } from "lucide-react"
+import { ArrowLeft, ArrowRight, AlertTriangle } from "lucide-react"
 import SourcePreprocessingDemo from "@/components/demos/source-preprocessing-demo"
 import IntegrationsDemo from "@/components/demos/integrations-demo"
 import MetadataTaggingDemo from "@/components/demos/metadata-tagging-demo"
@@ -293,160 +293,184 @@ export const steps = [
 ]
 
 export default function StepPage({ params }: { params: { id: string } }) {
-  const step = steps.find((step) => step.id === params.id)
+  const stepId = params.id
+  const step = steps.find((s) => s.id === stepId)
 
   if (!step) {
     notFound()
   }
 
-  // Get phase info based on step ID
-  const stepId = parseInt(step.id)
-  let phase = "Data Ingestion"
-  let phaseNumber = 1
-  let phaseColor = "from-emerald-500 to-teal-600"
-
-  if (stepId >= 7 && stepId <= 10) {
-    phase = "Retrieval"
-    phaseNumber = 2
-    phaseColor = "from-teal-500 to-cyan-600"
-  } else if (stepId >= 11) {
-    phase = "Generation"
-    phaseNumber = 3
-    phaseColor = "from-cyan-500 to-blue-600"
-  }
+  const currentIndex = steps.findIndex((s) => s.id === stepId)
+  const prevStep = currentIndex > 0 ? steps[currentIndex - 1] : null
+  const nextStep = currentIndex < steps.length - 1 ? steps[currentIndex + 1] : null
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
-      {/* Header with gradient background */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-emerald-600/20 to-transparent"></div>
-
-        <header className="container mx-auto px-4 py-10 relative z-10">
-          <div className="mb-8">
-            <Link
-              href="/"
-              className="inline-flex items-center text-emerald-400 hover:text-emerald-300 transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              <span>Back to Overview</span>
-            </Link>
-          </div>
-
-          <div className="flex items-center mb-6">
-            <div className="mr-4 bg-gradient-to-br from-emerald-500 to-teal-600 
-              text-white rounded-full w-12 h-12 flex items-center justify-center
-              text-xl font-bold shadow-lg">
-              {step.id}
-            </div>
-            <div>
-              <div className="text-sm text-emerald-400 mb-1">
-                Phase {phaseNumber}: {phase}
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-300 
-                bg-clip-text text-transparent">
-                {step.title}
-              </h1>
-            </div>
-          </div>
-
-          <p className="text-xl text-slate-300 max-w-4xl">
-            {step.description}
-          </p>
-        </header>
-      </div>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <div className="bg-slate-800/70 p-6 rounded-xl border border-slate-700">
-            <h2 className="text-2xl font-semibold mb-4 text-emerald-400 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              What it does
-            </h2>
-            <p className="text-slate-300">{step.whatItDoes}</p>
-          </div>
-
-          <div className="bg-slate-800/70 p-6 rounded-xl border border-slate-700">
-            <h2 className="text-2xl font-semibold mb-4 text-emerald-400 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Why it matters
-            </h2>
-            <p className="text-slate-300">{step.whyItMatters}</p>
-          </div>
-        </div>
-
-        <div className="mb-12 bg-slate-800/70 p-6 rounded-xl border border-slate-700">
-          <h2 className="text-2xl font-semibold mb-4 text-emerald-400 flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            Common Challenges
-          </h2>
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {step.challenges.map((challenge, index) => (
-              <li key={index} className="flex items-start">
-                <span className="inline-block bg-amber-400/20 text-amber-300 rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center mr-3 mt-0.5">
-                  {index + 1}
-                </span>
-                <span className="text-slate-300">{challenge}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {step.demo && (
-          <div>
-            <h2 className="text-2xl font-semibold mb-6 text-emerald-400 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              Interactive Demo
-            </h2>
-            <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
-              {step.demo}
-            </div>
-          </div>
-        )}
-      </main>
-
-      {/* Navigation Footer */}
-      <footer className="container mx-auto px-4 py-8 border-t border-slate-800">
-        <div className="flex flex-col sm:flex-row justify-between items-center">
-          {parseInt(step.id) > 1 && (
-            <Link
-              href={`/steps/${parseInt(step.id) - 1}`}
-              className="bg-slate-800 hover:bg-slate-700 border border-slate-700 
-                text-slate-300 px-4 py-2 rounded-lg mb-4 sm:mb-0 flex items-center"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Previous Step
-            </Link>
-          )}
-
+      <div className="container mx-auto px-2 py-10">
+        <div className="mb-10">
           <Link
             href="/"
-            className="bg-slate-800 hover:bg-slate-700 border border-slate-700 
-              text-slate-300 px-4 py-2 rounded-lg mb-4 sm:mb-0"
+            className="inline-flex items-center text-slate-300 hover:text-emerald-400 transition-colors"
           >
-            RAG Pipeline Overview
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Overview
           </Link>
+        </div>
 
-          {parseInt(step.id) < 15 && (
-            <Link
-              href={`/steps/${parseInt(step.id) + 1}`}
-              className="bg-slate-800 hover:bg-slate-700 border border-slate-700 
-                text-slate-300 px-4 py-2 rounded-lg flex items-center"
-            >
-              Next Step
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Link>
-          )}
+        <header className="max-w-4xl mx-auto mb-12">
+          <div className="bg-emerald-700 text-white text-xs font-bold px-3 py-1 rounded-full inline-block mb-3">
+            Step {step.id}
+          </div>
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 text-white">
+            {step.title}
+          </h1>
+          <p className="text-xl text-slate-300">{step.description}</p>
+        </header>
+
+        <div className="max-w-5xl mx-auto grid grid-cols-1 gap-8">
+          {/* Details Section */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-slate-800/60 border border-slate-700 rounded-xl p-6">
+              <h2 className="text-lg font-medium text-emerald-400 mb-3">
+                What It Does
+              </h2>
+              <p className="text-slate-300">{step.whatItDoes}</p>
+            </div>
+
+            <div className="bg-slate-800/60 border border-slate-700 rounded-xl p-6">
+              <h2 className="text-lg font-medium text-emerald-400 mb-3">
+                Why It Matters
+              </h2>
+              <p className="text-slate-300">{step.whyItMatters}</p>
+            </div>
+          </section>
+
+          {/* Challenges Section */}
+          <section className="bg-slate-800/60 border border-slate-700 rounded-xl p-6">
+            <h2 className="text-lg font-medium text-emerald-400 mb-4">
+              Common Challenges
+            </h2>
+            <ul className="space-y-2">
+              {step.challenges.map((challenge, i) => (
+                <li
+                  key={i}
+                  className="flex items-start gap-3 text-slate-300 pl-2"
+                >
+                  <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                  <span>{challenge}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Demo Section */}
+          <section className="bg-slate-800/60 border border-slate-700 rounded-xl p-6">
+            <h2 className="text-lg font-medium text-emerald-400 mb-4">
+              Interactive Demo
+            </h2>
+            {step.demo}
+          </section>
+
+          {/* Respeak Call to Action */}
+          <section className="bg-emerald-900/30 border border-emerald-800 rounded-xl p-6">
+            <div className="flex flex-col md:flex-row items-center gap-5">
+              <div className="flex-1">
+                <h2 className="text-lg font-medium text-emerald-400 mb-2">
+                  Skip the Complexity
+                </h2>
+                <p className="text-slate-300 mb-4">
+                  Building a robust {step.title.toLowerCase()} solution is challenging. 
+                  Respeak's Enterprise RAG Platform handles this complexity for you.
+                </p>
+                <div className="flex gap-3 flex-wrap">
+                  <a
+                    href="https://meetings-eu1.hubspot.com/tim-rietz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm
+                      font-medium transition-all flex items-center gap-2"
+                  >
+                    Schedule a Demo
+                  </a>
+                  <a
+                    href="https://www.respeak.io/contact"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm
+                      font-medium transition-all flex items-center gap-2"
+                  >
+                    Contact Us
+                  </a>
+                </div>
+              </div>
+              <div className="flex-shrink-0 hidden md:block">
+                <a 
+                  href="https://www.linkedin.com/in/timrietz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs">Follow <span className="font-medium">Dr. Tim Rietz</span></p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-between items-center pt-6">
+            {prevStep ? (
+              <Link
+                href={`/steps/${prevStep.id}`}
+                className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>
+                  <span className="text-slate-400 text-sm block">Previous</span>
+                  <span className="font-medium">{prevStep.title}</span>
+                </span>
+              </Link>
+            ) : (
+              <div></div>
+            )}
+
+            {nextStep ? (
+              <Link
+                href={`/steps/${nextStep.id}`}
+                className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors ml-auto"
+              >
+                <span>
+                  <span className="text-slate-400 text-sm block">Next</span>
+                  <span className="font-medium">{nextStep.title}</span>
+                </span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : (
+              <Link
+                href="/"
+                className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg transition-colors ml-auto"
+              >
+                <span className="font-medium">Back to Overview</span>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="container mx-auto px-2 py-8 text-center text-slate-400 border-t border-slate-800 mt-16">
+        <p>© 2024 <a href="https://www.respeak.io" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">Respeak GmbH</a>. All rights reserved.</p>
+        <div className="mt-4 flex justify-center gap-6">
+          <a href="https://www.respeak.io" className="hover:text-emerald-400 transition-colors">Website</a>
+          <a href="https://www.linkedin.com/in/timrietz/" className="hover:text-emerald-400 transition-colors">LinkedIn</a>
+          <a href="https://meetings-eu1.hubspot.com/tim-rietz" className="hover:text-emerald-400 transition-colors">Book a Demo</a>
         </div>
       </footer>
     </div>
