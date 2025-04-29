@@ -33,6 +33,7 @@ export const steps = [
       "Removing boilerplate content while keeping important information",
       "Extracting and preserving metadata for later use",
       "Dealing with tables, images, and other non-text content",
+      "Handling OCR artifacts, misrecognition, and layout confusion in scanned documents",
     ],
     demo: <SourcePreprocessingDemo />,
   },
@@ -51,6 +52,7 @@ export const steps = [
       "Ensuring consistent data formats across different services",
       "Maintaining compatibility with evolving external APIs",
       "Optimizing for cost and performance across integrated services",
+      "Inegrating with external tools (e.g. Sharepoint, Drive, etc.)",
     ],
     demo: <IntegrationsDemo />,
   },
@@ -302,7 +304,7 @@ export default function StepPage({ params }: { params: { id: string } }) {
   let phase = "Data Ingestion"
   let phaseNumber = 1
   let phaseColor = "from-emerald-500 to-teal-600"
-  
+
   if (stepId >= 7 && stepId <= 10) {
     phase = "Retrieval"
     phaseNumber = 2
@@ -319,25 +321,25 @@ export default function StepPage({ params }: { params: { id: string } }) {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-600/20 to-transparent"></div>
-        
+
         <header className="container mx-auto px-4 py-10 relative z-10">
-      <div className="mb-8">
-            <Link 
-              href="/" 
+          <div className="mb-8">
+            <Link
+              href="/"
               className="inline-flex items-center text-emerald-400 hover:text-emerald-300 transition-colors"
             >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          <span>Back to Overview</span>
-        </Link>
-      </div>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              <span>Back to Overview</span>
+            </Link>
+          </div>
 
           <div className="flex items-center mb-6">
             <div className="mr-4 bg-gradient-to-br from-emerald-500 to-teal-600 
               text-white rounded-full w-12 h-12 flex items-center justify-center
               text-xl font-bold shadow-lg">
               {step.id}
-        </div>
-        <div>
+            </div>
+            <div>
               <div className="text-sm text-emerald-400 mb-1">
                 Phase {phaseNumber}: {phase}
               </div>
@@ -345,8 +347,8 @@ export default function StepPage({ params }: { params: { id: string } }) {
                 bg-clip-text text-transparent">
                 {step.title}
               </h1>
-        </div>
-      </div>
+            </div>
+          </div>
 
           <p className="text-xl text-slate-300 max-w-4xl">
             {step.description}
@@ -366,7 +368,7 @@ export default function StepPage({ params }: { params: { id: string } }) {
             </h2>
             <p className="text-slate-300">{step.whatItDoes}</p>
           </div>
-          
+
           <div className="bg-slate-800/70 p-6 rounded-xl border border-slate-700">
             <h2 className="text-2xl font-semibold mb-4 text-emerald-400 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -377,7 +379,7 @@ export default function StepPage({ params }: { params: { id: string } }) {
             <p className="text-slate-300">{step.whyItMatters}</p>
           </div>
         </div>
-        
+
         <div className="mb-12 bg-slate-800/70 p-6 rounded-xl border border-slate-700">
           <h2 className="text-2xl font-semibold mb-4 text-emerald-400 flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -386,19 +388,19 @@ export default function StepPage({ params }: { params: { id: string } }) {
             Common Challenges
           </h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {step.challenges.map((challenge, index) => (
+            {step.challenges.map((challenge, index) => (
               <li key={index} className="flex items-start">
                 <span className="inline-block bg-amber-400/20 text-amber-300 rounded-full w-6 h-6 flex-shrink-0 flex items-center justify-center mr-3 mt-0.5">
                   {index + 1}
                 </span>
                 <span className="text-slate-300">{challenge}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-      {step.demo && (
-        <div>
+        {step.demo && (
+          <div>
             <h2 className="text-2xl font-semibold mb-6 text-emerald-400 flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -412,12 +414,12 @@ export default function StepPage({ params }: { params: { id: string } }) {
           </div>
         )}
       </main>
-      
+
       {/* Navigation Footer */}
       <footer className="container mx-auto px-4 py-8 border-t border-slate-800">
         <div className="flex flex-col sm:flex-row justify-between items-center">
           {parseInt(step.id) > 1 && (
-            <Link 
+            <Link
               href={`/steps/${parseInt(step.id) - 1}`}
               className="bg-slate-800 hover:bg-slate-700 border border-slate-700 
                 text-slate-300 px-4 py-2 rounded-lg mb-4 sm:mb-0 flex items-center"
@@ -426,17 +428,17 @@ export default function StepPage({ params }: { params: { id: string } }) {
               Previous Step
             </Link>
           )}
-          
-          <Link 
+
+          <Link
             href="/"
             className="bg-slate-800 hover:bg-slate-700 border border-slate-700 
               text-slate-300 px-4 py-2 rounded-lg mb-4 sm:mb-0"
           >
             RAG Pipeline Overview
           </Link>
-          
+
           {parseInt(step.id) < 15 && (
-            <Link 
+            <Link
               href={`/steps/${parseInt(step.id) + 1}`}
               className="bg-slate-800 hover:bg-slate-700 border border-slate-700 
                 text-slate-300 px-4 py-2 rounded-lg flex items-center"

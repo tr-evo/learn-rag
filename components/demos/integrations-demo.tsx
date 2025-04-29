@@ -6,18 +6,27 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { AlertCircle, CheckCircle2, Database, FileText, Cpu, BrainCircuit, ArrowRight, Settings, AlertTriangle } from "lucide-react"
+import { AlertCircle, CheckCircle2, Database, FileText, Cpu, BrainCircuit, ArrowRight, Settings, AlertTriangle, Share2 } from "lucide-react"
 
 export default function IntegrationsDemo() {
   // Define the components of our RAG pipeline
   const components = [
+    {
+      id: "sharepoint-connector",
+      name: "SharePoint Connector",
+      description: "Connects to SharePoint and extracts documents and metadata",
+      icon: Share2,
+      outputFormat: "sharepoint-document",
+      expectedInput: null,
+      status: "operational",
+    },
     {
       id: "document-loader",
       name: "Document Loader",
       description: "Loads documents from various sources",
       icon: FileText,
       outputFormat: "raw-text",
-      expectedInput: null,
+      expectedInput: "sharepoint-document",
       status: "operational",
     },
     {
@@ -186,7 +195,7 @@ export default function IntegrationsDemo() {
           </svg>
           RAG Pipeline Flow
         </h2>
-        
+
         <div className="relative">
           {/* Pipeline status indicator */}
           <div className="absolute -top-2 right-0">
@@ -201,7 +210,7 @@ export default function IntegrationsDemo() {
               </Badge>
             )}
           </div>
-          
+
           {/* Pipeline visualization */}
           <div className="flex flex-wrap justify-center items-center gap-2 py-6">
             {components
@@ -213,7 +222,7 @@ export default function IntegrationsDemo() {
                     ${pipelineStatus.errors.some((e) => e.componentId === component.id)
                         ? "bg-red-900/20 border border-red-500/50"
                         : "bg-slate-700/50 border border-slate-600 hover:border-emerald-500/30 transition-colors"
-                    }`}
+                      }`}
                   >
                     {pipelineStatus.errors.some((e) => e.componentId === component.id) && (
                       <div className="absolute -top-2 -right-2">
@@ -228,21 +237,20 @@ export default function IntegrationsDemo() {
                   </div>
                   {index < array.length - 1 && (
                     <div className="px-2">
-                      <ArrowRight className={`h-6 w-6 ${
-                        pipelineStatus.errors.some((e) => e.componentId === array[index + 1]?.id)
+                      <ArrowRight className={`h-6 w-6 ${pipelineStatus.errors.some((e) => e.componentId === array[index + 1]?.id)
                           ? "text-red-400"
                           : "text-emerald-500"
-                      }`} />
+                        }`} />
                     </div>
                   )}
                 </div>
               ))}
           </div>
-          
+
           {/* Run button */}
           <div className="flex justify-center mt-4">
-            <Button 
-              onClick={runPipeline} 
+            <Button
+              onClick={runPipeline}
               disabled={pipelineStatus.running}
               className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
             >
@@ -258,7 +266,7 @@ export default function IntegrationsDemo() {
             </Button>
           </div>
         </div>
-        
+
         {/* Error messages */}
         {pipelineStatus.errors.length > 0 && (
           <div className="mt-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg">
@@ -276,7 +284,7 @@ export default function IntegrationsDemo() {
             </ul>
           </div>
         )}
-        
+
         {/* Success message */}
         {pipelineStatus.success && (
           <div className="mt-6 p-4 bg-green-900/20 border border-green-500/50 rounded-lg">
@@ -293,82 +301,82 @@ export default function IntegrationsDemo() {
 
       {/* Component Configuration */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {components.map((component) => (
-              <div
-                key={component.id}
+        {components.map((component) => (
+          <div
+            key={component.id}
             className={`bg-slate-800/80 border rounded-xl overflow-hidden shadow-lg transition-colors
               ${pipelineStatus.errors.some((e) => e.componentId === component.id)
                 ? "border-red-500/50"
                 : "border-slate-700 hover:border-slate-600"
-                }`}
-              >
+              }`}
+          >
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <component.icon className="h-5 w-5 text-emerald-400" />
                 <h3 className="font-medium text-slate-200">{component.name}</h3>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      id={`${component.id}-switch`}
-                      checked={componentConfigs[component.id].enabled}
-                      onCheckedChange={() => toggleComponent(component.id)}
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  id={`${component.id}-switch`}
+                  checked={componentConfigs[component.id].enabled}
+                  onCheckedChange={() => toggleComponent(component.id)}
                   className="data-[state=checked]:bg-emerald-500"
-                    />
+                />
                 <Label htmlFor={`${component.id}-switch`} className="text-sm text-slate-300">
-                      {componentConfigs[component.id].enabled ? "Enabled" : "Disabled"}
-                    </Label>
-                  </div>
-                </div>
-            
+                  {componentConfigs[component.id].enabled ? "Enabled" : "Disabled"}
+                </Label>
+              </div>
+            </div>
+
             <div className="p-5">
               <p className="text-sm text-slate-300 mb-4">{component.description}</p>
-              
+
               <div className="space-y-3">
-                  {component.expectedInput && (
+                {component.expectedInput && (
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-slate-400">Expected Input:</span>
                     <Badge className="bg-slate-700 text-slate-300 hover:bg-slate-700">
                       {component.expectedInput}
                     </Badge>
                   </div>
-                  )}
-                
-                  <div className="flex items-center gap-2">
+                )}
+
+                <div className="flex items-center gap-2">
                   <span className="text-xs text-slate-400">Output Format:</span>
-                    <Badge
-                      className={
-                        componentConfigs[component.id].outputFormat !== component.outputFormat
+                  <Badge
+                    className={
+                      componentConfigs[component.id].outputFormat !== component.outputFormat
                         ? "bg-amber-500/20 text-amber-300 hover:bg-amber-500/30"
                         : "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
-                      }
-                    >
+                    }
+                  >
                     {componentConfigs[component.id].outputFormat}
-                    </Badge>
-                  
-                    {componentConfigs[component.id].outputFormat !== component.outputFormat && (
-                      <Button
+                  </Badge>
+
+                  {componentConfigs[component.id].outputFormat !== component.outputFormat && (
+                    <Button
                       variant="outline"
-                        size="sm"
-                        onClick={() => changeOutputFormat(component.id, component.outputFormat)}
+                      size="sm"
+                      onClick={() => changeOutputFormat(component.id, component.outputFormat)}
                       className="h-7 text-xs border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
-                      >
-                        Reset
-                      </Button>
-                    )}
-                  </div>
+                    >
+                      Reset
+                    </Button>
+                  )}
                 </div>
-              
-                {pipelineStatus.errors.some((e) => e.componentId === component.id) && (
+              </div>
+
+              {pipelineStatus.errors.some((e) => e.componentId === component.id) && (
                 <div className="mt-4 p-3 bg-red-900/20 border border-red-500/50 rounded-lg text-xs text-red-300 flex items-start gap-2">
-                    <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                    <span>{pipelineStatus.errors.find((e) => e.componentId === component.id)?.message}</span>
+                  <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <span>{pipelineStatus.errors.find((e) => e.componentId === component.id)?.message}</span>
                 </div>
               )}
             </div>
-                    </div>
-                  ))}
-              </div>
-      
+          </div>
+        ))}
+      </div>
+
       {/* Action buttons */}
       <div className="flex flex-wrap gap-4 justify-center">
         <Button
@@ -379,7 +387,7 @@ export default function IntegrationsDemo() {
           <Settings className="h-4 w-4 mr-2" />
           Introduce Issue
         </Button>
-        
+
         <Button
           variant="outline"
           onClick={resetPipeline}
@@ -390,14 +398,14 @@ export default function IntegrationsDemo() {
             <path d="M3 3v5h5" />
           </svg>
           Reset All
-            </Button>
+        </Button>
       </div>
 
       {/* Best Practices */}
       <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5">
         <h3 className="text-sm font-medium text-emerald-400 mb-4">Integration Best Practices</h3>
-        
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg transition-all hover:border-emerald-500/30">
             <div className="flex items-center gap-2 mb-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -409,7 +417,7 @@ export default function IntegrationsDemo() {
               Ensure components use compatible data formats and APIs. Consider frameworks like LangChain or LlamaIndex that provide standardized interfaces.
             </p>
           </div>
-          
+
           <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg transition-all hover:border-emerald-500/30">
             <div className="flex items-center gap-2 mb-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -422,7 +430,7 @@ export default function IntegrationsDemo() {
               Add robust error handling at each integration point. Gracefully handle failures and provide clear error messages for troubleshooting.
             </p>
           </div>
-          
+
           <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg transition-all hover:border-emerald-500/30">
             <div className="flex items-center gap-2 mb-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
