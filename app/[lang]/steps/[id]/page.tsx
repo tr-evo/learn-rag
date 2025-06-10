@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, ArrowRight, AlertTriangle } from "lucide-react"
+import LanguageSwitcher from "@/components/language-switcher"
 import SourcePreprocessingDemo from "@/components/demos/source-preprocessing-demo"
 import IntegrationsDemo from "@/components/demos/integrations-demo"
 import MetadataTaggingDemo from "@/components/demos/metadata-tagging-demo"
@@ -293,13 +294,18 @@ export const steps = [
 ]
 
 export function generateStaticParams() {
-  return steps.map((step) => ({
-    id: step.id,
-  }))
+  const langs = ['en', 'de']
+  const params = [] as { lang: string; id: string }[]
+  for (const lang of langs) {
+    for (const step of steps) {
+      params.push({ lang, id: step.id })
+    }
+  }
+  return params
 }
 
-export default function StepPage({ params }: { params: { id: string } }) {
-  const stepId = params.id
+export default function StepPage({ params }: { params: { lang: string; id: string } }) {
+  const { id: stepId, lang } = params
   const step = steps.find((s) => s.id === stepId)
 
   if (!step) {
@@ -313,14 +319,15 @@ export default function StepPage({ params }: { params: { id: string } }) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
       <div className="container mx-auto px-2 py-10">
-        <div className="mb-10">
+        <div className="mb-10 flex justify-between items-center">
           <Link
-            href="/"
+            href={`/${lang}`}
             className="inline-flex items-center text-slate-300 hover:text-emerald-400 transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Overview
           </Link>
+          <LanguageSwitcher />
         </div>
 
         <header className="max-w-4xl mx-auto mb-12">
@@ -433,7 +440,7 @@ export default function StepPage({ params }: { params: { id: string } }) {
           <div className="flex justify-between items-center pt-6">
             {prevStep ? (
               <Link
-                href={`/steps/${prevStep.id}`}
+                href={`/${lang}/steps/${prevStep.id}`}
                 className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
@@ -448,7 +455,7 @@ export default function StepPage({ params }: { params: { id: string } }) {
 
             {nextStep ? (
               <Link
-                href={`/steps/${nextStep.id}`}
+                href={`/${lang}/steps/${nextStep.id}`}
                 className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors ml-auto"
               >
                 <span>
@@ -459,7 +466,7 @@ export default function StepPage({ params }: { params: { id: string } }) {
               </Link>
             ) : (
               <Link
-                href="/"
+                href={`/${lang}`}
                 className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2 rounded-lg transition-colors ml-auto"
               >
                 <span className="font-medium">Back to Overview</span>
