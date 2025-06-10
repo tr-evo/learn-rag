@@ -1,0 +1,14 @@
+{
+  "id": "3",
+  "title": "Metadata Tagging",
+  "description": "Metadata tagging enriches your documents with additional information that helps with retrieval, filtering, and context understanding.",
+  "whatItDoes": "Metadata tagging adds structured information to your documents, such as categories, dates, authors, and other attributes. This metadata can be used for filtering, sorting, and enhancing the context provided to the LLM.",
+  "whyItMatters": "Rich metadata improves retrieval precision, enables advanced filtering, and provides crucial context to the LLM. It helps your RAG system understand not just what a document contains, but what it is.",
+  "challenges": [
+    "Designing a consistent metadata schema across diverse documents",
+    "Automatically extracting relevant metadata from unstructured text",
+    "Balancing metadata complexity with usability",
+    "Handling missing or inconsistent metadata",
+    "Storing and indexing metadata efficiently"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "9",
+  "title": "Filtering & Permission Checks",
+  "description": "Filtering and permission checks ensure that only relevant and authorized content is retrieved and presented to users.",
+  "whatItDoes": "Filtering narrows down search results based on metadata criteria like date, category, or source. Permission checks verify that users have appropriate access rights to the retrieved information, preventing unauthorized access to sensitive data.",
+  "whyItMatters": "Effective filtering improves retrieval precision by eliminating irrelevant results. Permission checks are crucial for security and compliance, ensuring users only see information they're authorized to access.",
+  "challenges": [
+    "Implementing efficient filtering without sacrificing retrieval performance",
+    "Designing flexible permission models that scale with complex organizations",
+    "Handling nested or inherited permissions",
+    "Balancing security with usability and performance",
+    "Maintaining consistent permission enforcement across the entire RAG pipeline"
+  ]
+}

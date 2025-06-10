@@ -1,0 +1,14 @@
+{
+  "id": "10",
+  "title": "Reranking / Fusion",
+  "description": "Reranking and fusion techniques improve retrieval quality by reordering or combining results from different retrieval methods.",
+  "whatItDoes": "Reranking takes initial search results and reorders them using more sophisticated (and often more computationally expensive) models to improve relevance. Fusion combines results from multiple retrieval methods (like keyword search and semantic search) to leverage the strengths of each approach.",
+  "whyItMatters": "These techniques significantly improve retrieval quality by addressing the limitations of individual retrieval methods. They help balance precision and recall, combining the strengths of different approaches to deliver more relevant results.",
+  "challenges": [
+    "Balancing the computational cost of reranking with retrieval speed",
+    "Determining optimal weights when combining different retrieval signals",
+    "Avoiding over-optimization for specific query types",
+    "Handling cases where different retrieval methods produce contradictory rankings",
+    "Measuring and optimizing the impact of reranking and fusion on end-to-end RAG performance"
+  ]
+}

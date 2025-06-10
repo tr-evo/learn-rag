@@ -1,0 +1,14 @@
+{
+  "id": "4",
+  "title": "DE Indexing",
+  "description": "DE Indexing organizes your document collection for efficient storage and retrieval, making it possible to quickly find relevant information.",
+  "whatItDoes": "DE Indexing creates optimized data structures that allow for fast searching and retrieval of documents. It maps terms, vectors, or other features to the documents that contain them.",
+  "whyItMatters": "DE Effective indexing is crucial for the performance and scalability of your RAG system. It enables quick retrieval of relevant documents from potentially massive collections.",
+  "challenges": [
+    "DE Choosing the right index type for your specific use case",
+    "DE Balancing index size with query performance",
+    "DE Handling index updates as documents change",
+    "DE Scaling indexes to large document collections",
+    "DE Optimizing for different query patterns"
+  ]
+}

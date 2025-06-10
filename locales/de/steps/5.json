@@ -1,0 +1,14 @@
+{
+  "id": "5",
+  "title": "DE Chunking Design",
+  "description": "DE Chunking breaks down documents into smaller, manageable pieces that can be individually embedded and retrieved.",
+  "whatItDoes": "DE Chunking splits documents into smaller segments based on various strategies like size, semantic boundaries, or structural elements. These chunks become the basic units for embedding and retrieval.",
+  "whyItMatters": "DE The way you chunk documents significantly impacts retrieval quality. Good chunking preserves context, reduces noise, and ensures that relevant information is retrieved together.",
+  "challenges": [
+    "DE Determining optimal chunk size for your specific use case",
+    "DE Preserving context across chunk boundaries",
+    "DE Handling documents with varying structures",
+    "DE Balancing chunk granularity with retrieval precision",
+    "DE Managing overlapping chunks to preserve context"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "8",
+  "title": "Hybrid Retrieval",
+  "description": "Hybrid retrieval combines multiple search methods like vector search and keyword search to improve the quality and relevance of retrieved information.",
+  "whatItDoes": "Hybrid retrieval uses a combination of retrieval methods – typically dense vector search and traditional keyword (sparse) search – to find relevant documents. Instead of relying on just one approach, it runs both methods and then merges the results, leveraging the strengths of each system.",
+  "whyItMatters": "Hybrid retrieval aims to get the best of both worlds. Sparse (term-based) search excels at exact matches – if the user's query uses the same terminology as a document, a keyword search will precisely find that document. Dense search, on the other hand, excels at finding conceptually related info (synonyms, paraphrases) but might also return something contextually similar yet not actually relevant. By combining them, the pipeline can catch relevant documents that one method alone might miss.",
+  "challenges": [
+    "Implementing and maintaining two search systems instead of one",
+    "Normalizing scores between different retrieval methods",
+    "Balancing the weight given to each retrieval method",
+    "Handling increased latency from running multiple searches",
+    "Managing duplicated results across retrieval methods"
+  ]
+}

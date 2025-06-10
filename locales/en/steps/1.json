@@ -1,0 +1,15 @@
+{
+  "id": "1",
+  "title": "Source Preprocessing",
+  "description": "The first step in building a RAG system is to preprocess your source documents. This involves cleaning, normalizing, and preparing your text data for further processing.",
+  "whatItDoes": "Source preprocessing transforms raw documents into clean, normalized text that's ready for chunking and embedding. It handles tasks like removing irrelevant content, standardizing formats, and extracting useful metadata.",
+  "whyItMatters": "High-quality preprocessing directly impacts the quality of your RAG system. Clean, well-structured text leads to better chunks, more accurate embeddings, and ultimately more relevant responses.",
+  "challenges": [
+    "Handling diverse document formats (PDF, HTML, Word, etc.)",
+    "Preserving document structure and formatting that provides context",
+    "Removing boilerplate content while keeping important information",
+    "Extracting and preserving metadata for later use",
+    "Dealing with tables, images, and other non-text content",
+    "Handling OCR artifacts, misrecognition, and layout confusion in scanned documents"
+  ]
+}

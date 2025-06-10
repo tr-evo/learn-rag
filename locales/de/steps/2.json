@@ -1,0 +1,15 @@
+{
+  "id": "2",
+  "title": "DE Integrations",
+  "description": "DE Integrations connect your RAG system with external tools, services, and data sources to enhance functionality and extend capabilities.",
+  "whatItDoes": "DE Integration components allow your RAG system to connect with document stores, vector databases, LLM providers, and other services. They provide standardized interfaces for data exchange and functionality sharing.",
+  "whyItMatters": "DE Well-designed integrations make your RAG system more powerful, flexible, and easier to maintain. They allow you to leverage specialized tools for different aspects of the RAG pipeline.",
+  "challenges": [
+    "DE Managing authentication and credentials securely",
+    "DE Handling rate limits and API quotas",
+    "DE Ensuring consistent data formats across different services",
+    "DE Maintaining compatibility with evolving external APIs",
+    "DE Optimizing for cost and performance across integrated services",
+    "DE Inegrating with external tools (e.g. Sharepoint, Drive, etc.)"
+  ]
+}

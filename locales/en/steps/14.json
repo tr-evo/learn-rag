@@ -1,0 +1,14 @@
+{
+  "id": "14",
+  "title": "Monitoring & Evaluation",
+  "description": "Monitoring and evaluation track the performance of your RAG system over time, helping you identify issues, measure quality, and drive continuous improvement.",
+  "whatItDoes": "Monitoring collects real-time metrics on system performance, such as latency, usage statistics, error rates, and user feedback. Evaluation systematically assesses answer quality through manual reviews, user ratings, and automated metrics against benchmark datasets. Both rely on comprehensive logging of inputs, retrievals, and outputs.",
+  "whyItMatters": "Without monitoring and evaluation, you're flying blind. These processes help you detect issues, understand where improvements are needed, and measure the impact of changes. They provide the insights necessary to maintain high quality, justify the system's performance, and catch regressions before they affect users.",
+  "challenges": [
+    "Defining meaningful metrics that truly capture RAG system quality",
+    "Attributing issues to specific pipeline components for targeted improvements",
+    "Balancing comprehensive logging with privacy and storage concerns",
+    "Creating effective alerting systems that catch both sudden and gradual degradation",
+    "Developing evaluation strategies that evolve with your system and use cases"
+  ]
+}

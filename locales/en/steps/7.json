@@ -1,0 +1,14 @@
+{
+  "id": "7",
+  "title": "Query Understanding",
+  "description": "Query understanding processes and interprets user queries to improve retrieval accuracy and response relevance.",
+  "whatItDoes": "Query understanding analyzes user queries to identify intent, extract key concepts, expand terms, and transform the query into a form that maximizes retrieval effectiveness. It may involve query classification, expansion, reformulation, or decomposition.",
+  "whyItMatters": "Better query understanding leads to more relevant retrievals. By interpreting what users are really asking for, rather than just matching keywords, RAG systems can provide more accurate and helpful responses.",
+  "challenges": [
+    "Handling ambiguous or underspecified queries",
+    "Balancing query expansion with precision",
+    "Decomposing complex queries into manageable sub-queries",
+    "Maintaining context across multi-turn conversations",
+    "Adapting to domain-specific terminology and concepts"
+  ]
+}

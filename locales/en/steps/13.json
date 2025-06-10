@@ -1,0 +1,14 @@
+{
+  "id": "13",
+  "title": "Post-processing",
+  "description": "Post-processing refines and validates the raw LLM output before presenting it to the end-user, ensuring quality, correctness, and appropriate formatting.",
+  "whatItDoes": "Takes the raw output from the LLM and applies various transformations such as formatting (bullet points, markdown, JSON), fact-checking against source documents, adding citations, filtering inappropriate content, and summarizing when needed. It serves as a quality control layer before delivering the final response.",
+  "whyItMatters": "Even with context, LLMs can produce outputs that benefit from an extra check. Post-processing ensures the final answer is not only correct but also presented appropriately. It increases trust and usability by delivering polished, verified responses aligned with application-specific requirements.",
+  "challenges": [
+    "Implementing reliable automated fact-checking against source documents",
+    "Modifying outputs without changing their meaning or introducing errors",
+    "Adding accurate citations that correctly link statements to sources",
+    "Balancing thoroughness with response latency",
+    "Creating robust systems that can handle unexpected model outputs"
+  ]
+}

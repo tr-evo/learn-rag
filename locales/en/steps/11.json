@@ -1,0 +1,14 @@
+{
+  "id": "11",
+  "title": "Context Assembly",
+  "description": "Context assembly builds the final prompt by organizing retrieved chunks into a coherent, optimized context for the LLM.",
+  "whatItDoes": "Context assembly takes the highest-ranked passages after retrieval and reranking and prepares them as context for the model. This includes formatting the text, removing redundancies, trimming for length to fit token limits, organizing snippets in a logical order, and structuring the prompt to clearly separate context from the query.",
+  "whyItMatters": "The LLM's answer will only be as good as the context it receives. Even with perfect retrieval, poorly assembled context can confuse the model or cause it to miss critical information. Well-assembled context gives the model a clear, digestible set of facts to work with and helps prevent it from veering off-course.",
+  "challenges": [
+    "Managing token limits while preserving essential information",
+    "Avoiding context dilution from loosely related chunks",
+    "Handling overlapping or redundant information across chunks",
+    "Determining the optimal ordering of context for model comprehension",
+    "Creating clear formatting that separates context from instructions and queries"
+  ]
+}

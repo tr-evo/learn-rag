@@ -1,0 +1,14 @@
+{
+  "id": "12",
+  "title": "DE Answer Generation",
+  "description": "DE Answer generation is where the LLM produces a response based on the user's query and the retrieved context, synthesizing information into a coherent answer.",
+  "whatItDoes": "DE The LLM takes the assembled context and user query to generate a natural language response. It synthesizes relevant information from the context, formats the answer appropriately, and delivers the final output to the user.",
+  "whyItMatters": "DE This is the culmination of the RAG pipeline where value is delivered to the user. A well-performed answer generation produces responses that are correct (grounded in facts), complete, and clear, significantly reducing hallucinations compared to using the LLM alone.",
+  "challenges": [
+    "DE Preventing hallucinations even with provided context",
+    "DE Ensuring the model uses the context rather than prior knowledge",
+    "DE Balancing verbosity and relevance in responses",
+    "DE Handling cases where the retrieved context doesn't contain the answer",
+    "DE Preventing information leakage from sensitive context"
+  ]
+}
