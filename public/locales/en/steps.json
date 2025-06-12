@@ -1,0 +1,229 @@
+{
+  "steps": {
+    "1": {
+      "title": "Source connection & preprocessing",
+      "description": "Converts every source to clean, deduplicated text.",
+      "pitfall": "Failed parsing or noisy leftovers hide data and add junk.",
+      "whatItDoes": "Source preprocessing transforms raw documents into clean, normalized text that's ready for chunking and embedding. It handles tasks like removing irrelevant content, standardizing formats, and extracting useful metadata.",
+      "whyItMatters": "High-quality preprocessing directly impacts the quality of your RAG system. Clean, well-structured text leads to better chunks, more accurate embeddings, and ultimately more relevant responses.",
+      "challenges": [
+        "Handling diverse document formats (PDF, HTML, Word, etc.)",
+        "Preserving document structure and formatting that provides context",
+        "Removing boilerplate content while keeping important information",
+        "Extracting and preserving metadata for later use",
+        "Dealing with tables, images, and other non-text content",
+        "Handling OCR artifacts, misrecognition, and layout confusion in scanned documents"
+      ]
+    },
+    "2": {
+      "title": "Integrations",
+      "description": "Links loaders->embeddings->index->LLM into one flow.",
+      "pitfall": "Interface mismatches or missing auth break the pipeline.",
+      "whatItDoes": "Integration components allow your RAG system to connect with document stores, vector databases, LLM providers, and other services. They provide standardized interfaces for data exchange and functionality sharing.",
+      "whyItMatters": "Well-designed integrations make your RAG system more powerful, flexible, and easier to maintain. They allow you to leverage specialized tools for different aspects of the RAG pipeline.",
+      "challenges": [
+        "Managing authentication and credentials securely",
+        "Handling rate limits and API quotas",
+        "Ensuring consistent data formats across different services",
+        "Maintaining compatibility with evolving external APIs",
+        "Optimizing for cost and performance across integrated services",
+        "Integrating with external tools (e.g. Sharepoint, Drive, etc.)"
+      ]
+    },
+    "3": {
+      "title": "Metadata tagging",
+      "description": "Enables filtering, access control, and audit.",
+      "pitfall": "Missing or inconsistent tags block filters and leak data.",
+      "whatItDoes": "Metadata tagging enriches your documents with additional information such as categories, dates, authors, source systems, and other attributes. This metadata can be used for filtering, sorting, access control, and enhancing the context provided to the LLM.",
+      "whyItMatters": "Rich metadata improves retrieval precision, enables advanced filtering, provides crucial context to the LLM, and supports compliance requirements. It helps your RAG system understand not just what a document contains, but what it is and who can access it.",
+      "challenges": [
+        "Designing a consistent metadata schema across diverse documents",
+        "Automatically extracting relevant metadata from unstructured text",
+        "Balancing metadata complexity with usability and performance",
+        "Handling missing or inconsistent metadata across document sources",
+        "Storing and indexing metadata efficiently for fast filtering",
+        "Maintaining metadata accuracy as documents are updated"
+      ]
+    },
+    "4": {
+      "title": "Indexing",
+      "description": "Lets queries hit millions of chunks in milliseconds.",
+      "pitfall": "Stale or partial index returns outdated or no results.",
+      "whatItDoes": "Indexing creates optimized data structures that allow for fast searching and retrieval of documents and chunks. It maps terms, vectors, or other features to the content that contains them, enabling efficient query processing at scale.",
+      "whyItMatters": "Effective indexing is crucial for the performance and scalability of your RAG system. It enables quick retrieval of relevant documents from potentially massive collections, making real-time responses possible even with millions of documents.",
+      "challenges": [
+        "Choosing the right index type for your specific use case and query patterns",
+        "Balancing index size with query performance and memory usage",
+        "Handling index updates as documents are added, modified, or deleted",
+        "Scaling indexes to large document collections while maintaining speed",
+        "Optimizing for different query patterns (exact match vs. semantic search)",
+        "Managing index consistency across distributed systems"
+      ]
+    },
+    "5": {
+      "title": "Chunking design",
+      "description": "Balances recall vs. context size.",
+      "pitfall": "Oversized chunks dilute relevance; undersized split answers.",
+      "whatItDoes": "Chunking splits documents into smaller segments based on various strategies like fixed size, semantic boundaries, or structural elements. These chunks become the basic units for embedding and retrieval, determining how information is packaged for the LLM.",
+      "whyItMatters": "The way you chunk documents significantly impacts retrieval quality and response accuracy. Good chunking preserves context, reduces noise, ensures that relevant information is retrieved together, and fits within LLM context windows.",
+      "challenges": [
+        "Determining optimal chunk size for your specific use case and model limits",
+        "Preserving semantic context across chunk boundaries",
+        "Handling documents with varying structures and content types",
+        "Balancing chunk granularity with retrieval precision",
+        "Managing overlapping chunks to preserve context without redundancy",
+        "Adapting chunking strategies for different document types"
+      ]
+    },
+    "6": {
+      "title": "Embedding creation & refresh",
+      "description": "Provides semantic search backbone.",
+      "pitfall": "Skipping refresh drifts quality; model changes invalidate vectors.",
+      "whatItDoes": "Embedding models convert text chunks into high-dimensional vectors where similar texts are positioned closer together in the vector space. These embeddings enable semantic search and similarity matching, capturing meaning beyond keyword matching.",
+      "whyItMatters": "The quality of your embeddings directly affects retrieval accuracy and the system's ability to find conceptually related content. Better embeddings capture more nuanced semantic relationships and lead to more relevant search results.",
+      "challenges": [
+        "Selecting appropriate embedding models for your domain and languages",
+        "Handling multilingual content effectively with consistent quality",
+        "Managing embedding dimensionality and computational costs",
+        "Dealing with embedding model limitations, biases, and domain gaps",
+        "Keeping embeddings up-to-date with model advancements and retraining",
+        "Optimizing embedding generation speed for large document collections"
+      ]
+    },
+    "7": {
+      "title": "Query understanding",
+      "description": "Turns messy input into precise search intent.",
+      "pitfall": "Ambiguity or wrong rewrite misguides retrieval.",
+      "whatItDoes": "Query understanding analyzes user queries to identify intent, extract key concepts, expand terms, and transform the query into a form that maximizes retrieval effectiveness. It may involve query classification, expansion, reformulation, or decomposition into sub-queries.",
+      "whyItMatters": "Better query understanding leads to more relevant retrievals. By interpreting what users are really asking for, rather than just matching keywords, RAG systems can provide more accurate and helpful responses, especially for complex or ambiguous queries.",
+      "challenges": [
+        "Handling ambiguous or underspecified queries from users",
+        "Balancing query expansion with precision to avoid topic drift",
+        "Decomposing complex queries into manageable sub-queries",
+        "Maintaining context across multi-turn conversations",
+        "Adapting to domain-specific terminology and concepts",
+        "Recognizing and handling different query types (factual, analytical, creative)"
+      ]
+    },
+    "8": {
+      "title": "Hybrid retrieval",
+      "description": "Combines keyword precision with vector recall.",
+      "pitfall": "Poor score fusion slows or skews results.",
+      "whatItDoes": "Hybrid retrieval uses a combination of retrieval methods – typically dense vector search and traditional keyword (sparse) search – to find relevant documents. It runs both methods and merges the results, leveraging the strengths of each approach.",
+      "whyItMatters": "Hybrid retrieval aims to get the best of both worlds. Sparse search excels at exact matches, while dense search excels at finding conceptually related content. By combining them, the pipeline can catch relevant documents that one method alone might miss.",
+      "challenges": [
+        "Implementing and maintaining two search systems instead of one",
+        "Normalizing scores between different retrieval methods for fair comparison",
+        "Balancing the weight given to each retrieval method",
+        "Handling increased latency from running multiple searches",
+        "Managing duplicated results across retrieval methods",
+        "Optimizing the fusion algorithm for your specific use case"
+      ]
+    },
+    "9": {
+      "title": "Filtering & permission checks",
+      "description": "Removes off-topic or unauthorized chunks.",
+      "pitfall": "Over-filtering drops answers; under-filtering leaks secrets.",
+      "whatItDoes": "Filtering narrows down search results based on metadata criteria like date, category, or source. Permission checks verify that users have appropriate access rights to the retrieved information, preventing unauthorized access to sensitive data.",
+      "whyItMatters": "Effective filtering improves retrieval precision by eliminating irrelevant results. Permission checks are crucial for security and compliance, ensuring users only see information they're authorized to access while maintaining system usability.",
+      "challenges": [
+        "Implementing efficient filtering without sacrificing retrieval performance",
+        "Designing flexible permission models that scale with complex organizations",
+        "Handling nested or inherited permissions correctly",
+        "Balancing security with usability and system performance",
+        "Maintaining consistent permission enforcement across the entire RAG pipeline",
+        "Managing dynamic permissions that change based on context or time"
+      ]
+    },
+    "10": {
+      "title": "Reranking / fusion",
+      "description": "Elevates the most answer-rich passages.",
+      "pitfall": "Heavy models add latency; bad fusion repeats or misorders.",
+      "whatItDoes": "Reranking takes initial search results and reorders them using more sophisticated models to improve relevance. Fusion combines results from multiple retrieval methods using algorithms like reciprocal rank fusion to create a unified ranking.",
+      "whyItMatters": "These techniques significantly improve retrieval quality by addressing the limitations of individual retrieval methods. They help balance precision and recall, combining the strengths of different approaches to deliver more relevant results to the LLM.",
+      "challenges": [
+        "Balancing the computational cost of reranking with retrieval speed",
+        "Determining optimal weights when combining different retrieval signals",
+        "Avoiding over-optimization for specific query types",
+        "Handling cases where different retrieval methods produce contradictory rankings",
+        "Measuring and optimizing the impact of reranking on end-to-end performance",
+        "Managing the increased complexity of multiple ranking stages"
+      ]
+    },
+    "11": {
+      "title": "Context assembly",
+      "description": "Packs the best snippets into the prompt window.",
+      "pitfall": "Token overflow or duplication confuses the LLM.",
+      "whatItDoes": "Context assembly takes the highest-ranked passages after retrieval and reranking and prepares them as context for the model. This includes formatting the text, removing redundancies, trimming for length, organizing snippets logically, and structuring the prompt clearly.",
+      "whyItMatters": "The LLM's answer will only be as good as the context it receives. Even with perfect retrieval, poorly assembled context can confuse the model or cause it to miss critical information. Well-assembled context gives the model clear, digestible facts to work with.",
+      "challenges": [
+        "Managing token limits while preserving essential information",
+        "Avoiding context dilution from loosely related chunks",
+        "Handling overlapping or redundant information across chunks",
+        "Determining the optimal ordering of context for model comprehension",
+        "Creating clear formatting that separates context from instructions and queries",
+        "Adapting context assembly for different types of questions and document types"
+      ]
+    },
+    "12": {
+      "title": "Answer generation",
+      "description": "Produces the user-visible response.",
+      "pitfall": "Hallucinations if context misses facts or prompt misguides.",
+      "whatItDoes": "The LLM takes the assembled context and user query to generate a natural language response. It synthesizes relevant information from the context, formats the answer appropriately, and delivers the final output to the user while staying grounded in the provided information.",
+      "whyItMatters": "This is the culmination of the RAG pipeline where value is delivered to the user. Well-performed answer generation produces responses that are correct, complete, and clear, significantly reducing hallucinations compared to using the LLM alone.",
+      "challenges": [
+        "Preventing hallucinations even with provided context",
+        "Ensuring the model uses the context rather than prior knowledge when they conflict",
+        "Balancing verbosity and relevance in responses",
+        "Handling cases where the retrieved context doesn't contain the answer",
+        "Preventing information leakage from sensitive context",
+        "Maintaining consistent tone and style across different queries"
+      ]
+    },
+    "13": {
+      "title": "Post-processing",
+      "description": "Formats, cites, and sanity-checks output.",
+      "pitfall": "Weak fact-check passes errors; over-editing distorts meaning.",
+      "whatItDoes": "Post-processing takes the raw output from the LLM and applies various transformations such as formatting, fact-checking against source documents, adding citations, filtering inappropriate content, and summarizing when needed. It serves as a quality control layer.",
+      "whyItMatters": "Even with context, LLMs can produce outputs that benefit from verification and formatting. Post-processing ensures the final answer is not only correct but also presented appropriately, increasing trust and usability.",
+      "challenges": [
+        "Implementing reliable automated fact-checking against source documents",
+        "Modifying outputs without changing their meaning or introducing errors",
+        "Adding accurate citations that correctly link statements to sources",
+        "Balancing thoroughness with response latency",
+        "Creating robust systems that can handle unexpected model outputs",
+        "Maintaining output quality while scaling to high query volumes"
+      ]
+    },
+    "14": {
+      "title": "Monitoring & evaluation",
+      "description": "Reveals quality, latency, and drift.",
+      "pitfall": "Wrong metrics hide failures; poor logging thwarts debugging.",
+      "whatItDoes": "Monitoring collects real-time metrics on system performance, such as latency, usage statistics, error rates, and user feedback. Evaluation systematically assesses answer quality through manual reviews, user ratings, and automated metrics against benchmark datasets.",
+      "whyItMatters": "Without monitoring and evaluation, you're operating blind. These processes help you detect issues, understand where improvements are needed, measure the impact of changes, and catch regressions before they affect users significantly.",
+      "challenges": [
+        "Defining meaningful metrics that truly capture RAG system quality",
+        "Attributing issues to specific pipeline components for targeted improvements",
+        "Balancing comprehensive logging with privacy and storage concerns",
+        "Creating effective alerting systems that catch both sudden and gradual degradation",
+        "Developing evaluation strategies that evolve with your system and use cases",
+        "Managing the cost and complexity of continuous monitoring infrastructure"
+      ]
+    },
+    "15": {
+      "title": "Feedback loop",
+      "description": "Feeds findings back to improve all stages.",
+      "pitfall": "Ignoring feedback lets issues persist or regressions slip in.",
+      "whatItDoes": "The feedback loop takes learnings from monitoring, user feedback, and evaluation to make iterative improvements throughout the pipeline. It includes adding missing content, refining chunking strategies, updating embeddings, fine-tuning models, and enhancing prompts based on real-world usage patterns.",
+      "whyItMatters": "No RAG system is perfect from the start. The feedback loop is how your system evolves and adapts to changing needs and expectations. By actively incorporating feedback, you can address content gaps, improve retrieval accuracy, and ensure continued relevance.",
+      "challenges": [
+        "Collecting meaningful feedback from users who may not always provide explicit ratings",
+        "Analyzing diverse feedback data to identify actionable improvements",
+        "Avoiding regressions when implementing changes to fix specific issues",
+        "Balancing qualitative insights with quantitative metrics",
+        "Establishing organizational processes for continuous improvement",
+        "Prioritizing improvements when feedback points in multiple directions"
+      ]
+    }
+  }
+} 

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -353,6 +354,8 @@ const chunkText = (
 }
 
 export default function ChunkingDesignDemo() {
+  const { t } = useTranslation('demos')
+  
   // State for document and chunking configuration
   const [selectedDocument, setSelectedDocument] = useState(sampleDocuments[0])
   const [chunkingStrategy, setChunkingStrategy] = useState("paragraph")
@@ -431,9 +434,9 @@ export default function ChunkingDesignDemo() {
     <div className="space-y-6">
       <Tabs defaultValue="design" className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-slate-800 p-1 rounded-lg">
-          <TabsTrigger value="design" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">Chunking Design</TabsTrigger>
-          <TabsTrigger value="search" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">Search Impact</TabsTrigger>
-          <TabsTrigger value="comparison" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">Strategy Comparison</TabsTrigger>
+          <TabsTrigger value="design" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">{t('chunkingDesign.chunkingDesign', 'Chunking Design')}</TabsTrigger>
+          <TabsTrigger value="search" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">{t('chunkingDesign.searchImpact', 'Search Impact')}</TabsTrigger>
+          <TabsTrigger value="comparison" className="data-[state=active]:bg-slate-700 data-[state=active]:text-emerald-400">{t('chunkingDesign.strategyComparison', 'Strategy Comparison')}</TabsTrigger>
         </TabsList>
 
         {/* Chunking Design Tab */}
@@ -443,10 +446,10 @@ export default function ChunkingDesignDemo() {
             <div className="md:col-span-1 bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
               <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
                 <Layers className="h-5 w-5 text-emerald-400" />
-                <h3 className="text-slate-200 font-medium">Sample Documents</h3>
+                <h3 className="text-slate-200 font-medium">{t('chunkingDesign.sampleDocuments', 'Sample Documents')}</h3>
               </div>
               <div className="p-5 space-y-4">
-                <p className="text-slate-400">Select a document to chunk</p>
+                <p className="text-slate-400">{t('chunkingDesign.selectDocumentToChunk', 'Select a document to chunk')}</p>
                 {sampleDocuments.map((doc) => (
                   <div
                     key={doc.id}
@@ -462,7 +465,7 @@ export default function ChunkingDesignDemo() {
                       {doc.content.substring(0, 100)}...
                     </p>
                     <div className="mt-2 text-xs text-slate-500">
-                      {countTokens(doc.content)} tokens · {doc.content.split(/\s+/).length} words
+                      {countTokens(doc.content)} {t('chunkingDesign.tokens', 'tokens')} · {doc.content.split(/\s+/).length} {t('chunkingDesign.words', 'words')}
                     </div>
                   </div>
                 ))}
@@ -473,41 +476,41 @@ export default function ChunkingDesignDemo() {
             <div className="md:col-span-2 bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
               <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
                 <Scissors className="h-5 w-5 text-emerald-400" />
-                <h3 className="text-slate-200 font-medium">Chunking Configuration</h3>
+                <h3 className="text-slate-200 font-medium">{t('chunkingDesign.chunkingConfiguration', 'Chunking Configuration')}</h3>
               </div>
               <div className="p-5 space-y-6">
-                <p className="text-slate-400">Configure how the document is split into chunks</p>
+                <p className="text-slate-400">{t('chunkingDesign.selectStrategy', 'Configure how the document is split into chunks')}</p>
                 
                 {/* Chunking Strategy */}
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Chunking Strategy</Label>
+                  <Label className="text-slate-300">{t('chunkingDesign.chunkingStrategy', 'Chunking Strategy')}</Label>
                   <Select value={chunkingStrategy} onValueChange={setChunkingStrategy}>
                     <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                      <SelectValue placeholder="Select chunking strategy" />
+                      <SelectValue placeholder={t('chunkingDesign.selectStrategy', 'Select chunking strategy')} />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-800 border-slate-700 text-slate-300">
-                      <SelectItem value="fixed-size">Fixed Size (Token Count)</SelectItem>
-                      <SelectItem value="paragraph">Paragraph-based</SelectItem>
-                      <SelectItem value="sentence">Sentence-based</SelectItem>
-                      <SelectItem value="semantic">Semantic Boundaries</SelectItem>
+                      <SelectItem value="fixed-size">{t('chunkingDesign.fixedSize', 'Fixed Size')}</SelectItem>
+                      <SelectItem value="paragraph">{t('chunkingDesign.paragraph', 'Paragraph-based')}</SelectItem>
+                      <SelectItem value="sentence">{t('chunkingDesign.sentence', 'Sentence-based')}</SelectItem>
+                      <SelectItem value="semantic">{t('chunkingDesign.semantic', 'Semantic')}</SelectItem>
                     </SelectContent>
                   </Select>
                   <p className="text-sm text-slate-400">
                     {chunkingStrategy === "fixed-size"
-                      ? "Splits text into chunks of a fixed token count, regardless of content boundaries."
+                      ? t('chunkingDesign.fixedSizeDescription', 'Splits text into chunks of a fixed token count, regardless of content boundaries.')
                       : chunkingStrategy === "paragraph"
-                        ? "Splits text at paragraph boundaries, preserving the natural structure of the document."
+                        ? t('chunkingDesign.paragraphDescription', 'Splits text at paragraph boundaries, preserving the natural structure of the document.')
                         : chunkingStrategy === "sentence"
-                          ? "Splits text at sentence boundaries, grouping sentences up to the chunk size limit."
-                          : "Attempts to split text at semantic boundaries, preserving meaning and context."}
+                          ? t('chunkingDesign.sentenceDescription', 'Splits text at sentence boundaries, grouping sentences up to the chunk size limit.')
+                          : t('chunkingDesign.semanticDescription', 'Attempts to split text at semantic boundaries, preserving meaning and context.')}
                   </p>
                 </div>
 
                 {/* Chunk Size */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label className="text-slate-300">Chunk Size (tokens)</Label>
-                    <span className="text-sm font-medium text-slate-300">{chunkSize} tokens</span>
+                    <Label className="text-slate-300">{t('chunkingDesign.chunkSize', 'Chunk Size')} ({t('chunkingDesign.tokens', 'tokens')})</Label>
+                    <span className="text-sm font-medium text-slate-300">{chunkSize} {t('chunkingDesign.tokens', 'tokens')}</span>
                   </div>
                   <Slider
                     value={[chunkSize]}
@@ -517,17 +520,17 @@ export default function ChunkingDesignDemo() {
                     onValueChange={(value) => setChunkSize(value[0])}
                   />
                   <div className="flex justify-between text-xs text-slate-500">
-                    <span>Small (50)</span>
-                    <span>Medium (200)</span>
-                    <span>Large (500)</span>
+                    <span>{t('chunkingDesign.small', 'Small')} (50)</span>
+                    <span>{t('chunkingDesign.medium', 'Medium')} (200)</span>
+                    <span>{t('chunkingDesign.large', 'Large')} (500)</span>
                   </div>
                 </div>
 
                 {/* Overlap Size */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label className="text-slate-300">Overlap Size (tokens)</Label>
-                    <span className="text-sm font-medium text-slate-300">{overlapSize} tokens</span>
+                    <Label className="text-slate-300">{t('chunkingDesign.overlap', 'Overlap')} ({t('chunkingDesign.tokens', 'tokens')})</Label>
+                    <span className="text-sm font-medium text-slate-300">{overlapSize} {t('chunkingDesign.tokens', 'tokens')}</span>
                   </div>
                   <Slider
                     value={[overlapSize]}
@@ -566,11 +569,10 @@ export default function ChunkingDesignDemo() {
                         onCheckedChange={setRespectParagraphs}
                         className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                       />
-                      <Label htmlFor="respect-paragraphs" className="text-slate-300">Respect paragraph boundaries</Label>
+                      <Label htmlFor="respect-paragraphs" className="text-slate-300">{t('chunkingDesign.respectParagraphBoundaries', 'Respect paragraph boundaries')}</Label>
                     </div>
                     <p className="text-sm text-slate-400 ml-6">
-                      When enabled, paragraphs are kept intact and combined until they reach the chunk size limit.
-                      When disabled, large paragraphs are split into smaller chunks using the overlap setting.
+                      {t('chunkingDesign.respectParagraphsDescription', 'When enabled, paragraphs are kept intact and combined until they reach the chunk size limit. When disabled, large paragraphs are split into smaller chunks using the overlap setting.')}
                     </p>
                   </div>
                 )}
@@ -583,14 +585,14 @@ export default function ChunkingDesignDemo() {
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <SplitSquareHorizontal className="h-5 w-5 text-emerald-400" />
-                <h3 className="text-slate-200 font-medium">Resulting Chunks</h3>
+                <h3 className="text-slate-200 font-medium">{t('chunkingDesign.resultingChunks', 'Resulting Chunks')}</h3>
               </div>
               <div className="text-sm text-slate-400">
-                {chunks.length} chunks created with an average of{" "}
+                {chunks.length} {t('chunkingDesign.chunksCreatedWithAverage', 'chunks created with an average of')}{" "}
                 {tokenCounts.length > 0
                   ? Math.round(tokenCounts.reduce((sum, count) => sum + count, 0) / tokenCounts.length)
                   : 0}{" "}
-                tokens per chunk
+                {t('chunkingDesign.tokensPerChunk', 'tokens per chunk')}
               </div>
             </div>
             <div className="p-5">
@@ -598,8 +600,8 @@ export default function ChunkingDesignDemo() {
                 {chunks.map((chunk, index) => (
                   <div key={index} className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-medium text-slate-200">Chunk #{index + 1}</h3>
-                      <Badge className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">{tokenCounts[index]} tokens</Badge>
+                      <h3 className="font-medium text-slate-200">{t('chunkingDesign.chunk', 'Chunk')} #{index + 1}</h3>
+                      <Badge className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">{tokenCounts[index]} {t('chunkingDesign.tokens', 'tokens')}</Badge>
                     </div>
                     <p className="text-sm text-slate-300 whitespace-pre-line">{chunk}</p>
                   </div>
@@ -616,15 +618,15 @@ export default function ChunkingDesignDemo() {
             <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
               <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
                 <Search className="h-5 w-5 text-emerald-400" />
-                <h3 className="text-slate-200 font-medium">Search</h3>
+                <h3 className="text-slate-200 font-medium">{t('chunkingDesign.search', 'Search')}</h3>
               </div>
               <div className="p-5 space-y-4">
-                <p className="text-slate-400">See how chunking affects search results</p>
+                <p className="text-slate-400">{t('chunkingDesign.seeHowChunkingAffectsSearch', 'See how chunking affects search results')}</p>
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Search Query</Label>
+                  <Label className="text-slate-300">{t('chunkingDesign.searchQuery', 'Search Query')}</Label>
                   <div className="flex gap-2">
                     <Input
-                      placeholder="Enter search query..."
+                      placeholder={t('chunkingDesign.enterSearchQuery', 'Enter search query...')}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
@@ -634,22 +636,22 @@ export default function ChunkingDesignDemo() {
                       disabled={isSearching || !searchQuery.trim()}
                       className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
                     >
-                      {isSearching ? "Searching..." : "Search"}
+                      {isSearching ? t('chunkingDesign.searching', 'Searching...') : t('chunkingDesign.search', 'Search')}
                     </Button>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Current Chunking Strategy</Label>
+                  <Label className="text-slate-300">{t('chunkingDesign.currentChunkingStrategy', 'Current Chunking Strategy')}</Label>
                   <div className="flex flex-wrap gap-2">
                     <Badge className="bg-slate-900/50 text-slate-300 border-slate-700">
-                      Strategy: {chunkingStrategy}
+                      {t('chunkingDesign.strategy', 'Strategy')}: {chunkingStrategy}
                     </Badge>
                     <Badge className="bg-slate-900/50 text-slate-300 border-slate-700">
-                      Chunk Size: {chunkSize} tokens
+                      {t('chunkingDesign.chunkSize', 'Chunk Size')}: {chunkSize} {t('chunkingDesign.tokens', 'tokens')}
                     </Badge>
                     <Badge className="bg-slate-900/50 text-slate-300 border-slate-700">
-                      Overlap: {overlapSize} tokens
+                      {t('chunkingDesign.overlap', 'Overlap')}: {overlapSize} {t('chunkingDesign.tokens', 'tokens')}
                     </Badge>
                   </div>
                 </div>
@@ -657,16 +659,16 @@ export default function ChunkingDesignDemo() {
                 <div className="bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-lg p-4">
                   <h3 className="font-medium mb-2 flex items-center gap-2">
                     <AlertCircle className="h-5 w-5" />
-                    Simulation Note
+                    {t('chunkingDesign.simulationNote', 'Simulation Note')}
                   </h3>
                   <p className="text-sm">
-                    This is a simplified search simulation using exact keyword matching. In a real RAG system:
+                    {t('chunkingDesign.simplifiedSearchSimulation', 'This is a simplified search simulation using exact keyword matching. In a real RAG system:')}
                   </p>
                   <ul className="text-sm mt-2 list-disc pl-5">
-                    <li>Text would be converted to vector embeddings</li>
-                    <li>Search would use vector similarity (cosine, dot product, etc.) instead of keyword matching</li>
-                    <li>Semantic meaning would be captured, not just exact text matches</li>
-                    <li>Retrieval would rank chunks by relevance scores</li>
+                    <li>{t('chunkingDesign.textConvertedToEmbeddings', 'Text would be converted to vector embeddings')}</li>
+                    <li>{t('chunkingDesign.vectorSimilaritySearch', 'Search would use vector similarity (cosine, dot product, etc.) instead of keyword matching')}</li>
+                    <li>{t('chunkingDesign.semanticMeaningCaptured', 'Semantic meaning would be captured, not just exact text matches')}</li>
+                    <li>{t('chunkingDesign.retrievalRankedByRelevance', 'Retrieval would rank chunks by relevance scores')}</li>
                   </ul>
                 </div>
 

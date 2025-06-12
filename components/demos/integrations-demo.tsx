@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
@@ -9,11 +10,13 @@ import { Badge } from "@/components/ui/badge"
 import { AlertCircle, CheckCircle2, Database, FileText, Cpu, BrainCircuit, ArrowRight, Settings, AlertTriangle, Share2 } from "lucide-react"
 
 export default function IntegrationsDemo() {
+  const { t } = useTranslation('demos')
+  
   // Define the components of our RAG pipeline
   const components = [
     {
       id: "sharepoint-connector",
-      name: "SharePoint Connector",
+      name: t('integrations.sharepointConnector', 'SharePoint Connector'),
       description: "Connects to SharePoint and extracts documents and metadata",
       icon: Share2,
       outputFormat: "sharepoint-document",
@@ -22,7 +25,7 @@ export default function IntegrationsDemo() {
     },
     {
       id: "document-loader",
-      name: "Document Loader",
+      name: t('integrations.documentLoader', 'Document Loader'),
       description: "Loads documents from various sources",
       icon: FileText,
       outputFormat: "raw-text",
@@ -31,7 +34,7 @@ export default function IntegrationsDemo() {
     },
     {
       id: "embedding-model",
-      name: "Embedding Model",
+      name: t('integrations.embeddingModel', 'Embedding Model'),
       description: "Converts text into vector embeddings",
       icon: Cpu,
       outputFormat: "vector-embedding",
@@ -40,7 +43,7 @@ export default function IntegrationsDemo() {
     },
     {
       id: "vector-database",
-      name: "Vector Database",
+      name: t('integrations.vectorDatabase', 'Vector Database'),
       description: "Stores and retrieves vector embeddings",
       icon: Database,
       outputFormat: "search-results",
@@ -49,7 +52,7 @@ export default function IntegrationsDemo() {
     },
     {
       id: "llm",
-      name: "Large Language Model",
+      name: t('integrations.llm', 'Large Language Model'),
       description: "Generates responses based on context",
       icon: BrainCircuit,
       outputFormat: "response",
@@ -193,7 +196,7 @@ export default function IntegrationsDemo() {
             <path d="M16 16l-4-4 4-4" />
             <path d="M20 16l-4-4 4-4" />
           </svg>
-          RAG Pipeline Flow
+          {t('integrations.title', 'RAG Pipeline Flow')}
         </h2>
 
         <div className="relative">
@@ -260,9 +263,9 @@ export default function IntegrationsDemo() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Running Pipeline...
+                  {t('integrations.pipelineRunning', 'Pipeline is running...')}
                 </>
-              ) : "Test Pipeline Integration"}
+              ) : t('integrations.runPipeline', 'Run Pipeline')}
             </Button>
           </div>
         </div>
@@ -272,7 +275,7 @@ export default function IntegrationsDemo() {
           <div className="mt-6 p-4 bg-red-900/20 border border-red-500/50 rounded-lg">
             <h3 className="text-red-400 font-medium flex items-center mb-2">
               <AlertTriangle className="h-4 w-4 mr-2" />
-              Integration Issues Detected
+              {t('integrations.integrationIssuesDetected', 'Integration Issues Detected')}
             </h3>
             <ul className="space-y-2 text-sm">
               {pipelineStatus.errors.map((error, index) => (
@@ -290,10 +293,10 @@ export default function IntegrationsDemo() {
           <div className="mt-6 p-4 bg-green-900/20 border border-green-500/50 rounded-lg">
             <h3 className="text-green-400 font-medium flex items-center mb-2">
               <CheckCircle2 className="h-4 w-4 mr-2" />
-              Pipeline Integration Successful
+              {t('integrations.pipelineIntegrationSuccessful', 'Pipeline Integration Successful')}
             </h3>
             <p className="text-sm text-slate-300">
-              All components are properly connected. Data flows smoothly through the entire pipeline.
+              {t('integrations.allComponentsConnected', 'All components are properly connected. Data flows smoothly through the entire pipeline.')}
             </p>
           </div>
         )}
@@ -323,7 +326,7 @@ export default function IntegrationsDemo() {
                   className="data-[state=checked]:bg-emerald-500"
                 />
                 <Label htmlFor={`${component.id}-switch`} className="text-sm text-slate-300">
-                  {componentConfigs[component.id].enabled ? "Enabled" : "Disabled"}
+                  {componentConfigs[component.id].enabled ? t('common.enabled', 'Enabled') : t('common.disabled', 'Disabled')}
                 </Label>
               </div>
             </div>
@@ -334,7 +337,7 @@ export default function IntegrationsDemo() {
               <div className="space-y-3">
                 {component.expectedInput && (
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-400">Expected Input:</span>
+                    <span className="text-xs text-slate-400">{t('integrations.expectedInput', 'Expected Input')}:</span>
                     <Badge className="bg-slate-700 text-slate-300 hover:bg-slate-700">
                       {component.expectedInput}
                     </Badge>
@@ -342,7 +345,7 @@ export default function IntegrationsDemo() {
                 )}
 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400">Output Format:</span>
+                  <span className="text-xs text-slate-400">{t('integrations.outputFormat', 'Output Format')}:</span>
                   <Badge
                     className={
                       componentConfigs[component.id].outputFormat !== component.outputFormat
@@ -360,7 +363,7 @@ export default function IntegrationsDemo() {
                       onClick={() => changeOutputFormat(component.id, component.outputFormat)}
                       className="h-7 text-xs border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
                     >
-                      Reset
+                      {t('integrations.reset', 'Reset')}
                     </Button>
                   )}
                 </div>
@@ -385,7 +388,7 @@ export default function IntegrationsDemo() {
           className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
         >
           <Settings className="h-4 w-4 mr-2" />
-          Introduce Issue
+          {t('integrations.introduceIssue', 'Introduce Issue')}
         </Button>
 
         <Button
@@ -397,13 +400,13 @@ export default function IntegrationsDemo() {
             <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
             <path d="M3 3v5h5" />
           </svg>
-          Reset All
+          {t('integrations.resetPipeline', 'Reset Pipeline')}
         </Button>
       </div>
 
       {/* Best Practices */}
       <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5">
-        <h3 className="text-sm font-medium text-emerald-400 mb-4">Integration Best Practices</h3>
+        <h3 className="text-sm font-medium text-emerald-400 mb-4">{t('integrations.integrationBestPractices', 'Integration Best Practices')}</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg transition-all hover:border-emerald-500/30">
@@ -411,10 +414,10 @@ export default function IntegrationsDemo() {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
               </svg>
-              <h4 className="font-medium text-slate-200">Standardized Interfaces</h4>
+              <h4 className="font-medium text-slate-200">{t('integrations.standardizedInterfaces', 'Standardized Interfaces')}</h4>
             </div>
             <p className="text-sm text-slate-400">
-              Ensure components use compatible data formats and APIs. Consider frameworks like LangChain or LlamaIndex that provide standardized interfaces.
+              {t('integrations.standardizedInterfacesDesc', 'Ensure components use compatible data formats and APIs. Consider frameworks like LangChain or LlamaIndex that provide standardized interfaces.')}
             </p>
           </div>
 
@@ -424,10 +427,10 @@ export default function IntegrationsDemo() {
                 <path d="M12 8v4l3 3" />
                 <circle cx="12" cy="12" r="10" />
               </svg>
-              <h4 className="font-medium text-slate-200">Error Handling</h4>
+              <h4 className="font-medium text-slate-200">{t('integrations.errorHandlingTitle', 'Error Handling')}</h4>
             </div>
             <p className="text-sm text-slate-400">
-              Add robust error handling at each integration point. Gracefully handle failures and provide clear error messages for troubleshooting.
+              {t('integrations.errorHandlingDesc', 'Add robust error handling at each integration point. Gracefully handle failures and provide clear error messages for troubleshooting.')}
             </p>
           </div>
 
@@ -437,10 +440,10 @@ export default function IntegrationsDemo() {
                 <path d="M3 3v18h18" />
                 <path d="m3 15 5-5 5 5 8-8" />
               </svg>
-              <h4 className="font-medium text-slate-200">Unified Monitoring</h4>
+              <h4 className="font-medium text-slate-200">{t('integrations.unifiedMonitoring', 'Unified Monitoring')}</h4>
             </div>
             <p className="text-sm text-slate-400">
-              Implement centralized logging and monitoring across all components to quickly identify and resolve integration issues.
+              {t('integrations.unifiedMonitoringDesc', 'Implement centralized logging and monitoring across all components to quickly identify and resolve integration issues.')}
             </p>
           </div>
         </div>

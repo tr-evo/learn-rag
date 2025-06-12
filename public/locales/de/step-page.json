@@ -1,0 +1,29 @@
+{
+  "navigation": {
+    "backToOverview": "Zurück zur Übersicht",
+    "previous": "Zurück",
+    "next": "Weiter"
+  },
+  "sections": {
+    "whatItDoes": "Was es tut",
+    "whyItMatters": "Warum es wichtig ist",
+    "commonChallenges": "Häufige Herausforderungen",
+    "interactiveDemo": "Interaktive Demo"
+  },
+  "cta": {
+    "title": "Komplexität überspringen",
+    "description": "Eine robuste {{stepTitle}}-Lösung zu entwickeln ist herausfordernd. Respeaks Enterprise RAG Plattform bewältigt diese Komplexität für Sie.",
+    "scheduleDemo": "Demo vereinbaren",
+    "contactUs": "Kontakt aufnehmen",
+    "followText": "Folgen Sie",
+    "drTimRietz": "Dr. Tim Rietz",
+    "forMoreInsights": "für weitere RAG-Einblicke"
+  },
+  "footer": {
+    "copyright": "© 2025",
+    "allRightsReserved": "Alle Rechte vorbehalten",
+    "website": "Website",
+    "linkedin": "LinkedIn",
+    "bookDemo": "Demo buchen"
+  }
+} 

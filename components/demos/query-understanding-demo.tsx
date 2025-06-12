@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
@@ -255,6 +256,8 @@ const simulateSearch = (query: string, knowledgeBase: typeof knowledgeBase): typ
 }
 
 export default function QueryUnderstandingDemo() {
+  const { t } = useTranslation('demos')
+  
   // State for query input and processing
   const [selectedQuery, setSelectedQuery] = useState("")
   const [customQuery, setCustomQuery] = useState("")
@@ -338,9 +341,9 @@ export default function QueryUnderstandingDemo() {
     <div className="space-y-6">
       <Tabs defaultValue="demo" className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-slate-800 border border-slate-700 rounded-lg">
-          <TabsTrigger value="demo" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Query Processing</TabsTrigger>
-          <TabsTrigger value="techniques" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Rewriting Techniques</TabsTrigger>
-          <TabsTrigger value="challenges" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Common Challenges</TabsTrigger>
+          <TabsTrigger value="demo" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">{t('queryUnderstanding.queryProcessing')}</TabsTrigger>
+          <TabsTrigger value="techniques" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">{t('queryUnderstanding.rewritingTechniques')}</TabsTrigger>
+          <TabsTrigger value="challenges" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">{t('queryUnderstanding.commonChallenges')}</TabsTrigger>
         </TabsList>
 
         {/* Query Processing Tab */}
@@ -352,20 +355,20 @@ export default function QueryUnderstandingDemo() {
                 <div>
                   <h3 className="text-slate-200 font-medium flex items-center gap-2">
                     <Search className="h-5 w-5 text-emerald-400" />
-                    Query Input
+                    {t('queryUnderstanding.queryInput')}
                   </h3>
-                  <p className="text-slate-400 text-sm">Select a sample query or enter your own</p>
+                  <p className="text-slate-400 text-sm">{t('queryUnderstanding.selectSampleQuery')}</p>
                 </div>
               </div>
               <div className="p-5 space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Sample Queries</Label>
+                  <Label className="text-slate-300">{t('queryUnderstanding.sampleQueries')}</Label>
                   <Select value={selectedQuery} onValueChange={handleQuerySelect}>
                     <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                      <SelectValue placeholder="Select a sample query" />
+                      <SelectValue placeholder={t('queryUnderstanding.selectSampleQueryPlaceholder')} />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-800 border-slate-700 text-slate-300">
-                      <SelectItem value="default">-- Select a query --</SelectItem>
+                      <SelectItem value="default">{t('queryUnderstanding.selectQueryDefault')}</SelectItem>
                       {sampleQueries.map(query => (
                         <SelectItem key={query.id} value={query.id.toString()}>
                           {query.text} ({query.category})
@@ -376,9 +379,9 @@ export default function QueryUnderstandingDemo() {
                 </div>
 
                 <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4">
-                  <h3 className="text-slate-200 font-medium mb-2">Active Query</h3>
+                  <h3 className="text-slate-200 font-medium mb-2">{t('queryUnderstanding.activeQuery')}</h3>
                   <p className="text-sm text-slate-300">
-                    {activeQuery || "No query selected"}
+                    {activeQuery || t('queryUnderstanding.noQuerySelected')}
                   </p>
 
                   {selectedQuery && (
@@ -399,7 +402,7 @@ export default function QueryUnderstandingDemo() {
                   disabled={!activeQuery.trim() || isProcessing}
                   className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
                 >
-                  {isProcessing ? "Processing..." : "Process Query"}
+                  {isProcessing ? t('queryUnderstanding.processing') : t('queryUnderstanding.processQuery')}
                 </Button>
               </div>
             </div>
@@ -408,11 +411,11 @@ export default function QueryUnderstandingDemo() {
             <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <div>
-                  <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                                      <h3 className="text-slate-200 font-medium flex items-center gap-2">
                     <Wand2 className="h-5 w-5 text-emerald-400" />
-                    Processing Configuration
+                    {t('queryUnderstanding.processingConfiguration')}
                   </h3>
-                  <p className="text-slate-400 text-sm">Configure how the query is processed</p>
+                  <p className="text-slate-400 text-sm">{t('queryUnderstanding.configureProcessing')}</p>
                 </div>
               </div>
               <div className="p-5 space-y-4">
@@ -420,7 +423,7 @@ export default function QueryUnderstandingDemo() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="query-rewriting" className="flex items-center gap-2 text-slate-300">
                       <Lightbulb className="h-4 w-4 text-emerald-400" />
-                      Enable Query Rewriting
+                      {t('queryUnderstanding.enableQueryRewriting')}
                     </Label>
                     <Switch
                       id="query-rewriting"
@@ -430,29 +433,29 @@ export default function QueryUnderstandingDemo() {
                     />
                   </div>
                   <p className="text-xs text-slate-400">
-                    When enabled, the system will attempt to improve the query by rewriting it.
+                    {t('queryUnderstanding.queryRewritingDescription')}
                   </p>
                 </div>
 
                 {enableQueryRewriting && (
                   <div className="space-y-2">
-                    <Label className="text-slate-300">Rewriting Technique</Label>
+                    <Label className="text-slate-300">{t('queryUnderstanding.rewritingTechnique')}</Label>
                     <Select value={rewriteTechnique} onValueChange={setRewriteTechnique}>
                       <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                        <SelectValue placeholder="Select a rewriting technique" />
+                        <SelectValue placeholder={t('queryUnderstanding.selectRewritingTechnique')} />
                       </SelectTrigger>
                       <SelectContent className="bg-slate-800 border-slate-700 text-slate-300">
-                        <SelectItem value="expand-acronyms">Expand Acronyms</SelectItem>
-                        <SelectItem value="add-context">Add Context</SelectItem>
-                        <SelectItem value="reformulate">Reformulate Query</SelectItem>
+                        <SelectItem value="expand-acronyms">{t('queryUnderstanding.expandAcronyms')}</SelectItem>
+                        <SelectItem value="add-context">{t('queryUnderstanding.addContext')}</SelectItem>
+                        <SelectItem value="reformulate">{t('queryUnderstanding.reformulateQuery')}</SelectItem>
                       </SelectContent>
                     </Select>
                     <p className="text-xs text-slate-400">
                       {rewriteTechnique === "expand-acronyms"
-                        ? "Expands acronyms to their full form (e.g., 'API' → 'Application Programming Interface (API)')"
+                        ? t('queryUnderstanding.expandAcronymsDescription')
                         : rewriteTechnique === "add-context"
-                          ? "Adds contextual information to ambiguous queries based on available knowledge"
-                          : "Reformulates the query to be more specific and comprehensive"}
+                          ? t('queryUnderstanding.addContextDescription')
+                          : t('queryUnderstanding.reformulateDescription')}
                     </p>
                   </div>
                 )}
@@ -461,7 +464,7 @@ export default function QueryUnderstandingDemo() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="policy-check" className="flex items-center gap-2 text-slate-300">
                       <ShieldAlert className="h-4 w-4 text-emerald-400" />
-                      Enable Policy Check
+                      {t('queryUnderstanding.enablePolicyCheck')}
                     </Label>
                     <Switch
                       id="policy-check"
@@ -471,20 +474,20 @@ export default function QueryUnderstandingDemo() {
                     />
                   </div>
                   <p className="text-xs text-slate-400">
-                    When enabled, the system will check if the query violates any policies.
+                    {t('queryUnderstanding.policyCheckDescription')}
                   </p>
                 </div>
 
                 <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4">
                   <h3 className="text-slate-200 font-medium mb-2">What This Demo Shows</h3>
                   <p className="text-sm text-slate-300">
-                    This demo illustrates how query understanding techniques can improve retrieval by:
+                    {t('queryUnderstanding.whatThisDemoShows')}
                   </p>
                   <ul className="text-sm text-slate-300 list-disc pl-5 mt-2 space-y-1">
-                    <li>Expanding acronyms to match full terms in documents</li>
-                    <li>Adding context to ambiguous queries</li>
-                    <li>Reformulating queries to be more specific</li>
-                    <li>Checking queries against policy guidelines</li>
+                    <li>{t('queryUnderstanding.demoPoint1')}</li>
+                    <li>{t('queryUnderstanding.demoPoint2')}</li>
+                    <li>{t('queryUnderstanding.demoPoint3')}</li>
+                    <li>{t('queryUnderstanding.demoPoint4')}</li>
                   </ul>
                 </div>
               </div>
@@ -497,12 +500,12 @@ export default function QueryUnderstandingDemo() {
               <div>
                 <h3 className="text-slate-200 font-medium flex items-center gap-2">
                   <ArrowRight className="h-5 w-5 text-emerald-400" />
-                  Processing Results
+                  {t('queryUnderstanding.processingResults')}
                 </h3>
                 <p className="text-slate-400 text-sm">
                   {rewrittenQuery
-                    ? "See how the query was processed and the resulting search"
-                    : "Process a query to see results"}
+                    ? t('queryUnderstanding.seeProcessingResults')
+                    : t('queryUnderstanding.processQueryToSeeResults')}
                 </p>
               </div>
             </div>
@@ -510,7 +513,7 @@ export default function QueryUnderstandingDemo() {
               {rewrittenQuery && (
                 <div className="space-y-4">
                   <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
-                    <h3 className="text-slate-200 font-medium mb-2">Original Query</h3>
+                    <h3 className="text-slate-200 font-medium mb-2">{t('queryUnderstanding.originalQuery')}</h3>
                     <p className="text-slate-300">{activeQuery}</p>
                   </div>
 
@@ -522,7 +525,7 @@ export default function QueryUnderstandingDemo() {
                     ? "bg-red-900/20 border border-red-500/30 text-red-300"
                     : "bg-emerald-900/20 border border-emerald-500/50 text-emerald-300"
                     }`}>
-                    <h3 className="text-slate-200 font-medium mb-2">Processed Query</h3>
+                    <h3 className="text-slate-200 font-medium mb-2">{t('queryUnderstanding.processedQuery')}</h3>
                     <p>
                       {rewrittenQuery}
                     </p>
@@ -535,9 +538,9 @@ export default function QueryUnderstandingDemo() {
                       </div>
 
                       <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
-                        <h3 className="text-slate-200 font-medium mb-2">Search Results</h3>
+                        <h3 className="text-slate-200 font-medium mb-2">{t('queryUnderstanding.searchResults')}</h3>
                         {searchResults.length === 0 ? (
-                          <p className="text-slate-400">No results found</p>
+                          <p className="text-slate-400">{t('queryUnderstanding.noResultsFound')}</p>
                         ) : (
                           <div className="space-y-3">
                             {searchResults.map(result => (
@@ -566,10 +569,9 @@ export default function QueryUnderstandingDemo() {
                   <div className="flex items-start gap-2">
                     <ShieldAlert className="h-5 w-5 text-red-300 mt-0.5" />
                     <div>
-                      <h3 className="font-medium text-red-300">Policy Violation Detected</h3>
+                      <h3 className="font-medium text-red-300">{t('queryUnderstanding.policyViolationDetected')}</h3>
                       <p className="text-sm text-red-300 mt-1">
-                        This query appears to violate system policies. In a real system, this might be blocked,
-                        logged, or handled according to your security protocols.
+                        {t('queryUnderstanding.policyViolationMessage')}
                       </p>
                     </div>
                   </div>
@@ -578,7 +580,7 @@ export default function QueryUnderstandingDemo() {
 
               {!rewrittenQuery && (
                 <div className="text-center py-8 text-slate-400">
-                  Select a query and click "Process Query" to see how query understanding works
+                  {t('queryUnderstanding.selectQueryInstruction')}
                 </div>
               )}
             </div>
@@ -590,8 +592,8 @@ export default function QueryUnderstandingDemo() {
           <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <div>
-                <h3 className="text-slate-200 font-medium">Query Rewriting Techniques</h3>
-                <p className="text-slate-400 text-sm">Different approaches to improve query understanding</p>
+                <h3 className="text-slate-200 font-medium">{t('queryUnderstanding.queryRewritingTechniques')}</h3>
+                <p className="text-slate-400 text-sm">{t('queryUnderstanding.differentApproaches')}</p>
               </div>
             </div>
             <div className="p-5">
@@ -600,19 +602,18 @@ export default function QueryUnderstandingDemo() {
                   <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
                     <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
                       <Lightbulb className="h-5 w-5 text-emerald-400" />
-                      Acronym Expansion
+                      {t('queryUnderstanding.acronymExpansion')}
                     </h3>
                     <p className="text-sm text-slate-300 mb-3">
-                      Expands acronyms and abbreviations to their full form to improve matching with documents
-                      that might use either the acronym or the full term.
+                      {t('queryUnderstanding.acronymExpansionDescription')}
                     </p>
                     <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-medium text-slate-300">Original:</span>
+                        <span className="text-xs font-medium text-slate-300">{t('queryUnderstanding.original')}:</span>
                         <span className="text-xs text-slate-400">What's the ROI on our ML investments?</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium text-slate-300">Rewritten:</span>
+                        <span className="text-xs font-medium text-slate-300">{t('queryUnderstanding.rewritten')}:</span>
                         <span className="text-xs text-emerald-400">
                           What's the Return on Investment (ROI) on our Machine Learning (ML) investments?
                         </span>
@@ -623,19 +624,18 @@ export default function QueryUnderstandingDemo() {
                   <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
                     <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
                       <Lightbulb className="h-5 w-5 text-emerald-400" />
-                      Context Addition
+                      {t('queryUnderstanding.contextAddition')}
                     </h3>
                     <p className="text-sm text-slate-300 mb-3">
-                      Adds contextual information to ambiguous queries based on user history, conversation context,
-                      or domain knowledge.
+                      {t('queryUnderstanding.contextAdditionDescription')}
                     </p>
                     <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-medium text-slate-300">Original:</span>
+                        <span className="text-xs font-medium text-slate-300">{t('queryUnderstanding.original')}:</span>
                         <span className="text-xs text-slate-400">What's the revenue for Q2?</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium text-slate-300">Rewritten:</span>
+                        <span className="text-xs font-medium text-slate-300">{t('queryUnderstanding.rewritten')}:</span>
                         <span className="text-xs text-emerald-400">
                           What's the revenue for Q2 (referring to Q2 2023 financial results)?
                         </span>
@@ -648,19 +648,18 @@ export default function QueryUnderstandingDemo() {
                   <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
                     <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
                       <Lightbulb className="h-5 w-5 text-emerald-400" />
-                      Query Reformulation
+                      {t('queryUnderstanding.queryReformulation')}
                     </h3>
                     <p className="text-sm text-slate-300 mb-3">
-                      Rewrites the query to be more specific, comprehensive, or aligned with the document corpus
-                      vocabulary, often using an LLM.
+                      {t('queryUnderstanding.queryReformulationDescription')}
                     </p>
                     <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-medium text-slate-300">Original:</span>
+                        <span className="text-xs font-medium text-slate-300">{t('queryUnderstanding.original')}:</span>
                         <span className="text-xs text-slate-400">How do I use the ML model?</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium text-slate-300">Rewritten:</span>
+                        <span className="text-xs font-medium text-slate-300">{t('queryUnderstanding.rewritten')}:</span>
                         <span className="text-xs text-emerald-400">
                           What are the steps to implement and utilize the sentiment analysis machine learning model, including input formats and output interpretation?
                         </span>
@@ -671,19 +670,14 @@ export default function QueryUnderstandingDemo() {
                   <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
                     <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
                       <ShieldAlert className="h-5 w-5 text-emerald-400" />
-                      Policy Checking
+                      {t('queryUnderstanding.policyChecking')}
                     </h3>
                     <p className="text-sm text-slate-300 mb-3">
-                      Analyzes queries for potential policy violations, security risks, or out-of-scope requests
-                      before processing them.
+                      {t('queryUnderstanding.policyCheckingDescription')}
                     </p>
                     <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-medium text-slate-300">Original:</span>
-                        <span className="text-xs text-slate-400">How can I bypass the content filter?</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium text-slate-300">Flagged:</span>
+                        <span className="text-xs font-medium text-slate-300">{t('queryUnderstanding.flagged')}:</span>
                         <span className="text-xs text-red-300">
                           [POLICY VIOLATION DETECTED] How can I bypass the content filter?
                         </span>
@@ -696,21 +690,19 @@ export default function QueryUnderstandingDemo() {
               <div className="mt-6 p-4 bg-emerald-900/20 border border-emerald-500/50 rounded-lg">
                 <h3 className="font-medium text-emerald-300 flex items-center gap-2 mb-2">
                   <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                  Implementation Approaches
+                  {t('queryUnderstanding.implementationApproaches')}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                   <div>
-                    <h4 className="text-sm font-medium text-emerald-300 mb-1">Rule-Based Systems</h4>
+                    <h4 className="text-sm font-medium text-emerald-300 mb-1">{t('queryUnderstanding.ruleBasedSystems')}</h4>
                     <p className="text-sm text-emerald-300">
-                      Use predefined patterns, dictionaries, and heuristics to identify and transform specific query elements.
-                      Fast and predictable, but limited to known patterns.
+                      {t('queryUnderstanding.ruleBasedDescription')}
                     </p>
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-emerald-300 mb-1">LLM-Based Rewriting</h4>
+                    <h4 className="text-sm font-medium text-emerald-300 mb-1">{t('queryUnderstanding.llmBasedRewriting')}</h4>
                     <p className="text-sm text-emerald-300">
-                      Use language models to understand and reformulate queries more intelligently.
-                      More flexible and powerful, but adds latency and may introduce unexpected changes.
+                      {t('queryUnderstanding.llmBasedDescription')}
                     </p>
                   </div>
                 </div>
@@ -724,8 +716,8 @@ export default function QueryUnderstandingDemo() {
           <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <div>
-                <h3 className="text-slate-200 font-medium">Common Query Understanding Challenges</h3>
-                <p className="text-slate-400 text-sm">Issues that can affect retrieval quality</p>
+                <h3 className="text-slate-200 font-medium">{t('queryUnderstanding.commonQueryChallenges')}</h3>
+                <p className="text-slate-400 text-sm">{t('queryUnderstanding.issuesAffectingRetrieval')}</p>
               </div>
             </div>
             <div className="p-5">
@@ -733,30 +725,28 @@ export default function QueryUnderstandingDemo() {
                 <div className="p-4 bg-amber-900/20 border border-amber-500/30 rounded-lg">
                   <h3 className="font-medium text-amber-300 flex items-center gap-2 mb-2">
                     <AlertCircle className="h-5 w-5 text-amber-300" />
-                    Ambiguity
+                    {t('queryUnderstanding.ambiguity')}
                   </h3>
                   <p className="text-sm text-amber-300 mb-3">
-                    Many terms and phrases can have multiple meanings, making it difficult to determine the user's intent.
+                    {t('queryUnderstanding.ambiguityDescription')}
                   </p>
                   <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
-                    <h4 className="text-sm font-medium text-slate-200 mb-2">Example: "Java" Ambiguity</h4>
+                    <h4 className="text-sm font-medium text-slate-200 mb-2">{t('queryUnderstanding.javaAmbiguityExample')}</h4>
                     <div className="space-y-2">
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium text-slate-300 mt-0.5">Query:</span>
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">{t('queryUnderstanding.query')}:</span>
                         <span className="text-xs text-slate-400">How do I install Java?</span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium text-slate-300 mt-0.5">Ambiguity:</span>
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">{t('queryUnderstanding.ambiguityLabel')}:</span>
                         <span className="text-xs text-slate-400">
-                          Could refer to the programming language (Java SDK), the runtime environment (JRE),
-                          or even a coffee machine brand.
+                          {t('queryUnderstanding.javaAmbiguityText')}
                         </span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium text-slate-300 mt-0.5">Solution:</span>
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">{t('queryUnderstanding.solution')}:</span>
                         <span className="text-xs text-slate-400">
-                          Use context from conversation history, user profile (e.g., developer vs. non-technical user),
-                          or ask for clarification.
+                          {t('queryUnderstanding.javaAmbiguitySolution')}
                         </span>
                       </div>
                     </div>
@@ -766,30 +756,30 @@ export default function QueryUnderstandingDemo() {
                 <div className="p-4 bg-amber-900/20 border border-amber-500/30 rounded-lg">
                   <h3 className="font-medium text-amber-300 flex items-center gap-2 mb-2">
                     <AlertCircle className="h-5 w-5 text-amber-300" />
-                    Vocabulary Mismatch
+                    {t('queryUnderstanding.vocabularyMismatch')}
                   </h3>
                   <p className="text-sm text-amber-300 mb-3">
-                    Users often use different terminology than what appears in the documents, leading to retrieval failures.
+                    {t('queryUnderstanding.vocabularyMismatchDescription')}
                   </p>
                   <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
-                    <h4 className="text-sm font-medium text-slate-200 mb-2">Example: Technical vs. Layman Terms</h4>
+                    <h4 className="text-sm font-medium text-slate-200 mb-2">{t('queryUnderstanding.technicalVsLaymanExample')}</h4>
                     <div className="space-y-2">
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium text-slate-300 mt-0.5">Document:</span>
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">{t('queryUnderstanding.document')}:</span>
                         <span className="text-xs text-slate-400">
                           "To authenticate, utilize the OAuth 2.0 protocol with JWT bearer tokens."
                         </span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium text-slate-300 mt-0.5">User Query:</span>
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">{t('queryUnderstanding.userQuery')}:</span>
                         <span className="text-xs text-slate-400">
                           "How do I log in to the API?"
                         </span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <span className="text-xs font-medium text-slate-300 mt-0.5">Solution:</span>
+                        <span className="text-xs font-medium text-slate-300 mt-0.5">{t('queryUnderstanding.solution')}:</span>
                         <span className="text-xs text-slate-400">
-                          Expand queries with synonyms, related terms, or domain-specific vocabulary.
+                          {t('queryUnderstanding.vocabularyMismatchSolution')}
                         </span>
                       </div>
                     </div>

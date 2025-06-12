@@ -2,6 +2,7 @@
 
 import React from "react"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -180,6 +181,8 @@ const userRoles = [
 ]
 
 export default function FilteringPermissionChecksDemo() {
+  const { t } = useTranslation('demos')
+  
   // State for user and filtering configuration
   const [selectedUserRole, setSelectedUserRole] = useState(userRoles[0])
   const [query, setQuery] = useState("What are the latest company updates?")
@@ -295,9 +298,9 @@ export default function FilteringPermissionChecksDemo() {
     <div className="space-y-6">
       <Tabs defaultValue="demo" className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-slate-800 border border-slate-700 p-1">
-          <TabsTrigger value="demo" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Filtering Demo</TabsTrigger>
-          <TabsTrigger value="permissions" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Permission Checks</TabsTrigger>
-          <TabsTrigger value="challenges" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">Common Challenges</TabsTrigger>
+          <TabsTrigger value="demo" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">{t('filteringPermissions.filteringDemo')}</TabsTrigger>
+          <TabsTrigger value="permissions" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">{t('filteringPermissions.permissionChecks')}</TabsTrigger>
+          <TabsTrigger value="challenges" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white">{t('filteringPermissions.commonChallenges')}</TabsTrigger>
         </TabsList>
 
         {/* Filtering Demo Tab */}
@@ -308,13 +311,13 @@ export default function FilteringPermissionChecksDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <h3 className="text-slate-200 font-medium flex items-center gap-2">
                   <User className="h-5 w-5 text-emerald-400" />
-                  User & Query
+                  {t('filteringPermissions.userAndQuery')}
                 </h3>
-                <p className="text-sm text-slate-400">Configure the user role and search query</p>
+                <p className="text-sm text-slate-400">{t('filteringPermissions.configureUserRole')}</p>
               </div>
               <div className="p-5 space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-slate-300">User Role</Label>
+                  <Label className="text-slate-300">{t('filteringPermissions.userRole')}</Label>
                   <Select
                     value={selectedUserRole.id}
                     onValueChange={(value) => {
@@ -323,7 +326,7 @@ export default function FilteringPermissionChecksDemo() {
                     }}
                   >
                     <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                      <SelectValue placeholder="Select user role" />
+                      <SelectValue placeholder={t('filteringPermissions.selectUserRole')} />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-800 border-slate-700">
                       {userRoles.map(role => (
@@ -337,7 +340,7 @@ export default function FilteringPermissionChecksDemo() {
                 </div>
 
                 <div className="p-3 bg-slate-800/50 border border-slate-700 rounded-md">
-                  <h3 className="text-sm font-medium mb-2 text-slate-300">Access Levels</h3>
+                  <h3 className="text-sm font-medium mb-2 text-slate-300">{t('filteringPermissions.accessLevels')}</h3>
                   <div className="flex flex-wrap gap-1">
                     {selectedUserRole.accessLevels.map(level => (
                       <Badge key={level} className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">
@@ -348,11 +351,11 @@ export default function FilteringPermissionChecksDemo() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Search Query</Label>
+                  <Label className="text-slate-300">{t('filteringPermissions.searchQuery')}</Label>
                   <Input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Enter your query..."
+                    placeholder={t('filteringPermissions.enterQuery')}
                     className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
                   />
                 </div>
@@ -362,7 +365,7 @@ export default function FilteringPermissionChecksDemo() {
                   disabled={isSearching || !query.trim()}
                   className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
                 >
-                  {isSearching ? "Searching..." : "Search & Filter"}
+                  {isSearching ? t('filteringPermissions.searching') : t('filteringPermissions.searchAndFilter')}
                 </Button>
               </div>
             </div>
@@ -372,9 +375,9 @@ export default function FilteringPermissionChecksDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <h3 className="text-slate-200 font-medium flex items-center gap-2">
                   <Filter className="h-5 w-5 text-emerald-400" />
-                  Filter Configuration
+                  {t('filteringPermissions.filterConfiguration')}
                 </h3>
-                <p className="text-sm text-slate-400">Configure how results are filtered</p>
+                <p className="text-sm text-slate-400">{t('filteringPermissions.configureFiltering')}</p>
               </div>
               <div className="p-5 space-y-4">
                 {/* Relevance Filter */}
@@ -382,7 +385,7 @@ export default function FilteringPermissionChecksDemo() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="relevance-filter" className="flex items-center gap-2 text-slate-300">
                       <Tag className="h-4 w-4 text-emerald-400" />
-                      Relevance Filter
+                      {t('filteringPermissions.relevanceFilter')}
                     </Label>
                     <Switch
                       id="relevance-filter"
@@ -394,7 +397,7 @@ export default function FilteringPermissionChecksDemo() {
                   {enableRelevanceFilter && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-slate-300">Minimum Relevance Score</span>
+                        <span className="text-sm text-slate-300">{t('filteringPermissions.minimumRelevanceScore')}</span>
                         <span className="text-sm font-medium text-emerald-400">{relevanceThreshold.toFixed(2)}</span>
                       </div>
                       <Slider
@@ -406,9 +409,9 @@ export default function FilteringPermissionChecksDemo() {
                         className="[&_[role=slider]]:bg-emerald-500"
                       />
                       <div className="flex justify-between text-xs text-slate-500">
-                        <span>Low (0.0)</span>
-                        <span>Medium (0.5)</span>
-                        <span>High (1.0)</span>
+                        <span>{t('filteringPermissions.low')} (0.0)</span>
+                        <span>{t('filteringPermissions.medium')} (0.5)</span>
+                        <span>{t('filteringPermissions.high')} (1.0)</span>
                       </div>
                     </div>
                   )}
@@ -419,7 +422,7 @@ export default function FilteringPermissionChecksDemo() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="date-filter" className="flex items-center gap-2 text-slate-300">
                       <Calendar className="h-4 w-4 text-emerald-400" />
-                      Date Filter
+                      {t('filteringPermissions.dateFilter')}
                     </Label>
                     <Switch
                       id="date-filter"
@@ -431,8 +434,8 @@ export default function FilteringPermissionChecksDemo() {
                   {enableDateFilter && (
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-slate-300">Maximum Age (months)</span>
-                        <span className="text-sm font-medium text-emerald-400">{dateThreshold} months</span>
+                        <span className="text-sm text-slate-300">{t('filteringPermissions.maximumAge')}</span>
+                        <span className="text-sm font-medium text-emerald-400">{dateThreshold} {t('filteringPermissions.months')}</span>
                       </div>
                       <Slider
                         value={[dateThreshold]}
@@ -443,9 +446,9 @@ export default function FilteringPermissionChecksDemo() {
                         className="[&_[role=slider]]:bg-emerald-500"
                       />
                       <div className="flex justify-between text-xs text-slate-500">
-                        <span>Recent (1)</span>
-                        <span>Medium (12)</span>
-                        <span>Old (24)</span>
+                        <span>{t('filteringPermissions.recent')} (1)</span>
+                        <span>{t('filteringPermissions.medium')} (12)</span>
+                        <span>{t('filteringPermissions.old')} (24)</span>
                       </div>
                     </div>
                   )}
@@ -456,7 +459,7 @@ export default function FilteringPermissionChecksDemo() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="category-filter" className="flex items-center gap-2 text-slate-300">
                       <FileText className="h-4 w-4 text-emerald-400" />
-                      Category Filter
+                      {t('filteringPermissions.categoryFilter')}
                     </Label>
                     <Switch
                       id="category-filter"
@@ -472,7 +475,7 @@ export default function FilteringPermissionChecksDemo() {
                         onValueChange={setSelectedCategory}
                       >
                         <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                          <SelectValue placeholder="Select category" />
+                          <SelectValue placeholder={t('filteringPermissions.selectCategory')} />
                         </SelectTrigger>
                         <SelectContent className="bg-slate-800 border-slate-700">
                           {getUniqueCategories().map(category => (
@@ -491,7 +494,7 @@ export default function FilteringPermissionChecksDemo() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="permission-checks" className="flex items-center gap-2 text-slate-300">
                       <Shield className="h-4 w-4 text-emerald-400" />
-                      Permission Checks
+                      {t('filteringPermissions.permissionChecks')}
                     </Label>
                     <Switch
                       id="permission-checks"
@@ -501,7 +504,7 @@ export default function FilteringPermissionChecksDemo() {
                     />
                   </div>
                   <p className="text-xs text-slate-500">
-                    When enabled, only documents the user has permission to access will be included.
+                    {t('filteringPermissions.permissionChecksDescription')}
                   </p>
                 </div>
               </div>
@@ -513,18 +516,18 @@ export default function FilteringPermissionChecksDemo() {
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <h3 className="text-slate-200 font-medium flex items-center gap-2">
                 <Search className="h-5 w-5 text-emerald-400" />
-                Search & Filtering Results
+                {t('filteringPermissions.searchFilteringResults')}
               </h3>
               <p className="text-sm text-slate-400">
                 {hasSearched
-                  ? `${filteredResults.length} results after filtering (${retrievedResults.length} before filtering)`
-                  : "Run a search to see results"}
+                  ? t('filteringPermissions.resultsAfterFiltering', { filtered: filteredResults.length, retrieved: retrievedResults.length })
+                  : t('filteringPermissions.runSearchToSeeResults')}
               </p>
             </div>
             <div className="p-5 space-y-4">
               {!hasSearched ? (
                 <div className="text-center py-8 text-slate-400">
-                  Configure your search parameters and click "Search & Filter" to see results
+                  {t('filteringPermissions.configureSearchParameters')}
                 </div>
               ) : (
                 <>
@@ -532,41 +535,41 @@ export default function FilteringPermissionChecksDemo() {
                   {stats && (
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                       <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-slate-200">{stats.retrievedCount}</div>
-                        <div className="text-sm text-slate-400">Retrieved Results</div>
+                        <div className="text-2xl font-bold text-slate-200">{t('filteringPermissions.retrievedResults')}: {stats.retrievedCount}</div>
+                        <div className="text-sm text-slate-400">{t('filteringPermissions.retrievedResultsDescription')}</div>
                       </div>
                       <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-emerald-400">{stats.filteredCount}</div>
-                        <div className="text-sm text-slate-400">Filtered Results</div>
+                        <div className="text-2xl font-bold text-emerald-400">{t('filteringPermissions.filteredResults')}: {stats.filteredCount}</div>
+                        <div className="text-sm text-slate-400">{t('filteringPermissions.filteredResultsDescription')}</div>
                       </div>
                       <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-amber-400">{stats.removedCount}</div>
-                        <div className="text-sm text-slate-400">Removed Results</div>
+                        <div className="text-2xl font-bold text-amber-400">{t('filteringPermissions.removedResults')}: {stats.removedCount}</div>
+                        <div className="text-sm text-slate-400">{t('filteringPermissions.removedResultsDescription')}</div>
                       </div>
                       <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
-                        <div className="text-2xl font-bold text-slate-200">{stats.removalPercentage}%</div>
-                        <div className="text-sm text-slate-400">Removal Rate</div>
+                        <div className="text-2xl font-bold text-slate-200">{t('filteringPermissions.removalRate')}: {stats.removalPercentage}%</div>
+                        <div className="text-sm text-slate-400">{t('filteringPermissions.removalRateDescription')}</div>
                       </div>
                     </div>
                   )}
 
                   {/* Filtered Results */}
                   <div className="space-y-4">
-                    <h3 className="font-medium text-slate-200">Filtered Results</h3>
+                    <h3 className="font-medium text-slate-200">{t('filteringPermissions.filteredResults')}</h3>
                     {filteredResults.length === 0 ? (
                       <div className="p-4 bg-amber-900/20 border border-amber-500/30 rounded-lg">
                         <div className="flex items-start gap-2">
                           <AlertCircle className="h-5 w-5 text-amber-300 mt-0.5" />
                           <div>
-                            <h3 className="font-medium text-amber-300">No Results After Filtering</h3>
+                            <h3 className="font-medium text-amber-300">{t('filteringPermissions.noResultsAfterFiltering')}</h3>
                             <p className="text-sm text-amber-300 mt-1">
-                              All retrieved results were filtered out. This could be due to:
+                              {t('filteringPermissions.allResultsFiltered')}
                             </p>
                             <ul className="text-sm text-amber-300 mt-1 list-disc pl-5">
-                              <li>Overly strict relevance threshold</li>
-                              <li>Date filter excluding relevant content</li>
-                              <li>Category filter removing matching documents</li>
-                              <li>User lacking permission to access retrieved documents</li>
+                              <li>{t('filteringPermissions.strictRelevanceThreshold')}</li>
+                              <li>{t('filteringPermissions.dateFilterExcluding')}</li>
+                              <li>{t('filteringPermissions.categoryFilterRemoving')}</li>
+                              <li>{t('filteringPermissions.userLackingPermission')}</li>
                             </ul>
                           </div>
                         </div>
@@ -577,7 +580,7 @@ export default function FilteringPermissionChecksDemo() {
                           <div className="flex justify-between items-start mb-2">
                             <h4 className="font-medium text-slate-200">{result.metadata.source}</h4>
                             <Badge className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">
-                              Score: {result.metadata.relevanceScore.toFixed(2)}
+                              {t('filteringPermissions.score')}: {result.metadata.relevanceScore.toFixed(2)}
                             </Badge>
                           </div>
                           <p className="text-sm text-slate-300 mb-3">{result.text}</p>
@@ -605,7 +608,7 @@ export default function FilteringPermissionChecksDemo() {
                     <div className="space-y-4 mt-8">
                       <h3 className="font-medium text-slate-200 flex items-center gap-2">
                         <EyeOff className="h-4 w-4 text-slate-400" />
-                        Filtered Out Results
+                        {t('filteringPermissions.filteredOutResults')}
                       </h3>
                       {retrievedResults
                         .filter(r => !filteredResults.some(f => f.id === r.id))
@@ -615,10 +618,10 @@ export default function FilteringPermissionChecksDemo() {
                               <h4 className="font-medium text-slate-300">{result.metadata.source}</h4>
                               <div className="flex items-center gap-2">
                                 <Badge className="bg-red-900/20 border border-red-500/30 text-red-300">
-                                  Filtered Out
+                                  {t('filteringPermissions.filteredOut')}
                                 </Badge>
                                 <Badge className="bg-slate-700 text-slate-300">
-                                  Score: {result.metadata.relevanceScore.toFixed(2)}
+                                  {t('filteringPermissions.score')}: {result.metadata.relevanceScore.toFixed(2)}
                                 </Badge>
                               </div>
                             </div>
@@ -641,21 +644,21 @@ export default function FilteringPermissionChecksDemo() {
                             {/* Reason for filtering */}
                             <div className="mt-3 p-2 bg-red-900/10 border border-red-900/20 rounded">
                               <p className="text-xs text-red-400">
-                                <span className="font-medium">Reason for filtering: </span>
+                                <span className="font-medium">{t('filteringPermissions.reasonForFiltering')}: </span>
                                 {enableRelevanceFilter && result.metadata.relevanceScore < relevanceThreshold &&
-                                  "Relevance score below threshold. "
+                                  t('filteringPermissions.relevanceBelowThreshold')
                                 }
                                 {enableDateFilter &&
                                   result.metadata.date < new Date(new Date().setMonth(new Date().getMonth() - dateThreshold)) &&
-                                  "Document too old. "
+                                  t('filteringPermissions.documentTooOld')
                                 }
                                 {enableCategoryFilter && selectedCategory !== "All" &&
                                   result.metadata.category !== selectedCategory &&
-                                  "Category doesn't match filter. "
+                                  t('filteringPermissions.categoryDoesntMatch')
                                 }
                                 {enablePermissionChecks &&
                                   !selectedUserRole.accessLevels.includes(result.metadata.accessLevel) &&
-                                  "User doesn't have permission to access this document."
+                                  t('filteringPermissions.userNoPermission')
                                 }
                               </p>
                             </div>
@@ -675,36 +678,36 @@ export default function FilteringPermissionChecksDemo() {
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <h3 className="text-slate-200 font-medium flex items-center gap-2">
                 <Shield className="h-5 w-5 text-emerald-400" />
-                Permission Checks
+                {t('filteringPermissions.permissionChecks')}
               </h3>
-              <p className="text-sm text-slate-400">Explore how permission checks work in RAG systems</p>
+              <p className="text-sm text-slate-400">{t('filteringPermissions.explorePermissionChecks')}</p>
             </div>
             <div className="p-5">
               <div className="space-y-6">
                 <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
-                  <h3 className="font-medium mb-3 text-slate-200">How Permission Checks Work</h3>
+                  <h3 className="font-medium mb-3 text-slate-200">{t('filteringPermissions.howPermissionChecksWork')}</h3>
                   <p className="text-sm text-slate-300 mb-4">
-                    Permission checks ensure that users only see information they're authorized to access. This is crucial for maintaining security and compliance in enterprise RAG systems.
+                    {t('filteringPermissions.permissionChecksDescription2')}
                   </p>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <h4 className="text-sm font-medium text-slate-200">Common Implementation Approaches:</h4>
+                      <h4 className="text-sm font-medium text-slate-200">{t('filteringPermissions.commonImplementationApproaches')}:</h4>
                       <ul className="text-sm text-slate-300 list-disc pl-5 space-y-1">
-                        <li>Metadata-based filtering using access control lists</li>
-                        <li>Integration with identity providers (e.g., OAuth, SAML)</li>
-                        <li>Role-based access control (RBAC)</li>
-                        <li>Attribute-based access control (ABAC)</li>
-                        <li>Document-level or field-level security</li>
+                        <li>{t('filteringPermissions.metadataBasedFiltering')}</li>
+                        <li>{t('filteringPermissions.identityProviderIntegration')}</li>
+                        <li>{t('filteringPermissions.roleBasedAccessControl')}</li>
+                        <li>{t('filteringPermissions.attributeBasedAccessControl')}</li>
+                        <li>{t('filteringPermissions.documentLevelSecurity')}</li>
                       </ul>
                     </div>
 
                     <div className="space-y-2">
-                      <h4 className="text-sm font-medium text-slate-200">When Permission Checks Happen:</h4>
+                      <h4 className="text-sm font-medium text-slate-200">{t('filteringPermissions.whenPermissionChecksHappen')}:</h4>
                       <ul className="text-sm text-slate-300 list-disc pl-5 space-y-1">
-                        <li><strong>Pre-retrieval:</strong> Limit search scope to authorized documents only</li>
-                        <li><strong>Post-retrieval:</strong> Filter out unauthorized documents from results</li>
-                        <li><strong>Hybrid approach:</strong> Combine both for efficiency and security</li>
+                        <li><strong>{t('filteringPermissions.preRetrieval')}:</strong> {t('filteringPermissions.limitSearchScope')}</li>
+                        <li><strong>{t('filteringPermissions.postRetrieval')}:</strong> {t('filteringPermissions.filterUnauthorizedDocuments')}</li>
+                        <li><strong>{t('filteringPermissions.hybridApproach')}:</strong> {t('filteringPermissions.combineBothApproaches')}</li>
                       </ul>
                     </div>
                   </div>
@@ -712,9 +715,9 @@ export default function FilteringPermissionChecksDemo() {
 
                 {/* Simulation Controls */}
                 <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
-                  <h3 className="font-medium mb-3 text-slate-200">Filtering Simulation</h3>
+                  <h3 className="font-medium mb-3 text-slate-200">{t('filteringPermissions.filteringSimulation')}</h3>
                   <p className="text-sm text-slate-300 mb-4">
-                    Simulate common filtering issues to see their impact on search results.
+                    {t('filteringPermissions.simulateFilteringIssues')}
                   </p>
 
                   <div className="space-y-4">
@@ -722,7 +725,7 @@ export default function FilteringPermissionChecksDemo() {
                       <div className="flex items-center justify-between">
                         <Label htmlFor="over-filtering" className="flex items-center gap-2 text-slate-300">
                           <AlertCircle className="h-4 w-4 text-amber-300" />
-                          Simulate Over-Filtering
+                          {t('filteringPermissions.simulateOverFiltering')}
                         </Label>
                         <Switch
                           id="over-filtering"
@@ -735,7 +738,7 @@ export default function FilteringPermissionChecksDemo() {
                         />
                       </div>
                       <p className="text-xs text-slate-400">
-                        When enabled, applies extremely strict filters that remove most results, even relevant ones.
+                        {t('filteringPermissions.overFilteringDescription')}
                       </p>
                     </div>
 
@@ -743,7 +746,7 @@ export default function FilteringPermissionChecksDemo() {
                       <div className="flex items-center justify-between">
                         <Label htmlFor="under-filtering" className="flex items-center gap-2 text-slate-300">
                           <AlertCircle className="h-4 w-4 text-red-300" />
-                          Simulate Under-Filtering
+                          {t('filteringPermissions.simulateUnderFiltering')}
                         </Label>
                         <Switch
                           id="under-filtering"
@@ -756,7 +759,7 @@ export default function FilteringPermissionChecksDemo() {
                         />
                       </div>
                       <p className="text-xs text-slate-400">
-                        When enabled, skips permission checks entirely, potentially exposing sensitive information.
+                        {t('filteringPermissions.underFilteringDescription')}
                       </p>
                     </div>
                   </div>
@@ -772,54 +775,54 @@ export default function FilteringPermissionChecksDemo() {
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <h3 className="text-slate-200 font-medium flex items-center gap-2">
                 <AlertCircle className="h-5 w-5 text-emerald-400" />
-                Common Filtering Challenges
+                {t('filteringPermissions.commonFilteringChallenges')}
               </h3>
-              <p className="text-sm text-slate-400">Understanding the balance between security and usability</p>
+              <p className="text-sm text-slate-400">{t('filteringPermissions.understandBalance')}</p>
             </div>
             <div className="p-5">
               <div className="space-y-6">
                 <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
-                  <h3 className="font-medium mb-3 text-slate-200">Over-Filtering</h3>
+                  <h3 className="font-medium mb-3 text-slate-200">{t('filteringPermissions.overFiltering')}</h3>
                   <p className="text-sm text-slate-300 mb-4">
-                    Over-filtering occurs when filters are too strict, removing too many potentially relevant documents.
+                    {t('filteringPermissions.overFilteringDescription2')}
                   </p>
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-slate-200">Common Causes:</h4>
+                    <h4 className="text-sm font-medium text-slate-200">{t('filteringPermissions.commonCauses')}:</h4>
                     <ul className="text-sm text-slate-300 list-disc pl-5 space-y-1">
-                      <li>Relevance threshold set too high</li>
-                      <li>Overly restrictive date filters</li>
-                      <li>Too many filters applied simultaneously</li>
-                      <li>Permissions systems that are too granular</li>
+                      <li>{t('filteringPermissions.relevanceThresholdTooHigh')}</li>
+                      <li>{t('filteringPermissions.overlyRestrictiveDateFilter')}</li>
+                      <li>{t('filteringPermissions.tooManyFilters')}</li>
+                      <li>{t('filteringPermissions.granularPermissions')}</li>
                     </ul>
                   </div>
                 </div>
 
                 <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
-                  <h3 className="font-medium mb-3 text-slate-200">Under-Filtering</h3>
+                  <h3 className="font-medium mb-3 text-slate-200">{t('filteringPermissions.underFiltering')}</h3>
                   <p className="text-sm text-slate-300 mb-4">
-                    Under-filtering occurs when not enough filtering is applied, potentially exposing sensitive information.
+                    {t('filteringPermissions.underFilteringDescription2')}
                   </p>
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-slate-200">Common Causes:</h4>
+                    <h4 className="text-sm font-medium text-slate-200">{t('filteringPermissions.commonCauses')}:</h4>
                     <ul className="text-sm text-slate-300 list-disc pl-5 space-y-1">
-                      <li>Ignoring permission checks for performance reasons</li>
-                      <li>Insufficient permissions metadata</li>
-                      <li>Bugs in access control implementation</li>
-                      <li>Permissions that don't align with actual needs</li>
+                      <li>{t('filteringPermissions.ignoringPermissionChecks')}</li>
+                      <li>{t('filteringPermissions.insufficientPermissionsMetadata')}</li>
+                      <li>{t('filteringPermissions.bugsInAccessControl')}</li>
+                      <li>{t('filteringPermissions.permissionsNotAligned')}</li>
                     </ul>
                   </div>
                 </div>
 
                 <div className="p-4 bg-slate-800/50 border border-slate-700 rounded-lg">
-                  <h3 className="font-medium mb-3 text-slate-200">Best Practices</h3>
+                  <h3 className="font-medium mb-3 text-slate-200">{t('filteringPermissions.bestPractices')}</h3>
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-slate-200">Balancing Security and Utility:</h4>
+                    <h4 className="text-sm font-medium text-slate-200">{t('filteringPermissions.balancingSecurityAndUtility')}:</h4>
                     <ul className="text-sm text-slate-300 list-disc pl-5 space-y-1">
-                      <li>Apply permission checks before relevance filtering</li>
-                      <li>Use adaptive thresholds based on the number of results</li>
-                      <li>Provide clear explanations when results are filtered out</li>
-                      <li>Monitor and audit filtered results to adjust settings</li>
-                      <li>Consider a tiered approach to permissions based on content sensitivity</li>
+                      <li>{t('filteringPermissions.applyPermissionChecks')}</li>
+                      <li>{t('filteringPermissions.useAdaptiveThresholds')}</li>
+                      <li>{t('filteringPermissions.provideClearExplanations')}</li>
+                      <li>{t('filteringPermissions.monitorAndAudit')}</li>
+                      <li>{t('filteringPermissions.tieredApproach')}</li>
                     </ul>
                   </div>
                 </div>

@@ -2,6 +2,7 @@
 
 import React from "react"
 import { useState, useEffect, useRef } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -58,7 +59,7 @@ const updatedChunk5 = {
 const embeddingModels = [
   {
     id: "basic",
-    name: "Basic Embedding Model",
+    name: "Basic Embedding Model", // Keep English for now as these are technical model names
     dimensions: 128,
     quality: "Low",
     speed: "Fast",
@@ -125,6 +126,8 @@ const cosineSimilarity = (a: number[], b: number[]): number => {
 }
 
 export default function EmbeddingCreationDemo() {
+  const { t } = useTranslation('demos')
+  
   // State for embedding configuration
   const [selectedModel, setSelectedModel] = useState(embeddingModels[1])
   const [chunks, setChunks] = useState(sampleChunks)
@@ -375,13 +378,13 @@ export default function EmbeddingCreationDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <h3 className="text-slate-200 font-medium flex items-center gap-2">
                   <Cpu className="h-5 w-5 text-emerald-400" />
-                  Embedding Configuration
+                  {t('embeddingCreation.embeddingConfiguration')}
                 </h3>
-                <p className="text-slate-400 text-sm">Configure embedding model and settings</p>
+                <p className="text-slate-400 text-sm">{t('embeddingCreation.configureModel')}</p>
               </div>
               <div className="p-5 space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Embedding Model</Label>
+                  <Label className="text-slate-300">{t('embeddingCreation.embeddingModel')}</Label>
                   <Select
                     value={selectedModel.id}
                     onValueChange={(value) => {
@@ -390,7 +393,7 @@ export default function EmbeddingCreationDemo() {
                     }}
                   >
                     <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                      <SelectValue placeholder="Select embedding model" />
+                      <SelectValue placeholder={t('embeddingCreation.selectModel')} />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-800 border-slate-700">
                       {embeddingModels.map(model => (
@@ -403,32 +406,32 @@ export default function EmbeddingCreationDemo() {
 
                   <div className="grid grid-cols-3 gap-2 mt-2">
                     <div className="p-2 bg-slate-900/50 border border-slate-700 rounded text-center">
-                      <div className="text-xs text-slate-400 mb-1">Quality</div>
+                      <div className="text-xs text-slate-400 mb-1">{t('embeddingCreation.quality')}</div>
                       <div className="text-slate-300 font-medium">{selectedModel.quality}</div>
                     </div>
                     <div className="p-2 bg-slate-900/50 border border-slate-700 rounded text-center">
-                      <div className="text-xs text-slate-400 mb-1">Speed</div>
+                      <div className="text-xs text-slate-400 mb-1">{t('embeddingCreation.speed')}</div>
                       <div className="text-slate-300 font-medium">{selectedModel.speed}</div>
                     </div>
                     <div className="p-2 bg-slate-900/50 border border-slate-700 rounded text-center">
-                      <div className="text-xs text-slate-400 mb-1">Cost</div>
+                      <div className="text-xs text-slate-400 mb-1">{t('embeddingCreation.cost')}</div>
                       <div className="text-slate-300 font-medium">{selectedModel.cost}</div>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Text Chunks</Label>
+                  <Label className="text-slate-300">{t('embeddingCreation.textChunks')}</Label>
                   <div className="max-h-[200px] overflow-y-auto space-y-2">
                     {chunks.map(chunk => (
                       <div key={chunk.id} className="p-2 bg-slate-900/50 border border-slate-700 hover:border-slate-600 transition-all rounded-md">
                         <div className="flex justify-between items-start">
-                          <span className="font-medium text-sm text-slate-300">Chunk #{chunk.id}</span>
+                          <span className="font-medium text-sm text-slate-300">{t('embeddingCreation.chunk')} #{chunk.id}</span>
                           <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white">{chunk.category}</Badge>
                         </div>
                         <p className="text-xs text-slate-400 mt-1 line-clamp-2">{chunk.text}</p>
                         <div className="text-xs text-slate-500 mt-1">
-                          Last updated: {chunk.lastUpdated.toLocaleDateString()}
+                          {t('embeddingCreation.lastUpdated')}: {chunk.lastUpdated.toLocaleDateString()}
                         </div>
                       </div>
                     ))}
@@ -436,15 +439,15 @@ export default function EmbeddingCreationDemo() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Embedding Status</Label>
+                  <Label className="text-slate-300">{t('embeddingCreation.embeddingStatus')}</Label>
                   <div className="p-3 bg-slate-900/50 border border-slate-700 rounded-md">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-slate-400">Embeddings Generated:</span>
+                      <span className="text-sm text-slate-400">{t('embeddingCreation.embeddingsGenerated')}:</span>
                       <span className="font-medium text-slate-300">{Object.keys(embeddings).length} / {chunks.length}</span>
                     </div>
                     {lastRefreshed && (
                       <div className="flex justify-between items-center mt-1">
-                        <span className="text-sm text-slate-400">Last Refreshed:</span>
+                        <span className="text-sm text-slate-400">{t('embeddingCreation.lastRefreshed')}:</span>
                         <span className="font-medium text-slate-300">{lastRefreshed.toLocaleTimeString()}</span>
                       </div>
                     )}
@@ -457,7 +460,7 @@ export default function EmbeddingCreationDemo() {
                   disabled={isGenerating}
                   className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
                 >
-                  {isGenerating ? "Generating..." : "Generate Embeddings"}
+                  {isGenerating ? t('embeddingCreation.processing') : t('embeddingCreation.generateEmbeddings')}
                 </Button>
               </div>
             </div>
@@ -467,9 +470,9 @@ export default function EmbeddingCreationDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <h3 className="text-slate-200 font-medium flex items-center gap-2">
                   <BarChart3 className="h-5 w-5 text-emerald-400" />
-                  Embedding Visualization
+                  {t('embeddingCreation.embeddingVisualization')}
                 </h3>
-                <p className="text-slate-400 text-sm">2D projection of high-dimensional embeddings</p>
+                <p className="text-slate-400 text-sm">{t('embeddingCreation.2dProjection')}</p>
               </div>
               <div className="p-5">
                 <div className="border border-slate-700 rounded-md p-1 bg-slate-900/50">
@@ -478,20 +481,20 @@ export default function EmbeddingCreationDemo() {
                 <div className="flex justify-center mt-4 gap-4">
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                    <span className="text-xs text-slate-400">Technical</span>
+                    <span className="text-xs text-slate-400">{t('embeddingCreation.technical')}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                    <span className="text-xs text-slate-400">Best Practice</span>
+                    <span className="text-xs text-slate-400">{t('embeddingCreation.bestPractice')}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <div className="w-3 h-3 rounded-full bg-orange-500"></div>
-                    <span className="text-xs text-slate-400">Financial</span>
+                    <span className="text-xs text-slate-400">{t('embeddingCreation.financial')}</span>
                   </div>
                 </div>
               </div>
               <div className="px-5 py-3 border-t border-slate-700 text-xs text-slate-500 text-center">
-                Note: This is a simplified 2D projection. Real embeddings have {selectedModel.dimensions} dimensions.
+                {t('embeddingCreation.noteProjection', { dimensions: selectedModel.dimensions })}
               </div>
             </div>
           </div>
@@ -501,30 +504,20 @@ export default function EmbeddingCreationDemo() {
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <h3 className="text-slate-200 font-medium flex items-center gap-2">
                 <Search className="h-5 w-5 text-emerald-400" />
-                Search with Embeddings
+                {t('embeddingCreation.searchWithEmbeddings')}
               </h3>
-              <p className="text-slate-400 text-sm">See how embeddings enable semantic search</p>
+              <p className="text-slate-400 text-sm">{t('embeddingCreation.semanticSearchDemo')}</p>
             </div>
             <div className="p-5 space-y-4">
               <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-md mb-4">
-                <h3 className="font-medium mb-2 text-slate-300">How Search Works in This Demo</h3>
+                <h3 className="font-medium mb-2 text-slate-300">{t('embeddingCreation.howSearchWorks')}</h3>
                 <p className="text-sm text-slate-400">
-                  This demo uses a simplified simulation of vector search. Instead of a real embedding model, we use a 
-                  deterministic algorithm that converts text to vectors based on character codes and text patterns.
-                  When you search, we:
-                </p>
-                <ol className="list-decimal ml-5 mt-2 text-sm text-slate-400 space-y-1">
-                  <li>Generate a simulated vector for your query using our simplified algorithm</li>
-                  <li>Compare it to the simulated vectors of each text chunk using cosine similarity</li>
-                  <li>Return the chunks with the highest similarity scores</li>
-                </ol>
-                <p className="text-sm text-slate-400 mt-2">
-                  This demonstrates the core concept of semantic search while being fast enough to run entirely in your browser.
+                  {t('embeddingCreation.searchExplanation')}
                 </p>
               </div>
               
               <div className="p-4 border-l-4 border-emerald-500 bg-slate-900/50 rounded-r-md mb-4">
-                <h3 className="font-medium mb-2 text-emerald-400">Try These Example Queries</h3>
+                <h3 className="font-medium mb-2 text-emerald-400">{t('embeddingCreation.tryExampleQueries')}</h3>
                 <div className="grid grid-cols-2 gap-2 mt-3">
                   {["semantic understanding", "vector dimensions", "performance improvement", "revenue report", "RAG system"].map((query) => (
                     <Button 
@@ -544,7 +537,7 @@ export default function EmbeddingCreationDemo() {
               
               <div className="flex gap-2">
                 <Input
-                  placeholder="Enter search query..."
+                  placeholder={t('embeddingCreation.enterSearchQuery')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => {
@@ -559,7 +552,7 @@ export default function EmbeddingCreationDemo() {
                   disabled={isSearching || !searchQuery.trim() || Object.keys(embeddings).length === 0}
                   className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
                 >
-                  {isSearching ? "Searching..." : "Search"}
+                  {isSearching ? t('embeddingCreation.searching') : t('embeddingCreation.search')}
                 </Button>
                 {searchResults.length > 0 && (
                   <Button 
@@ -567,7 +560,7 @@ export default function EmbeddingCreationDemo() {
                     onClick={clearSearch}
                     className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
                   >
-                    Clear
+                    {t('embeddingCreation.clear')}
                   </Button>
                 )}
               </div>
@@ -575,21 +568,21 @@ export default function EmbeddingCreationDemo() {
               {Object.keys(embeddings).length === 0 && (
                 <div className="p-4 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-md text-sm flex items-start gap-2">
                   <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                  <span>No embeddings generated yet. Click "Generate Embeddings" to create embeddings for the text chunks.</span>
+                  <span>{t('embeddingCreation.noEmbeddingsGenerated')}</span>
                 </div>
               )}
 
               {searchResults.length > 0 && (
                 <div className="space-y-3">
-                  <h3 className="font-medium text-slate-300">Search Results</h3>
+                  <h3 className="font-medium text-slate-300">{t('embeddingCreation.searchResults')}</h3>
                   {searchResults.map(result => {
                     const chunk = chunks.find(c => c.id === result.id)
                     return chunk ? (
                       <div key={result.id} className="p-3 bg-slate-900/50 border border-slate-700 hover:border-slate-600 transition-all rounded-md">
                         <div className="flex justify-between items-start">
-                          <span className="font-medium text-slate-300">Chunk #{chunk.id}</span>
+                          <span className="font-medium text-slate-300">{t('embeddingCreation.chunk')} #{chunk.id}</span>
                           <Badge className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">
-                            {(result.similarity * 100).toFixed(1)}% match
+                            {(result.similarity * 100).toFixed(1)}% {t('embeddingCreation.match')}
                           </Badge>
                         </div>
                         <p className="text-sm text-slate-400 mt-1">{chunk.text}</p>
@@ -606,94 +599,94 @@ export default function EmbeddingCreationDemo() {
         <TabsContent value="comparison" className="space-y-6">
           <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
-              <h3 className="text-slate-200 font-medium">Embedding Model Comparison</h3>
-              <p className="text-slate-400 text-sm">Compare different embedding models and their characteristics</p>
+              <h3 className="text-slate-200 font-medium">{t('embeddingCreation.embeddingModelComparison')}</h3>
+              <p className="text-slate-400 text-sm">{t('embeddingCreation.compareModels')}</p>
             </div>
             <div className="p-5">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="border-b border-slate-700">
-                      <th className="text-left p-3 text-slate-300">Model Type</th>
-                      <th className="text-left p-3 text-slate-300">Dimensions</th>
-                      <th className="text-left p-3 text-slate-300">Best For</th>
-                      <th className="text-left p-3 text-slate-300">Advantages</th>
-                      <th className="text-left p-3 text-slate-300">Disadvantages</th>
+                      <th className="text-left p-3 text-slate-300">{t('embeddingCreation.modelType')}</th>
+                      <th className="text-left p-3 text-slate-300">{t('embeddingCreation.dimensions')}</th>
+                      <th className="text-left p-3 text-slate-300">{t('embeddingCreation.bestFor')}</th>
+                      <th className="text-left p-3 text-slate-300">{t('embeddingCreation.advantages')}</th>
+                      <th className="text-left p-3 text-slate-300">{t('embeddingCreation.disadvantages')}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="border-b border-slate-700">
-                      <td className="p-3 font-medium text-slate-300">Small Models<br />(128-384d)</td>
+                      <td className="p-3 font-medium text-slate-300">{t('embeddingCreation.smallModels')}<br />(128-384d)</td>
                       <td className="p-3 text-slate-400">128-384</td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Simple applications</li>
-                          <li>Large document sets</li>
-                          <li>Cost-sensitive deployments</li>
+                          <li>{t('embeddingCreation.simpleApplications')}</li>
+                          <li>{t('embeddingCreation.largeDocumentSets')}</li>
+                          <li>{t('embeddingCreation.costSensitiveDeployments')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Fast generation</li>
-                          <li>Lower storage requirements</li>
-                          <li>Lower API costs</li>
+                          <li>{t('embeddingCreation.fastGeneration')}</li>
+                          <li>{t('embeddingCreation.lowerStorageRequirements')}</li>
+                          <li>{t('embeddingCreation.lowerAPICosts')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Less semantic precision</li>
-                          <li>Poorer handling of nuance</li>
-                          <li>May miss subtle relationships</li>
+                          <li>{t('embeddingCreation.lessSemanticPrecision')}</li>
+                          <li>{t('embeddingCreation.poorerHandlingOfNuance')}</li>
+                          <li>{t('embeddingCreation.mayMissSubtleRelationships')}</li>
                         </ul>
                       </td>
                     </tr>
                     <tr className="border-b border-slate-700">
-                      <td className="p-3 font-medium text-slate-300">Medium Models<br />(512-768d)</td>
+                      <td className="p-3 font-medium text-slate-300">{t('embeddingCreation.mediumModels')}<br />(512-768d)</td>
                       <td className="p-3 text-slate-400">512-768</td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>General purpose RAG</li>
-                          <li>Balanced applications</li>
-                          <li>Most documentation</li>
+                          <li>{t('embeddingCreation.generalPurposeRAG')}</li>
+                          <li>{t('embeddingCreation.balancedApplications')}</li>
+                          <li>{t('embeddingCreation.mostDocumentation')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Good balance of quality/cost</li>
-                          <li>Reasonable generation speed</li>
-                          <li>Good semantic understanding</li>
+                          <li>{t('embeddingCreation.goodBalanceQualityCost')}</li>
+                          <li>{t('embeddingCreation.reasonableGenerationSpeed')}</li>
+                          <li>{t('embeddingCreation.goodSemanticUnderstanding')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>May struggle with specialized domains</li>
-                          <li>Moderate storage requirements</li>
-                          <li>Medium API costs</li>
+                          <li>{t('embeddingCreation.mayStruggleSpecializedDomains')}</li>
+                          <li>{t('embeddingCreation.moderateStorageRequirements')}</li>
+                          <li>{t('embeddingCreation.mediumAPICosts')}</li>
                         </ul>
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-3 font-medium text-slate-300">Large Models<br />(1024-1536d+)</td>
+                      <td className="p-3 font-medium text-slate-300">{t('embeddingCreation.largeModels')}<br />(1024-1536d+)</td>
                       <td className="p-3 text-slate-400">1024-1536+</td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Complex semantic tasks</li>
-                          <li>Specialized domains</li>
-                          <li>High-precision requirements</li>
+                          <li>{t('embeddingCreation.complexSemanticTasks')}</li>
+                          <li>{t('embeddingCreation.specializedDomains')}</li>
+                          <li>{t('embeddingCreation.highPrecisionRequirements')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Highest semantic precision</li>
-                          <li>Better cross-lingual capabilities</li>
-                          <li>Better for complex queries</li>
+                          <li>{t('embeddingCreation.highestSemanticPrecision')}</li>
+                          <li>{t('embeddingCreation.betterCrossLingualCapabilities')}</li>
+                          <li>{t('embeddingCreation.betterForComplexQueries')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Slower generation</li>
-                          <li>Higher storage requirements</li>
-                          <li>Higher API costs</li>
+                          <li>{t('embeddingCreation.slowerGeneration')}</li>
+                          <li>{t('embeddingCreation.higherStorageRequirements')}</li>
+                          <li>{t('embeddingCreation.higherAPICosts')}</li>
                         </ul>
                       </td>
                     </tr>
@@ -706,15 +699,15 @@ export default function EmbeddingCreationDemo() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
-                <h3 className="text-slate-200 font-medium">Model Change Simulation</h3>
-                <p className="text-slate-400 text-sm">See what happens when you change embedding models</p>
+                <h3 className="text-slate-200 font-medium">{t('embeddingCreation.modelChangeSimulation')}</h3>
+                <p className="text-slate-400 text-sm">{t('embeddingCreation.seeModelChange')}</p>
               </div>
               <div className="p-5 space-y-4">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="model-change" className="flex items-center gap-2 text-slate-300">
                       <AlertCircle className="h-4 w-4 text-amber-500" />
-                      Simulate Model Change
+                      {t('embeddingCreation.simulateModelChange')}
                     </Label>
                     <Switch
                       id="model-change"
@@ -724,7 +717,7 @@ export default function EmbeddingCreationDemo() {
                     />
                   </div>
                   <p className="text-xs text-slate-500">
-                    When enabled, changing the embedding model will invalidate existing embeddings, requiring regeneration.
+                    {t('embeddingCreation.modelChangeDescription')}
                   </p>
                 </div>
 
@@ -732,11 +725,10 @@ export default function EmbeddingCreationDemo() {
                   <div className="p-4 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-lg">
                     <h3 className="font-medium text-amber-300 flex items-center gap-2 mb-2">
                       <AlertCircle className="h-5 w-5" />
-                      Model Change Detected
+                      {t('embeddingCreation.modelChangeDetected')}
                     </h3>
                     <p className="text-sm text-amber-300">
-                      The embedding model has changed, invalidating existing embeddings. You need to regenerate all embeddings
-                      with the new model to ensure consistency. Different models produce incompatible vector spaces.
+                      {t('embeddingCreation.modelChangeWarning')}
                     </p>
                   </div>
                 )}
@@ -745,7 +737,7 @@ export default function EmbeddingCreationDemo() {
                   <div className="flex items-center justify-between">
                     <Label htmlFor="incomplete-embeddings" className="flex items-center gap-2 text-slate-300">
                       <AlertCircle className="h-4 w-4 text-amber-500" />
-                      Simulate Incomplete Embeddings
+                      {t('embeddingCreation.simulateIncompleteEmbeddings')}
                     </Label>
                     <Switch
                       id="incomplete-embeddings"
@@ -755,7 +747,7 @@ export default function EmbeddingCreationDemo() {
                     />
                   </div>
                   <p className="text-xs text-slate-500">
-                    When enabled, some chunks will be skipped during embedding generation, simulating API failures or errors.
+                    {t('embeddingCreation.incompleteEmbeddingsDescription')}
                   </p>
                 </div>
 
@@ -763,11 +755,10 @@ export default function EmbeddingCreationDemo() {
                   <div className="p-4 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-lg">
                     <h3 className="font-medium text-amber-300 flex items-center gap-2 mb-2">
                       <AlertCircle className="h-5 w-5" />
-                      Incomplete Embeddings Detected
+                      {t('embeddingCreation.incompleteEmbeddingsDetected')}
                     </h3>
                     <p className="text-sm text-amber-300">
-                      Some chunks ({chunks.length - Object.keys(embeddings).length} of {chunks.length}) are missing embeddings.
-                      This creates blind spots in your search index where content exists but cannot be retrieved.
+                      {t('embeddingCreation.incompleteEmbeddingsWarning', { missing: chunks.length - Object.keys(embeddings).length, total: chunks.length })}
                     </p>
                   </div>
                 )}
@@ -776,18 +767,17 @@ export default function EmbeddingCreationDemo() {
 
             <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
-                <h3 className="text-slate-200 font-medium">Best Practices</h3>
+                <h3 className="text-slate-200 font-medium">{t('embeddingCreation.bestPractices')}</h3>
               </div>
               <div className="p-5">
                 <div className="space-y-4">
                   <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg">
                     <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-300">
                       <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                      Implement Change Detection
+                      {t('embeddingCreation.implementChangeDetection')}
                     </h3>
                     <p className="text-sm text-slate-400">
-                      Track document changes with timestamps or checksums to identify which embeddings need refreshing.
-                      This enables efficient incremental updates rather than full reindexing.
+                      {t('embeddingCreation.changeDetectionDescription')}
                     </p>
                   </div>
                 </div>
@@ -798,12 +788,10 @@ export default function EmbeddingCreationDemo() {
           <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
             <h3 className="text-slate-200 font-medium mb-3 flex items-center gap-2">
               <Layers className="h-5 w-5 text-emerald-400" />
-              Embedding Strategy Recap
+              {t('embeddingCreation.embeddingStrategyRecap')}
             </h3>
             <p className="text-sm text-slate-400 mb-4">
-              Choose the right embedding model based on your specific needs. Higher dimensions generally provide better semantic 
-              understanding but come with increased costs and storage requirements. Refresh embeddings when source content changes 
-              to maintain retrieval quality.
+              {t('embeddingCreation.strategyRecapDescription')}
             </p>
           </div>
         </TabsContent>

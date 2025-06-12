@@ -1,0 +1,29 @@
+{
+  "navigation": {
+    "backToOverview": "Back to Overview",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "sections": {
+    "whatItDoes": "What It Does",
+    "whyItMatters": "Why It Matters",
+    "commonChallenges": "Common Challenges",
+    "interactiveDemo": "Interactive Demo"
+  },
+  "cta": {
+    "title": "Skip the Complexity",
+    "description": "Building a robust {{stepTitle}} solution is challenging. Respeak's Enterprise RAG Platform handles this complexity for you.",
+    "scheduleDemo": "Schedule a Demo",
+    "contactUs": "Contact Us",
+    "followText": "Follow",
+    "drTimRietz": "Dr. Tim Rietz",
+    "forMoreInsights": "for more RAG insights"
+  },
+  "footer": {
+    "copyright": "© 2025",
+    "allRightsReserved": "All rights reserved",
+    "website": "Website",
+    "linkedin": "LinkedIn",
+    "bookDemo": "Book a Demo"
+  }
+} 

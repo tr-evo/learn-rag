@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
@@ -270,6 +271,7 @@ type EnhancedDocument = typeof sampleDocuments[0] & { rrf_score?: number }
 type RerankedDocument = typeof documents[0] & { rrf_score?: number }
 
 export default function RerankingFusionDemo() {
+  const { t } = useTranslation('demos')
   const [activeTab, setActiveTab] = useState("reranking")
   const [rerankingMethod, setRerankingMethod] = useState("reciprocal-rank")
   const [weights, setWeights] = useState({ relevance: 0.4, semantic: 0.4, recency: 0.2 })
@@ -610,8 +612,8 @@ export default function RerankingFusionDemo() {
     <div className="w-full bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
       <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
         <div>
-          <h2 className="text-slate-200 font-medium text-xl">Reranking & Fusion Demo</h2>
-          <p className="text-slate-400">Explore how reranking and fusion techniques improve search results</p>
+          <h2 className="text-slate-200 font-medium text-xl">{t('rerankingFusion.title')}</h2>
+          <p className="text-slate-400">{t('rerankingFusion.subtitle')}</p>
         </div>
       </div>
       <div className="p-5">
@@ -621,13 +623,13 @@ export default function RerankingFusionDemo() {
               value="reranking"
               className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white rounded-md transition-all"
             >
-              Reranking
+              {t('rerankingFusion.reranking')}
             </TabsTrigger>
             <TabsTrigger
               value="fusion"
               className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white rounded-md transition-all"
             >
-              Fusion
+              {t('rerankingFusion.fusion')}
             </TabsTrigger>
           </TabsList>
 
@@ -641,23 +643,23 @@ export default function RerankingFusionDemo() {
                     onCheckedChange={setUseReranking}
                     className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 transition-colors"
                   />
-                  <Label htmlFor="use-reranking" className="text-slate-300">Enable Reranking</Label>
+                  <Label htmlFor="use-reranking" className="text-slate-300">{t('rerankingFusion.enableReranking')}</Label>
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Base Retrieval Method</Label>
+                  <Label className="text-slate-300">{t('rerankingFusion.baseRetrievalMethod')}</Label>
                   <Select
                     value={retrievalMethod}
                     onValueChange={setRetrievalMethod}
                     disabled={useReranking && rerankingMethod === "weighted-score"}
                   >
                     <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                      <SelectValue placeholder="Select retrieval method" />
+                      <SelectValue placeholder={t('rerankingFusion.selectRetrievalMethod')} />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-800 border-slate-700 text-slate-300">
-                      <SelectItem value="bm25">BM25 (Keyword)</SelectItem>
-                      <SelectItem value="semantic">Semantic Search</SelectItem>
-                      <SelectItem value="hybrid">Hybrid Search</SelectItem>
+                      <SelectItem value="bm25">{t('rerankingFusion.bm25Keyword')}</SelectItem>
+                      <SelectItem value="semantic">{t('rerankingFusion.semanticSearch')}</SelectItem>
+                      <SelectItem value="hybrid">{t('rerankingFusion.hybridSearch')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -665,14 +667,14 @@ export default function RerankingFusionDemo() {
                 {useReranking && (
                   <>
                     <div className="space-y-2">
-                      <Label className="text-slate-300">Reranking Method</Label>
+                      <Label className="text-slate-300">{t('rerankingFusion.rerankingMethod')}</Label>
                       <Select value={rerankingMethod} onValueChange={setRerankingMethod}>
                         <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                          <SelectValue placeholder="Select reranking method" />
+                          <SelectValue placeholder={t('rerankingFusion.selectRerankingMethod')} />
                         </SelectTrigger>
                         <SelectContent className="bg-slate-800 border-slate-700 text-slate-300">
-                          <SelectItem value="weighted-score">Weighted Score</SelectItem>
-                          <SelectItem value="reciprocal-rank">Reciprocal Rank Fusion</SelectItem>
+                          <SelectItem value="weighted-score">{t('rerankingFusion.weightedScore')}</SelectItem>
+                          <SelectItem value="reciprocal-rank">{t('rerankingFusion.reciprocalRankFusion')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -680,15 +682,13 @@ export default function RerankingFusionDemo() {
                     {rerankingMethod === "reciprocal-rank" && (
                       <Alert className="bg-slate-900/20 border border-slate-700 text-slate-300">
                         <AlertCircle className="h-4 w-4 text-emerald-400" />
-                        <AlertTitle className="text-slate-200">Reciprocal Rank Fusion (RRF)</AlertTitle>
+                        <AlertTitle className="text-slate-200">{t('rerankingFusion.rrfTitle')}</AlertTitle>
                         <AlertDescription className="text-slate-400">
                           <p className="text-sm mt-2">
-                            RRF combines results from multiple ranked lists based on document positions rather than scores.
-                            For each document, its RRF score is calculated as: Σ 1/(rank + k) across all lists.
+                            {t('rerankingFusion.rrfDescription1')}
                           </p>
                           <p className="text-sm mt-2">
-                            In production, RRF is used to merge results from different retrieval methods (BM25, vector search).
-                            This demo simulates this by using initial ranks and a secondary ranking based on document recency.
+                            {t('rerankingFusion.rrfDescription2')}
                           </p>
                         </AlertDescription>
                       </Alert>
@@ -698,7 +698,7 @@ export default function RerankingFusionDemo() {
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <div className="flex justify-between">
-                            <Label className="text-slate-300">Relevance Weight: {weights.relevance.toFixed(1)}</Label>
+                            <Label className="text-slate-300">{t('rerankingFusion.relevanceWeight')}: {weights.relevance.toFixed(1)}</Label>
                           </div>
                           <Slider
                             value={[weights.relevance * 10]}
@@ -712,7 +712,7 @@ export default function RerankingFusionDemo() {
 
                         <div className="space-y-2">
                           <div className="flex justify-between">
-                            <Label className="text-slate-300">Semantic Weight: {weights.semantic.toFixed(1)}</Label>
+                            <Label className="text-slate-300">{t('rerankingFusion.semanticWeight')}: {weights.semantic.toFixed(1)}</Label>
                           </div>
                           <Slider
                             value={[weights.semantic * 10]}
@@ -726,7 +726,7 @@ export default function RerankingFusionDemo() {
 
                         <div className="space-y-2">
                           <div className="flex justify-between">
-                            <Label className="text-slate-300">Recency Weight: {weights.recency.toFixed(1)}</Label>
+                            <Label className="text-slate-300">{t('rerankingFusion.recencyWeight')}: {weights.recency.toFixed(1)}</Label>
                           </div>
                           <Slider
                             value={[weights.recency * 10]}
@@ -744,30 +744,29 @@ export default function RerankingFusionDemo() {
               </div>
 
               <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-5 hover:border-slate-600 transition-all">
-                <h3 className="text-lg font-medium mb-4 text-slate-200">Results</h3>
+                <h3 className="text-lg font-medium mb-4 text-slate-200">{t('rerankingFusion.results')}</h3>
                 <div className="space-y-3">
                   {displayedDocuments.map((doc, index) => (
                     <div key={doc.id} className="border border-slate-700 rounded-lg p-3 bg-slate-800/50 hover:border-emerald-500/30 hover:bg-slate-800/80 transition-all shadow-md">
                       <div className="flex justify-between items-start">
                         <h4 className="font-medium text-slate-200">{doc.title}</h4>
-                        <Badge className="bg-slate-800 text-slate-300 dark:bg-slate-700 dark:text-slate-200">Rank {index + 1}</Badge>
+                        <Badge className="bg-slate-800 text-slate-300 dark:bg-slate-700 dark:text-slate-200">{t('rerankingFusion.rank')} {index + 1}</Badge>
                       </div>
                       <p className="text-sm text-slate-400 mt-1 line-clamp-2">{doc.content}</p>
                       {useReranking && rerankingMethod === "weighted-score" && (
                         <div className="mt-2 grid grid-cols-3 gap-2 text-xs text-slate-300">
-                          <div>Relevance: {doc.relevanceScore.toFixed(2)}</div>
-                          <div>Semantic: {doc.semanticScore.toFixed(2)}</div>
-                          <div>Recency: {doc.recencyScore.toFixed(2)}</div>
+                          <div>{t('rerankingFusion.relevance')}: {doc.relevanceScore.toFixed(2)}</div>
+                          <div>{t('rerankingFusion.semantic')}: {doc.semanticScore.toFixed(2)}</div>
+                          <div>{t('rerankingFusion.recency')}: {doc.recencyScore.toFixed(2)}</div>
                         </div>
                       )}
                       {useReranking && rerankingMethod === "reciprocal-rank" && doc.rrf_score && (
                         <div className="mt-2 text-xs text-slate-300">
-                          <div>RRF Score: {doc.rrf_score.toFixed(3)}</div>
-                          {/* Display features only for search results that have them */}
+                          <div>{t('rerankingFusion.rrfScore')}: {doc.rrf_score.toFixed(3)}</div>
                           {'features' in doc && (
                             <div className="mt-1 grid grid-cols-2 gap-2">
-                              <div>Recency: {(doc as any).features.documentRecency.toFixed(2)}</div>
-                              <div>Query Overlap: {(doc as any).features.queryOverlap.toFixed(2)}</div>
+                              <div>{t('rerankingFusion.recency')}: {(doc as any).features.documentRecency.toFixed(2)}</div>
+                              <div>{t('rerankingFusion.queryOverlap')}: {(doc as any).features.queryOverlap.toFixed(2)}</div>
                             </div>
                           )}
                         </div>
@@ -789,11 +788,11 @@ export default function RerankingFusionDemo() {
                     onCheckedChange={setUseFusion}
                     className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 transition-colors"
                   />
-                  <Label htmlFor="use-fusion" className="text-slate-300">Enable Fusion</Label>
+                  <Label htmlFor="use-fusion" className="text-slate-300">{t('rerankingFusion.enableFusion')}</Label>
                 </div>
 
                 <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-5 hover:border-slate-600 transition-all">
-                  <h3 className="text-lg font-medium mb-4 text-slate-200">BM25 Results</h3>
+                  <h3 className="text-lg font-medium mb-4 text-slate-200">{t('rerankingFusion.bm25Results')}</h3>
                   <div className="space-y-2">
                     {retrievalMethods2.bm25.slice(0, 3).map((id, index) => {
                       const doc = documents.find((d) => d.id === id)!
@@ -802,7 +801,7 @@ export default function RerankingFusionDemo() {
                           <div className="flex justify-between items-start">
                             <h4 className="font-medium text-sm text-slate-200">{doc.title}</h4>
                             <Badge className="bg-slate-800 text-slate-300 dark:bg-slate-700 dark:text-slate-200 text-xs">
-                              Rank {index + 1}
+                              {t('rerankingFusion.rank')} {index + 1}
                             </Badge>
                           </div>
                         </div>
@@ -812,7 +811,7 @@ export default function RerankingFusionDemo() {
                 </div>
 
                 <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-5 hover:border-slate-600 transition-all">
-                  <h3 className="text-lg font-medium mb-4 text-slate-200">Semantic Results</h3>
+                  <h3 className="text-lg font-medium mb-4 text-slate-200">{t('rerankingFusion.semanticResults')}</h3>
                   <div className="space-y-2">
                     {retrievalMethods2.semantic.slice(0, 3).map((id, index) => {
                       const doc = documents.find((d) => d.id === id)!
@@ -821,7 +820,7 @@ export default function RerankingFusionDemo() {
                           <div className="flex justify-between items-start">
                             <h4 className="font-medium text-sm text-slate-200">{doc.title}</h4>
                             <Badge className="bg-slate-800 text-slate-300 dark:bg-slate-700 dark:text-slate-200 text-xs">
-                              Rank {index + 1}
+                              {t('rerankingFusion.rank')} {index + 1}
                             </Badge>
                           </div>
                         </div>
@@ -832,13 +831,13 @@ export default function RerankingFusionDemo() {
               </div>
 
               <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-5 hover:border-slate-600 transition-all">
-                <h3 className="text-lg font-medium mb-4 text-slate-200">Fused Results</h3>
+                <h3 className="text-lg font-medium mb-4 text-slate-200">{t('rerankingFusion.fusedResults')}</h3>
                 <div className="space-y-3">
                   {displayedDocuments.map((doc, index) => (
                     <div key={doc.id} className="border border-slate-700 rounded-lg p-3 bg-slate-800/50 hover:border-emerald-500/30 hover:bg-slate-800/80 transition-all shadow-md">
                       <div className="flex justify-between items-start">
                         <h4 className="font-medium text-slate-200">{doc.title}</h4>
-                        <Badge className="bg-slate-800 text-slate-300 dark:bg-slate-700 dark:text-slate-200">Rank {index + 1}</Badge>
+                        <Badge className="bg-slate-800 text-slate-300 dark:bg-slate-700 dark:text-slate-200">{t('rerankingFusion.rank')} {index + 1}</Badge>
                       </div>
                       <p className="text-sm text-slate-400 mt-1 line-clamp-2">{doc.content}</p>
                     </div>

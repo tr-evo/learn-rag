@@ -1,0 +1,80 @@
+{
+  "hero": {
+    "title": "RAG Explorer",
+    "subtitle": "Eine interaktive Reise durch die Retrieval Augmented Generation Pipeline — erkunden Sie jede Komponente, verstehen Sie Fallstricke und meistern Sie die Implementierung.",
+    "broughtBy": "Bereitgestellt von",
+    "enterpriseRag": "Enterprise RAG Plattform"
+  },
+  "welcome": {
+    "title": "Willkommen bei RAG Explorer!",
+    "message": "Bereit, in die Welt der Retrieval Augmented Generation einzutauchen? Wir führen Sie durch jeden Schritt beim Aufbau leistungsstarker, wissensbasierter KI-Systeme. Viel Spaß auf der Reise!"
+  },
+  "overview": {
+    "title": "Der RAG-Prozess auf einen Blick",
+    "phase1": {
+      "title": "Datenaufnahme",
+      "description": "Quelldaten vorbereiten, bereinigen und indexieren",
+      "steps": "Schritte: 1-6"
+    },
+    "phase2": {
+      "title": "Abruf",
+      "description": "Relevante Informationen finden und bewerten",
+      "steps": "Schritte: 7-10"
+    },
+    "phase3": {
+      "title": "Generierung",
+      "description": "Antworten erstellen und verbessern",
+      "steps": "Schritte: 11-15"
+    }
+  },
+  "pipeline": {
+    "title": "Die RAG-Pipeline: Schritt für Schritt"
+  },
+  "benefits": {
+    "title": "Hauptvorteile von RAG",
+    "reducedHallucinations": {
+      "title": "Weniger Halluzinationen",
+      "description": "Antworten auf Faktendaten statt auf Trainingsdaten-Memorierung gründen"
+    },
+    "upToDate": {
+      "title": "Aktuelle Informationen",
+      "description": "Zugriff auf frische Daten, die während des Modelltrainings nicht verfügbar waren"
+    },
+    "sourceAttribution": {
+      "title": "Quellenzuordnung",
+      "description": "Zitate und Belege für generierte Inhalte bereitstellen"
+    },
+    "domainSpecialization": {
+      "title": "Bereichsspezialisierung",
+      "description": "Leistung zu spezifischen Themen ohne Fine-Tuning verbessern"
+    }
+  },
+  "phases": {
+    "phase1": "Phase 1: Datenaufnahme",
+    "phase2": "Phase 2: Abruf", 
+    "phase3": "Phase 3: Generierung"
+  },
+  "stepCard": {
+    "explore": "Erkunden"
+  },
+  "popup": {
+    "title": "RAG-Komplexität überspringen",
+    "description": "Ein RAG-System von Grund auf zu erstellen kann herausfordernd sein. Lassen Sie uns die schwierigen Teile für Sie mit unserer unternehmenstauglichen Plattform übernehmen.",
+    "scheduleDemo": "Demo vereinbaren"
+  },
+  "cta": {
+    "title": "RAG-Komplexität überspringen",
+    "description": "RAG-Systeme von Grund auf zu erstellen ist herausfordernd. Respeak bietet eine sofort einsatzbereite RAG-Plattform mit modernster Informationsextraktion, Tabellen-Parsing und Bildverständnis.",
+    "scheduleDemo": "Demo vereinbaren",
+    "visitRespeak": "Respeak besuchen",
+    "followText": "Folgen Sie Dr. Tim Rietz",
+    "followSubtext": "für weitere RAG-Einblicke"
+  },
+  "footer": {
+    "copyright": "© 2025",
+    "allRightsReserved": "Alle Rechte vorbehalten",
+    "website": "Website",
+    "linkedin": "LinkedIn", 
+    "bookDemo": "Demo buchen"
+  }
+} 

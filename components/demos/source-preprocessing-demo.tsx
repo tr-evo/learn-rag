@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { FileText, FileJson, FileCode, FileSpreadsheetIcon as FileCsv, ArrowRight, FileType, File as FilePdf, Image, ScanLine } from "lucide-react"
 
 export default function SourcePreprocessingDemo() {
+  const { t } = useTranslation('demos')
   const [inputType, setInputType] = useState("text")
   const [inputText, setInputText] = useState("")
   const [processedText, setProcessedText] = useState("")
@@ -194,15 +196,15 @@ export default function SourcePreprocessingDemo() {
     <div className="flex flex-col space-y-6">
       {/* Type selector with improved styling */}
       <div className="bg-slate-700/30 p-4 rounded-lg mb-4">
-        <div className="text-lg font-medium text-slate-200 mb-3">Select Source Format</div>
+        <div className="text-lg font-medium text-slate-200 mb-3">{t('sourcePreprocessing.selectFormat')}</div>
         
         {/* Unstructured formats */}
         <div className="mb-4">
           <div className="flex items-center mb-2">
             <div className="h-1 w-2 bg-amber-500 rounded mr-2"></div>
-            <h3 className="text-sm font-medium text-amber-500/90">Unstructured Formats</h3>
+            <h3 className="text-sm font-medium text-amber-500/90">{t('sourcePreprocessing.unstructuredFormats')}</h3>
             <div className="ml-3 text-xs text-amber-500/70 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
-              Complex layouts, harder to process
+              {t('sourcePreprocessing.complexLayouts')}
             </div>
           </div>
           
@@ -216,7 +218,7 @@ export default function SourcePreprocessingDemo() {
               }`}
             >
               <FileText className="h-6 w-6 mb-2" />
-              <span>Plain Text</span>
+                              <span>{t('sourcePreprocessing.plainText')}</span>
             </button>
             
             <button
@@ -228,7 +230,7 @@ export default function SourcePreprocessingDemo() {
               }`}
             >
               <FileType className="h-6 w-6 mb-2" />
-              <span>Word Document</span>
+                              <span>{t('sourcePreprocessing.wordDocument')}</span>
             </button>
             
             <button
@@ -240,7 +242,7 @@ export default function SourcePreprocessingDemo() {
               }`}
             >
               <FilePdf className="h-6 w-6 mb-2" />
-              <span>PDF Document</span>
+                              <span>{t('sourcePreprocessing.pdfDocument')}</span>
             </button>
             
             <button
@@ -252,9 +254,9 @@ export default function SourcePreprocessingDemo() {
               }`}
             >
               <ScanLine className="h-6 w-6 mb-2" />
-              <span>Scanned Doc</span>
+                              <span>{t('sourcePreprocessing.scannedDocument')}</span>
               <span className="mt-1 text-xs px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/20">
-                OCR Needed
+                {t('sourcePreprocessing.ocrNeeded')}
               </span>
             </button>
             
@@ -267,9 +269,9 @@ export default function SourcePreprocessingDemo() {
               }`}
             >
               <Image className="h-6 w-6 mb-2" />
-              <span>Image</span>
+                              <span>{t('sourcePreprocessing.imageWithText')}</span>
               <span className="mt-1 text-xs px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/20">
-                OCR Needed
+                {t('sourcePreprocessing.ocrNeeded')}
               </span>
             </button>
           </div>
@@ -279,9 +281,9 @@ export default function SourcePreprocessingDemo() {
         <div>
           <div className="flex items-center mb-2">
             <div className="h-1 w-2 bg-blue-500 rounded mr-2"></div>
-            <h3 className="text-sm font-medium text-blue-500/90">Structured Formats</h3>
+            <h3 className="text-sm font-medium text-blue-500/90">{t('sourcePreprocessing.structuredFormats')}</h3>
             <div className="ml-3 text-xs text-blue-500/70 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20">
-              Well-defined structure, easier to process
+              {t('sourcePreprocessing.wellDefinedStructure')}
             </div>
           </div>
           
@@ -295,7 +297,7 @@ export default function SourcePreprocessingDemo() {
               }`}
             >
               <FileJson className="h-6 w-6 mb-2" />
-              <span>JSON</span>
+                              <span>{t('sourcePreprocessing.jsonData')}</span>
             </button>
             
             <button
@@ -307,7 +309,7 @@ export default function SourcePreprocessingDemo() {
               }`}
             >
               <FileCode className="h-6 w-6 mb-2" />
-              <span>HTML</span>
+                              <span>{t('sourcePreprocessing.htmlContent')}</span>
             </button>
             
             <button
@@ -319,7 +321,7 @@ export default function SourcePreprocessingDemo() {
               }`}
             >
               <FileCsv className="h-6 w-6 mb-2" />
-              <span>CSV</span>
+                              <span>{t('sourcePreprocessing.csvData')}</span>
             </button>
           </div>
         </div>
@@ -331,12 +333,12 @@ export default function SourcePreprocessingDemo() {
           <div className="px-4 py-3 bg-slate-700/50 flex items-center justify-between">
             <div className="flex items-center">
             {getInputIcon()}
-              <span className="ml-2 font-medium text-slate-200">Source Input</span>
+              <span className="ml-2 font-medium text-slate-200">{t('sourcePreprocessing.inputText')}</span>
             </div>
             <div className="text-xs px-2 py-1 rounded-full bg-slate-600 text-slate-300">
               {inputType.toUpperCase()}
               {(inputType === "scanned" || inputType === "image") && 
-                <span className="ml-1 text-amber-400">+ OCR</span>
+                <span className="ml-1 text-amber-400">+ {t('sourcePreprocessing.ocr')}</span>
               }
             </div>
           </div>
@@ -346,7 +348,7 @@ export default function SourcePreprocessingDemo() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
               className="min-h-[280px] font-mono text-sm bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
-            placeholder={`Enter ${inputType} content here...`}
+            placeholder={t('sourcePreprocessing.enterContentPlaceholder', { type: inputType })}
           />
           </div>
         </div>
@@ -375,10 +377,10 @@ export default function SourcePreprocessingDemo() {
             <div className="px-4 py-3 bg-slate-700/50 flex items-center justify-between">
               <div className="flex items-center">
                 <FileText className="h-5 w-5 text-emerald-400" />
-                <span className="ml-2 font-medium text-slate-200">Processed Output</span>
+                <span className="ml-2 font-medium text-slate-200">{t('sourcePreprocessing.processedOutput')}</span>
               </div>
               <div className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">
-                CLEAN TEXT
+                {t('sourcePreprocessing.cleanText')}
               </div>
             </div>
             
@@ -387,15 +389,18 @@ export default function SourcePreprocessingDemo() {
             value={processedText}
             readOnly
                 className="min-h-[280px] font-mono text-sm bg-slate-900/50 border-slate-700 text-emerald-300 focus:border-emerald-500 focus:ring-emerald-500/20"
-            placeholder="Processed text will appear here..."
+            placeholder={t('sourcePreprocessing.processedTextPlaceholder')}
           />
             </div>
             
             <div className="px-4 py-3 bg-slate-800 border-t border-slate-700">
               <p className="text-sm text-slate-400">
             {processedText
-                  ? `✓ Successfully processed ${inputType.toUpperCase()}${(inputType === "scanned" || inputType === "image") ? " with OCR" : ""} into clean, deduplicated text`
-                  : 'Click the arrow button to process the input'}
+                  ? t('sourcePreprocessing.successfullyProcessed', { 
+                      type: inputType.toUpperCase(),
+                      ocr: (inputType === "scanned" || inputType === "image") ? ` ${t('sourcePreprocessing.withOCR')}` : ""
+                    })
+                  : t('sourcePreprocessing.clickArrowToProcess')}
               </p>
             </div>
           </div>
@@ -404,32 +409,32 @@ export default function SourcePreprocessingDemo() {
       
       {/* Information panel about what's happening */}
       <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-4">
-        <h3 className="text-sm font-medium text-emerald-400 mb-2">What's happening?</h3>
+        <h3 className="text-sm font-medium text-emerald-400 mb-2">{t('sourcePreprocessing.whatsHappening')}</h3>
         <p className="text-sm text-slate-400 mb-3">
-          This demo shows how raw source data is preprocessed for a RAG system. Unstructured formats like Word and PDF are challenging due to their complex layouts. Images and scanned documents are not machine-readable and require Optical Character Recognition (OCR) as a preliminary step, which can introduce errors and uncertainty. The preprocessing removes duplicates, cleans up formatting, and extracts relevant text - making the content ready for chunking and embedding.
+          {t('sourcePreprocessing.whatsHappeningDescription')}
         </p>
         
-        <h4 className="text-sm font-medium text-amber-400 mb-2">Common Preprocessing Challenges:</h4>
+        <h4 className="text-sm font-medium text-amber-400 mb-2">{t('sourcePreprocessing.commonChallenges')}</h4>
         <ul className="text-sm text-slate-400 space-y-2">
           <li className="flex items-start">
             <span className="text-amber-500 mr-2">•</span>
-            <span><strong>Non-machine readable content:</strong> Images, scanned documents, and handwritten notes require OCR, which can misinterpret characters (confusing "0" with "O"), miss content entirely, or introduce artifacts.</span>
+            <span><strong>{t('sourcePreprocessing.nonMachineReadable')}:</strong> {t('sourcePreprocessing.nonMachineReadableDescription')}</span>
           </li>
           <li className="flex items-start">
             <span className="text-amber-500 mr-2">•</span>
-            <span><strong>Complex layouts:</strong> Multi-column text, tables, sidebars, and footnotes in PDFs and Word documents often get scrambled during extraction, losing the logical reading order.</span>
+            <span><strong>{t('sourcePreprocessing.complexLayoutsChallenge')}:</strong> {t('sourcePreprocessing.complexLayoutsDescription')}</span>
           </li>
           <li className="flex items-start">
             <span className="text-amber-500 mr-2">•</span>
-            <span><strong>Embedded non-text elements:</strong> Charts, diagrams, and images with important information may be completely lost or replaced with placeholder text.</span>
+            <span><strong>{t('sourcePreprocessing.embeddedNonText')}:</strong> {t('sourcePreprocessing.embeddedNonTextDescription')}</span>
           </li>
           <li className="flex items-start">
             <span className="text-amber-500 mr-2">•</span>
-            <span><strong>Headers and footers:</strong> Repeated page numbers, document titles, and section headers can create noise in the extracted text if not properly cleaned.</span>
+            <span><strong>{t('sourcePreprocessing.headersFooters')}:</strong> {t('sourcePreprocessing.headersFootersDescription')}</span>
           </li>
           <li className="flex items-start">
             <span className="text-amber-500 mr-2">•</span>
-            <span><strong>Formatting artifacts:</strong> Special characters, unusual whitespace, and formatting codes can appear in the extracted text, requiring specialized cleaning.</span>
+            <span><strong>{t('sourcePreprocessing.formattingArtifacts')}:</strong> {t('sourcePreprocessing.formattingArtifactsDescription')}</span>
           </li>
         </ul>
       </div>

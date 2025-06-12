@@ -1,0 +1,67 @@
+{
+  "navigation": {
+    "home": "Home",
+    "steps": "Steps",
+    "language": "Language"
+  },
+  "buttons": {
+    "startLearning": "Start Learning",
+    "getRagSolution": "Get a RAG Solution",
+    "process": "Process",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close"
+  },
+  "labels": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning"
+  },
+  "language": {
+    "english": "English",
+    "german": "Deutsch"
+  },
+  "notFound": {
+    "title": "404 - Not Found",
+    "message": "The page you're looking for doesn't exist.",
+    "returnHome": "Return Home"
+  },
+  "vectorSearch": {
+    "title": "Vector Search Demo",
+    "searchQuery": "Enter search query...",
+    "searchButton": "Search",
+    "results": "Search Results",
+    "relevanceScore": "Relevance Score",
+    "noResults": "No results found",
+    "searchPlaceholder": "Search documents..."
+  },
+  "answerGeneration": {
+    "generatedAnswer": "Generated Answer"
+  },
+  "chunkingDesign": {
+    "chunkingStrategy": "Chunking Strategy",
+    "fixedSize": "Fixed Size",
+    "semantic": "Semantic",
+    "chunkSize": "Chunk Size",
+    "overlap": "Overlap"
+  },
+  "hybridRetrieval": {
+    "searchQuery": "Enter search query...",
+    "vectorSearch": "Vector Search",
+    "keywordSearch": "Keyword Search",
+    "results": "Search Results"
+  },
+  "contextAssembly": {
+    "title": "Context Assembly Demo",
+    "retrievedChunks": "Retrieved Chunks",
+    "assemblyStrategy": "Assembly Strategy"
+  },
+  "rerankingFusion": {
+    "title": "Reranking & Fusion Demo",
+    "reranking": "Reranking",
+    "fusion": "Fusion",
+    "enableReranking": "Enable Reranking",
+    "results": "Results"
+  }
+} 

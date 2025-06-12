@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -118,6 +119,8 @@ const euclideanDistance = (a: number[], b: number[]) => {
 }
 
 export default function IndexingDemo() {
+  const { t } = useTranslation('demos')
+  
   // State for the index configuration
   const [indexConfig, setIndexConfig] = useState({
     distanceMetric: "cosine",
@@ -312,9 +315,9 @@ export default function IndexingDemo() {
     <div className="space-y-6">
       <Tabs defaultValue="search" className="w-full">
         <TabsList className="grid w-full grid-cols-3 bg-slate-800 p-1">
-          <TabsTrigger value="search" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-200">Vector Search</TabsTrigger>
-          <TabsTrigger value="config" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-200">Index Configuration</TabsTrigger>
-          <TabsTrigger value="issues" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-200">Common Issues</TabsTrigger>
+          <TabsTrigger value="search" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-200">{t('indexing.vectorSearch')}</TabsTrigger>
+          <TabsTrigger value="config" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-200">{t('indexing.indexConfiguration')}</TabsTrigger>
+          <TabsTrigger value="issues" className="data-[state=active]:bg-slate-700 data-[state=active]:text-slate-200">{t('indexing.commonIssues')}</TabsTrigger>
         </TabsList>
 
         {/* Vector Search Tab */}
@@ -341,14 +344,14 @@ export default function IndexingDemo() {
               <div className="px-5 py-4 border-t border-slate-700 flex justify-between items-center">
                 <div className="text-sm text-slate-400 flex items-center gap-2">
                   <Clock className="h-4 w-4 text-emerald-400" />
-                  Last refreshed: {lastRefreshed.toLocaleTimeString()}
+                  <span className="text-sm text-slate-400">{t('indexing.lastRefreshed')}:</span> {lastRefreshed.toLocaleTimeString()}
                 </div>
                 <Button 
                   onClick={refreshIndex} 
                   className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all flex items-center gap-2"
                 >
                   <RefreshCw className="h-4 w-4" />
-                  Refresh Index
+                  {t('indexing.refreshIndex')}
                 </Button>
               </div>
             </div>
@@ -359,20 +362,20 @@ export default function IndexingDemo() {
                 <div>
                   <h3 className="text-slate-200 font-medium flex items-center gap-2">
                     <Search className="h-5 w-5 text-emerald-400" />
-                    Vector Search
+                    {t('indexing.vectorSearch')}
                   </h3>
-                  <p className="text-slate-400 text-sm mt-1">Search the vector index for similar content</p>
+                  <p className="text-slate-400 text-sm mt-1">{t('indexing.searchVectorIndex')}</p>
                 </div>
               </div>
               <div className="p-5 space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Select a query</Label>
+                  <Label className="text-slate-300">{t('indexing.searchQuery')}</Label>
                   <Select
                     value={selectedQuery === sampleQueries[0] ? "0" : selectedQuery === sampleQueries[1] ? "1" : "2"}
                     onValueChange={(value) => setSelectedQuery(sampleQueries[Number.parseInt(value)])}
                   >
                     <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                      <SelectValue placeholder="Select a query" />
+                      <SelectValue placeholder={t('indexing.selectSampleQuery')} />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-800 border-slate-700">
                       {sampleQueries.map((query, index) => (
@@ -387,15 +390,15 @@ export default function IndexingDemo() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <Badge className="bg-slate-900/50 border-slate-700 text-slate-300 hover:bg-slate-800">
-                      Index Size: {indexedChunks.length} chunks
+                      {t('indexing.indexStatus')} {indexedChunks.length} {t('indexing.chunks')}
                     </Badge>
                     <Badge className="bg-slate-900/50 border-slate-700 text-slate-300 hover:bg-slate-800">
-                      Metric: {indexConfig.distanceMetric === "cosine" ? "Cosine Similarity" : "Euclidean Distance"}
+                      {t('indexing.distanceMetric')}: {indexConfig.distanceMetric === "cosine" ? "Cosine Similarity" : "Euclidean Distance"}
                     </Badge>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Badge className={`bg-slate-900/50 border-slate-700 text-slate-300 hover:bg-slate-800 ${indexConfig.approximateSearch ? "border-emerald-500/30" : ""}`}>
-                      {indexConfig.approximateSearch ? "Approximate" : "Exact"} Search
+                      {indexConfig.approximateSearch ? t('indexing.approximate') : t('indexing.exact')} {t('indexing.search')}
                     </Badge>
                   </div>
                 </div>
@@ -407,11 +410,11 @@ export default function IndexingDemo() {
                   className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all flex items-center gap-2 disabled:opacity-70"
                 >
                   {isSearching ? (
-                    <>Searching...</>
+                    <>{t('indexing.searching')}</>
                   ) : (
                     <>
                       <Search className="h-4 w-4" />
-                      Search Vector Index
+                      {t('indexing.searchVectorIndex')}
                     </>
                   )}
                 </Button>
@@ -424,30 +427,30 @@ export default function IndexingDemo() {
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <div>
                 <h3 className="text-slate-200 font-medium flex items-center gap-2">
-                  Search Results
+                  {t('indexing.searchResults')}
                 </h3>
                 <p className="text-slate-400 text-sm mt-1">
                   {searchResults.length > 0
-                    ? `Found ${searchResults.length} similar chunks in ${searchTime.toFixed(1)}ms`
-                    : "Run a search to see results"}
+                    ? t('indexing.foundResults', { count: searchResults.length, time: searchTime.toFixed(1) })
+                    : t('indexing.runSearchToSeeResults')}
                 </p>
               </div>
             </div>
             <div className="p-5">
               {searchResults.length === 0 ? (
                 <div className="text-center py-8 text-slate-400">
-                  No search results yet. Click "Search Vector Index" to find similar content.
+                  {t('indexing.noSearchResults')}
                 </div>
               ) : (
                 <div className="space-y-4">
                   {searchResults.map((result, index) => (
                     <div key={result.id} className="p-4 border border-slate-700 rounded-lg bg-slate-900/50 hover:border-slate-600 transition-colors">
                       <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-slate-200 font-medium">Result #{index + 1}</h3>
+                        <h3 className="text-slate-200 font-medium">{t('indexing.result')} #{index + 1}</h3>
                         <Badge className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300">
-                          {indexConfig.distanceMetric === "cosine"
-                            ? `Similarity: ${result.similarity.toFixed(3)}`
-                            : `Distance: ${(-result.similarity).toFixed(3)}`}
+                          {t('indexing.distanceMetric')}: {indexConfig.distanceMetric === "cosine"
+                            ? t('indexing.similarity', { value: result.similarity.toFixed(3) })
+                            : t('indexing.distance', { value: (-result.similarity).toFixed(3) })}
                         </Badge>
                       </div>
                       <p className="text-slate-300 mb-2">{result.text}</p>
@@ -473,38 +476,38 @@ export default function IndexingDemo() {
               <div>
                 <h3 className="text-slate-200 font-medium flex items-center gap-2">
                   <Settings className="h-5 w-5 text-emerald-400" />
-                  Index Configuration
+                  {t('indexing.indexConfiguration')}
                 </h3>
-                <p className="text-slate-400 text-sm mt-1">Configure your vector index parameters</p>
+                <p className="text-slate-400 text-sm mt-1">{t('indexing.configureVectorIndexParameters')}</p>
               </div>
             </div>
             <div className="p-5 space-y-6">
               {/* Distance Metric */}
               <div className="space-y-2">
-                <Label className="text-slate-300">Distance Metric</Label>
+                <Label className="text-slate-300">{t('indexing.distanceMetric')}</Label>
                 <Select
                   value={indexConfig.distanceMetric}
                   onValueChange={(value) => setIndexConfig({ ...indexConfig, distanceMetric: value })}
                 >
                   <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                    <SelectValue placeholder="Select distance metric" />
+                    <SelectValue placeholder={t('indexing.selectDistanceMetric')} />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-800 border-slate-700">
-                    <SelectItem value="cosine" className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">Cosine Similarity</SelectItem>
-                    <SelectItem value="euclidean" className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">Euclidean Distance</SelectItem>
+                    <SelectItem value="cosine" className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">{t('indexing.cosineSimilarity')}</SelectItem>
+                    <SelectItem value="euclidean" className="text-slate-300 focus:bg-slate-700 focus:text-slate-200">{t('indexing.euclideanDistance')}</SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-sm text-slate-400">
                   {indexConfig.distanceMetric === "cosine"
-                    ? "Cosine similarity measures the angle between vectors, focusing on direction rather than magnitude."
-                    : "Euclidean distance measures the straight-line distance between vectors in the embedding space."}
+                    ? t('indexing.cosineDescription')
+                    : t('indexing.euclideanDescription')}
                 </p>
               </div>
 
               {/* Search Type */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="approximate-search" className="text-slate-300">Approximate Search</Label>
+                  <Label htmlFor="approximate-search" className="text-slate-300">{t('indexing.approximateSearch')}</Label>
                   <Switch
                     id="approximate-search"
                     checked={indexConfig.approximateSearch}
@@ -514,15 +517,15 @@ export default function IndexingDemo() {
                 </div>
                 <p className="text-sm text-slate-400">
                   {indexConfig.approximateSearch
-                    ? "Approximate search (ANN) trades perfect accuracy for significant speed improvements, essential for large datasets."
-                    : "Exact search guarantees finding the true nearest neighbors but can be slower on large datasets."}
+                    ? t('indexing.approximateSearchDescription')
+                    : t('indexing.exactSearchDescription')}
                 </p>
               </div>
 
               {/* Index Size */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-slate-300">Index Size (chunks)</Label>
+                  <Label className="text-slate-300">{t('indexing.indexSize')} ({t('indexing.chunks')})</Label>
                   <span className="text-sm font-medium text-slate-300">{indexConfig.indexSize}</span>
                 </div>
                 <Slider
@@ -534,16 +537,16 @@ export default function IndexingDemo() {
                   className="[&>span]:bg-emerald-500"
                 />
                 <div className="flex justify-between text-xs text-slate-400">
-                  <span>Small (5)</span>
-                  <span>Medium (100)</span>
-                  <span>Large (1000)</span>
+                  <span>{t('indexing.small')} (5)</span>
+                  <span>{t('indexing.medium')} (100)</span>
+                  <span>{t('indexing.large')} (1000)</span>
                 </div>
               </div>
 
               {/* Refresh Interval */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-slate-300">Refresh Interval (seconds)</Label>
+                  <Label className="text-slate-300">{t('indexing.refreshInterval')} ({t('indexing.seconds')})</Label>
                   <span className="text-sm font-medium text-slate-300">{indexConfig.refreshInterval}s</span>
                 </div>
                 <Slider
@@ -555,9 +558,9 @@ export default function IndexingDemo() {
                   className="[&>span]:bg-emerald-500"
                 />
                 <div className="flex justify-between text-xs text-slate-400">
-                  <span>Frequent (5s)</span>
-                  <span>Medium (60s)</span>
-                  <span>Infrequent (120s)</span>
+                  <span>{t('indexing.frequent')} (5s)</span>
+                  <span>{t('indexing.medium')} (60s)</span>
+                  <span>{t('indexing.infrequent')} (120s)</span>
                 </div>
               </div>
             </div>
@@ -574,14 +577,14 @@ export default function IndexingDemo() {
                 }}
                 className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-slate-200"
               >
-                Reset to Defaults
+                {t('indexing.resetToDefaults')}
               </Button>
               <Button 
                 onClick={refreshIndex} 
                 className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all flex items-center gap-2"
               >
                 <RefreshCw className="h-4 w-4" />
-                Apply & Refresh Index
+                {t('indexing.applyRefreshIndex')}
               </Button>
             </div>
           </div>
@@ -589,7 +592,7 @@ export default function IndexingDemo() {
           <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg mt-6">
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <div>
-                <h3 className="text-slate-200 font-medium">Index Performance Characteristics</h3>
+                <h3 className="text-slate-200 font-medium">{t('indexing.indexPerformanceCharacteristics')}</h3>
               </div>
             </div>
             <div className="p-5">
@@ -597,15 +600,15 @@ export default function IndexingDemo() {
                 <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50">
                   <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
                     <Zap className="h-5 w-5 text-emerald-400" />
-                    Search Speed
+                    {t('indexing.searchSpeed')}
                   </h3>
                   <p className="text-sm text-slate-300">
                     {indexConfig.approximateSearch
-                      ? "Fast, scales well to large datasets due to approximate search algorithms."
-                      : "Slower on large datasets as exact search examines all vectors."}
+                      ? t('indexing.fastSearchDescription')
+                      : t('indexing.slowSearchDescription')}
                     {indexConfig.indexSize > 500 && !indexConfig.approximateSearch && (
                       <span className="block mt-2 text-amber-300">
-                        Warning: Exact search on large indices may cause performance issues.
+                        {t('indexing.exactSearchWarning')}
                       </span>
                     )}
                   </p>
@@ -613,25 +616,25 @@ export default function IndexingDemo() {
                 <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50">
                   <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
                     <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                    Result Quality
+                    {t('indexing.resultQuality')}
                   </h3>
                   <p className="text-sm text-slate-300">
                     {indexConfig.approximateSearch
-                      ? "Good but not perfect. May occasionally miss the absolute best match."
-                      : "Highest quality results, guaranteed to find the true nearest neighbors."}
+                      ? t('indexing.approximateQualityDescription')
+                      : t('indexing.exactQualityDescription')}
                   </p>
                 </div>
                 <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50">
                   <h3 className="text-slate-200 font-medium mb-2 flex items-center gap-2">
                     <RefreshCw className="h-5 w-5 text-emerald-400" />
-                    Freshness
+                    {t('indexing.freshness')}
                   </h3>
                   <p className="text-sm text-slate-300">
                     {indexConfig.refreshInterval < 15
-                      ? "Very fresh data with frequent updates, but higher system load."
+                      ? t('indexing.veryFreshDescription')
                       : indexConfig.refreshInterval < 60
-                        ? "Balanced approach with regular updates."
-                        : "Less frequent updates, may miss recent changes but lower system load."}
+                        ? t('indexing.balancedDescription')
+                        : t('indexing.lessFreshDescription')}
                   </p>
                 </div>
               </div>
@@ -646,9 +649,9 @@ export default function IndexingDemo() {
               <div>
                 <h3 className="text-slate-200 font-medium flex items-center gap-2">
                   <AlertCircle className="h-5 w-5 text-emerald-400" />
-                  Common Indexing Issues
+                  {t('indexing.commonIndexingIssues')}
                 </h3>
-                <p className="text-slate-400 text-sm mt-1">Simulate and understand common problems with vector indices</p>
+                <p className="text-slate-400 text-sm mt-1">{t('indexing.simulateUnderstandProblems')}</p>
               </div>
             </div>
             <div className="p-5 space-y-6">
@@ -657,7 +660,7 @@ export default function IndexingDemo() {
                 <div className="flex items-center justify-between">
                   <Label htmlFor="stale-index" className="flex items-center gap-2 text-slate-300">
                     <AlertCircle className="h-4 w-4 text-amber-400" />
-                    Simulate Stale Index
+                    {t('indexing.simulateStaleIndex')}
                   </Label>
                   <Switch 
                     id="stale-index" 
@@ -667,18 +670,13 @@ export default function IndexingDemo() {
                   />
                 </div>
                 <p className="text-sm text-slate-400">
-                  When enabled, the index won't update when refreshed, simulating an outdated index that returns stale
-                  results.
-                </p>
-                {simulateStaleIndex && (
-                  <div className="p-3 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-md text-sm flex items-start gap-2">
-                    <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  {t('indexing.staleIndexDescription')}
+                  {simulateStaleIndex && (
                     <span>
-                      Stale index detected! The index is not being updated with new or changed documents. This can lead
-                      to outdated or incorrect search results.
+                      {t('indexing.staleIndexWarning')}
                     </span>
-                  </div>
-                )}
+                  )}
+                </p>
               </div>
 
               {/* Partial Index */}
@@ -686,7 +684,7 @@ export default function IndexingDemo() {
                 <div className="flex items-center justify-between">
                   <Label htmlFor="partial-index" className="flex items-center gap-2 text-slate-300">
                     <AlertCircle className="h-4 w-4 text-amber-400" />
-                    Simulate Partial Index
+                    {t('indexing.simulatePartialIndex')}
                   </Label>
                   <Switch 
                     id="partial-index" 
@@ -696,18 +694,13 @@ export default function IndexingDemo() {
                   />
                 </div>
                 <p className="text-sm text-slate-400">
-                  When enabled, some documents will be missing from the index, simulating failed indexing or incomplete
-                  data.
-                </p>
-                {simulatePartialIndex && (
-                  <div className="p-3 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-md text-sm flex items-start gap-2">
-                    <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  {t('indexing.partialIndexDescription')}
+                  {simulatePartialIndex && (
                     <span>
-                      Partial index detected! Some documents are missing from the index. This can lead to incomplete
-                      search results and missed relevant information.
+                      {t('indexing.partialIndexWarning')}
                     </span>
-                  </div>
-                )}
+                  )}
+                </p>
               </div>
 
               {/* Slow Search */}
@@ -715,7 +708,7 @@ export default function IndexingDemo() {
                 <div className="flex items-center justify-between">
                   <Label htmlFor="slow-search" className="flex items-center gap-2 text-slate-300">
                     <AlertCircle className="h-4 w-4 text-amber-400" />
-                    Simulate Slow Search
+                    {t('indexing.simulateSlowSearch')}
                   </Label>
                   <Switch 
                     id="slow-search" 
@@ -725,18 +718,13 @@ export default function IndexingDemo() {
                   />
                 </div>
                 <p className="text-sm text-slate-400">
-                  When enabled, searches will take longer, simulating performance issues with large or poorly configured
-                  indices.
-                </p>
-                {simulateSlowSearch && (
-                  <div className="p-3 bg-amber-900/20 border border-amber-500/30 text-amber-300 rounded-md text-sm flex items-start gap-2">
-                    <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  {t('indexing.slowSearchDescription')}
+                  {simulateSlowSearch && (
                     <span>
-                      Slow search performance detected! This could be due to a large index size, inefficient index
-                      configuration, or insufficient resources.
+                      {t('indexing.slowSearchWarning')}
                     </span>
-                  </div>
-                )}
+                  )}
+                </p>
               </div>
             </div>
           </div>
@@ -744,40 +732,33 @@ export default function IndexingDemo() {
           <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg mt-6">
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <div>
-                <h3 className="text-slate-200 font-medium">Best Practices for Vector Indexing</h3>
+                <h3 className="text-slate-200 font-medium">{t('indexing.bestPracticesVectorIndexing')}</h3>
               </div>
             </div>
             <div className="p-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50 hover:border-slate-600 transition-colors">
-                  <h3 className="text-slate-200 font-medium mb-2">Choose the Right Index Type</h3>
+                  <h3 className="text-slate-200 font-medium mb-2">{t('indexing.chooseRightIndexType')}</h3>
                   <p className="text-sm text-slate-300">
-                    Different vector databases offer various index types (HNSW, IVF, etc.). Choose based on your dataset
-                    size, query patterns, and accuracy requirements. For large datasets, approximate nearest neighbor
-                    (ANN) algorithms are usually necessary.
+                    {t('indexing.chooseIndexTypeDescription')}
                   </p>
                 </div>
                 <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50 hover:border-slate-600 transition-colors">
-                  <h3 className="text-slate-200 font-medium mb-2">Implement Regular Refresh Cycles</h3>
+                  <h3 className="text-slate-200 font-medium mb-2">{t('indexing.implementRegularRefresh')}</h3>
                   <p className="text-sm text-slate-300">
-                    Set up automated index refresh processes that align with your data update frequency. For rapidly
-                    changing data, consider incremental updates rather than full rebuilds to maintain freshness without
-                    excessive overhead.
+                    {t('indexing.regularRefreshDescription')}
                   </p>
                 </div>
                 <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50 hover:border-slate-600 transition-colors">
-                  <h3 className="text-slate-200 font-medium mb-2">Monitor Index Health</h3>
+                  <h3 className="text-slate-200 font-medium mb-2">{t('indexing.monitorIndexHealth')}</h3>
                   <p className="text-sm text-slate-300">
-                    Implement monitoring for index size, query latency, and indexing errors. Set up alerts for failed
-                    indexing jobs or performance degradation to catch issues before they affect users.
+                    {t('indexing.monitorHealthDescription')}
                   </p>
                 </div>
                 <div className="p-4 border border-slate-700 rounded-lg bg-slate-900/50 hover:border-slate-600 transition-colors">
-                  <h3 className="text-slate-200 font-medium mb-2">Plan for Scale</h3>
+                  <h3 className="text-slate-200 font-medium mb-2">{t('indexing.planForScale')}</h3>
                   <p className="text-sm text-slate-300">
-                    Design your indexing strategy with future growth in mind. Consider sharding, partitioning, or
-                    clustering strategies that will allow your index to scale horizontally as your data volume
-                    increases.
+                    {t('indexing.planScaleDescription')}
                   </p>
                 </div>
               </div>
@@ -787,17 +768,17 @@ export default function IndexingDemo() {
           <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
             <h3 className="text-slate-200 font-medium mb-3 flex items-center gap-2">
               <Database className="h-5 w-5 text-emerald-400" />
-              Vector Database Resources
+              {t('indexing.vectorDatabaseResources')}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="text-sm text-slate-300">
-                <p>Optimizing vector search configurations requires balancing search speed, result quality, and resource usage based on your specific use case needs.</p>
+                <p>{t('indexing.optimizingVectorSearch')}</p>
               </div>
               <div>
                 <Button 
                   className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
                 >
-                  Learn More About Vector Databases
+                  {t('indexing.learnMoreVectorDatabases')}
                 </Button>
               </div>
             </div>

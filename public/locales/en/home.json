@@ -1,0 +1,80 @@
+{
+  "hero": {
+    "title": "RAG Explorer",
+    "subtitle": "An interactive journey through the Retrieval Augmented Generation pipeline — explore each component, understand pitfalls, and master implementation.",
+    "broughtBy": "Brought to you by",
+    "enterpriseRag": "Enterprise RAG Platform"
+  },
+  "welcome": {
+    "title": "Welcome to RAG Explorer!",
+    "message": "Ready to dive into the world of Retrieval Augmented Generation? We'll guide you through each step of building powerful, knowledge-grounded AI systems. Enjoy the journey!"
+  },
+  "overview": {
+    "title": "The RAG Process at a Glance",
+    "phase1": {
+      "title": "Data Ingestion",
+      "description": "Prepare, clean, and index source data",
+      "steps": "Steps: 1-6"
+    },
+    "phase2": {
+      "title": "Retrieval",
+      "description": "Find and rank relevant information",
+      "steps": "Steps: 7-10"
+    },
+    "phase3": {
+      "title": "Generation",
+      "description": "Create and improve responses",
+      "steps": "Steps: 11-15"
+    }
+  },
+  "pipeline": {
+    "title": "The RAG Pipeline: Step by Step"
+  },
+  "benefits": {
+    "title": "Key Benefits of RAG",
+    "reducedHallucinations": {
+      "title": "Reduced Hallucinations",
+      "description": "Ground responses in factual data rather than training data memorization"
+    },
+    "upToDate": {
+      "title": "Up-to-date Information",
+      "description": "Access fresh data not available during model training"
+    },
+    "sourceAttribution": {
+      "title": "Source Attribution",
+      "description": "Provide citations and evidence for generated content"
+    },
+    "domainSpecialization": {
+      "title": "Domain Specialization",
+      "description": "Enhance performance on specific topics without fine-tuning"
+    }
+  },
+  "phases": {
+    "phase1": "Phase 1: Data Ingestion",
+    "phase2": "Phase 2: Retrieval", 
+    "phase3": "Phase 3: Generation"
+  },
+  "stepCard": {
+    "explore": "Explore"
+  },
+  "popup": {
+    "title": "Skip the RAG Complexity",
+    "description": "Building a RAG system from scratch can be challenging. Let us handle the hard parts for you with our enterprise-ready platform.",
+    "scheduleDemo": "Schedule a Demo"
+  },
+  "cta": {
+    "title": "Skip the RAG Complexity",
+    "description": "Building RAG systems from scratch is challenging. Respeak provides an out-of-the-box RAG platform with cutting-edge information extraction, table parsing, and image understanding.",
+    "scheduleDemo": "Schedule a Demo",
+    "visitRespeak": "Visit Respeak",
+    "followText": "Follow Dr. Tim Rietz",
+    "followSubtext": "for more RAG insights"
+  },
+  "footer": {
+    "copyright": "© 2025",
+    "allRightsReserved": "All rights reserved",
+    "website": "Website",
+    "linkedin": "LinkedIn", 
+    "bookDemo": "Book a Demo"
+  }
+} 

@@ -1,0 +1,67 @@
+{
+  "navigation": {
+    "home": "Startseite",
+    "steps": "Schritte",
+    "language": "Sprache"
+  },
+  "buttons": {
+    "startLearning": "Lernen beginnen",
+    "getRagSolution": "RAG-Lösung erhalten",
+    "process": "Verarbeiten",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "close": "Schließen"
+  },
+  "labels": {
+    "loading": "Lädt...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "warning": "Warnung"
+  },
+  "language": {
+    "english": "English",
+    "german": "Deutsch"
+  },
+  "notFound": {
+    "title": "404 - Seite nicht gefunden",
+    "message": "Die gesuchte Seite existiert nicht.",
+    "returnHome": "Zur Startseite"
+  },
+  "vectorSearch": {
+    "title": "Vektor-Suche Demo",
+    "searchQuery": "Suchanfrage eingeben...",
+    "searchButton": "Suchen",
+    "results": "Suchergebnisse",
+    "relevanceScore": "Relevanz-Score",
+    "noResults": "Keine Ergebnisse gefunden",
+    "searchPlaceholder": "Dokumente durchsuchen..."
+  },
+  "answerGeneration": {
+    "generatedAnswer": "Generierte Antwort"
+  },
+  "chunkingDesign": {
+    "chunkingStrategy": "Chunking-Strategie",
+    "fixedSize": "Feste Größe",
+    "semantic": "Semantisch",
+    "chunkSize": "Chunk-Größe",
+    "overlap": "Überlappung"
+  },
+  "hybridRetrieval": {
+    "searchQuery": "Suchanfrage eingeben...",
+    "vectorSearch": "Vektor-Suche",
+    "keywordSearch": "Keyword-Suche",
+    "results": "Suchergebnisse"
+  },
+  "contextAssembly": {
+    "title": "Kontext-Assembly Demo",
+    "retrievedChunks": "Abgerufene Chunks",
+    "assemblyStrategy": "Assembly-Strategie"
+  },
+  "rerankingFusion": {
+    "title": "Reranking & Fusion Demo",
+    "reranking": "Reranking",
+    "fusion": "Fusion",
+    "enableReranking": "Reranking aktivieren",
+    "results": "Ergebnisse"
+  }
+} 

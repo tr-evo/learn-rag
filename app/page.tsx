@@ -3,8 +3,11 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { ArrowRight, BookOpen, AlertTriangle, Zap, ExternalLink, X } from "lucide-react"
+import { useTranslation } from "react-i18next"
+import LanguageSwitcher from "@/components/language-switcher"
 
 export default function Home() {
+  const { t, ready } = useTranslation(['home', 'common', 'steps'])
   const [showCta, setShowCta] = useState(false)
   const [showWelcome, setShowWelcome] = useState(false)
 
@@ -34,98 +37,15 @@ export default function Home() {
     return () => clearTimeout(timer)
   }, [])
 
-  const steps = [
-    {
-      id: 1,
-      title: "Source connection & preprocessing",
-      description: "Converts every source to clean, deduplicated text.",
-      pitfall: "Failed parsing or noisy leftovers hide data and add junk.",
-    },
-    {
-      id: 2,
-      title: "Integrations",
-      description: "Links loaders->embeddings->index->LLM into one flow.",
-      pitfall: "Interface mismatches or missing auth break the pipeline.",
-    },
-    {
-      id: 3,
-      title: "Metadata tagging",
-      description: "Enables filtering, access control, and audit.",
-      pitfall: "Missing or inconsistent tags block filters and leak data.",
-    },
-    {
-      id: 4,
-      title: "Indexing",
-      description: "Lets queries hit millions of chunks in milliseconds.",
-      pitfall: "Stale or partial index returns outdated or no results.",
-    },
-    {
-      id: 5,
-      title: "Chunking design",
-      description: "Balances recall vs. context size.",
-      pitfall: "Oversized chunks dilute relevance; undersized split answers.",
-    },
-    {
-      id: 6,
-      title: "Embedding creation & refresh",
-      description: "Provides semantic search backbone.",
-      pitfall: "Skipping refresh drifts quality; model changes invalidate vectors.",
-    },
-    {
-      id: 7,
-      title: "Query understanding",
-      description: "Turns messy input into precise search intent.",
-      pitfall: "Ambiguity or wrong rewrite misguides retrieval.",
-    },
-    {
-      id: 8,
-      title: "Hybrid retrieval",
-      description: "Combines keyword precision with vector recall.",
-      pitfall: "Poor score fusion slows or skews results.",
-    },
-    {
-      id: 9,
-      title: "Filtering & permission checks",
-      description: "Removes off-topic or unauthorized chunks.",
-      pitfall: "Over-filtering drops answers; under-filtering leaks secrets.",
-    },
-    {
-      id: 10,
-      title: "Reranking / fusion",
-      description: "Elevates the most answer-rich passages.",
-      pitfall: "Heavy models add latency; bad fusion repeats or misorders.",
-    },
-    {
-      id: 11,
-      title: "Context assembly",
-      description: "Packs the best snippets into the prompt window.",
-      pitfall: "Token overflow or duplication confuses the LLM.",
-    },
-    {
-      id: 12,
-      title: "Answer generation",
-      description: "Produces the user-visible response.",
-      pitfall: "Hallucinations if context misses facts or prompt misguides.",
-    },
-    {
-      id: 13,
-      title: "Post-processing",
-      description: "Formats, cites, and sanity-checks output.",
-      pitfall: "Weak fact-check passes errors; over-editing distorts meaning.",
-    },
-    {
-      id: 14,
-      title: "Monitoring & evaluation",
-      description: "Reveals quality, latency, and drift.",
-      pitfall: "Wrong metrics hide failures; poor logging thwarts debugging.",
-    },
-    {
-      id: 15,
-      title: "Feedback loop",
-      description: "Feeds findings back to improve all stages.",
-      pitfall: "Ignoring feedback lets issues persist or regressions slip in.",
-    },
-  ]
+  const steps = Array.from({ length: 15 }, (_, i) => {
+    const stepId = (i + 1).toString()
+    return {
+      id: i + 1,
+      title: ready ? t(`steps:steps.${stepId}.title`) : `Step ${stepId}`,
+      description: ready ? t(`steps:steps.${stepId}.description`) : 'Loading...',
+      pitfall: ready ? t(`steps:steps.${stepId}.pitfall`) : 'Loading...',
+    }
+  })
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
@@ -135,15 +55,17 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-600/20 to-transparent"></div>
 
         <header className="container mx-auto px-4 py-16 relative z-10">
+          <div className="flex justify-end mb-4">
+            <LanguageSwitcher />
+          </div>
           <h1 className="text-5xl md:text-7xl font-bold text-center mb-4 bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent drop-shadow-sm">
-            RAG Explorer
+            {t('home:hero.title', 'RAG Explorer')}
           </h1>
           <p className="text-xl md:text-2xl text-center text-slate-300 mb-8 max-w-3xl mx-auto">
-            An interactive journey through the Retrieval Augmented Generation pipeline —
-            explore each component, understand pitfalls, and master implementation.
+            {t('home:hero.subtitle', 'An interactive journey through the Retrieval Augmented Generation pipeline — explore each component, understand pitfalls, and master implementation.')}
           </p>
           <div className="text-center text-slate-300 mb-6">
-            <p>Brought to you by <a href="https://www.respeak.io/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 font-semibold"><img src="/Respeak_fav.png" alt="Respeak" className="inline-block h-4 w-4 mr-2" />Respeak</a> — Enterprise RAG Platform</p>
+            <p>{t('home:hero.broughtBy', 'Brought to you by')} <a href="https://www.respeak.io/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 font-semibold"><img src="/Respeak_fav.png" alt="Respeak" className="inline-block h-4 w-4 mr-2" />Respeak</a> — {t('home:hero.enterpriseRag', 'Enterprise RAG Platform')}</p>
           </div>
           <div className="flex justify-center gap-4 flex-wrap">
             <Link 
@@ -153,7 +75,7 @@ export default function Home() {
                 flex items-center gap-2 shadow-lg hover:shadow-emerald-500/20"
             >
               <Zap className="h-5 w-5" />
-              Start Learning
+              {t('common:buttons.startLearning', 'Start Learning')}
             </Link>
             <a
               href="https://www.respeak.io/contact"
@@ -164,7 +86,7 @@ export default function Home() {
                 flex items-center gap-2 shadow-lg"
             >
               <ExternalLink className="h-5 w-5" />
-              Get a RAG Solution
+              {t('common:buttons.getRagSolution', 'Get a RAG Solution')}
             </a>
           </div>
         </header>
@@ -182,10 +104,10 @@ export default function Home() {
               <X size={18} />
             </button>
             <h3 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-              <span role="img" aria-label="waving hand">👋</span> Welcome to RAG Explorer!
+              <span role="img" aria-label="waving hand">👋</span> {t('home:welcome.title', 'Welcome to RAG Explorer!')}
             </h3>
             <p className="text-emerald-100 text-sm">
-              Ready to dive into the world of Retrieval Augmented Generation? We'll guide you through each step of building powerful, knowledge-grounded AI systems. Enjoy the journey!
+              {t('home:welcome.message', "Ready to dive into the world of Retrieval Augmented Generation? We'll guide you through each step of building powerful, knowledge-grounded AI systems. Enjoy the journey!")}
             </p>
           </div>
         </div>
@@ -195,7 +117,7 @@ export default function Home() {
       <main id="steps" className="container mx-auto px-4 py-16">
         {/* RAG Process Overview - Now placed above the step grid */}
         <h2 className="text-3xl font-bold text-center mb-12 bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-          The RAG Process at a Glance
+          {t('home:overview.title', 'The RAG Process at a Glance')}
         </h2>
 
         {/* Phase Flow Diagram */}
@@ -207,10 +129,10 @@ export default function Home() {
               px-4 py-1 rounded-full text-sm font-medium">
               Phase 1
             </div>
-            <h3 className="text-xl font-bold text-emerald-400 mt-4 mb-3">Data Ingestion</h3>
-            <p className="text-slate-300 mb-3">Prepare, clean, and index source data</p>
+            <h3 className="text-xl font-bold text-emerald-400 mt-4 mb-3">{t('home:overview.phase1.title', 'Data Ingestion')}</h3>
+            <p className="text-slate-300 mb-3">{t('home:overview.phase1.description', 'Prepare, clean, and index source data')}</p>
             <div className="text-amber-300/80 text-sm">
-              Steps: 1-6
+              {t('home:overview.phase1.steps', 'Steps: 1-6')}
             </div>
 
             <div className="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 z-10">
@@ -227,10 +149,10 @@ export default function Home() {
               px-4 py-1 rounded-full text-sm font-medium">
               Phase 2
             </div>
-            <h3 className="text-xl font-bold text-emerald-400 mt-4 mb-3">Retrieval</h3>
-            <p className="text-slate-300 mb-3">Find and rank relevant information</p>
+            <h3 className="text-xl font-bold text-emerald-400 mt-4 mb-3">{t('home:overview.phase2.title', 'Retrieval')}</h3>
+            <p className="text-slate-300 mb-3">{t('home:overview.phase2.description', 'Find and rank relevant information')}</p>
             <div className="text-amber-300/80 text-sm">
-              Steps: 7-10
+              {t('home:overview.phase2.steps', 'Steps: 7-10')}
             </div>
 
             <div className="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 z-10">
@@ -247,10 +169,10 @@ export default function Home() {
               px-4 py-1 rounded-full text-sm font-medium">
               Phase 3
             </div>
-            <h3 className="text-xl font-bold text-emerald-400 mt-4 mb-3">Generation</h3>
-            <p className="text-slate-300 mb-3">Create and improve responses</p>
+            <h3 className="text-xl font-bold text-emerald-400 mt-4 mb-3">{t('home:overview.phase3.title', 'Generation')}</h3>
+            <p className="text-slate-300 mb-3">{t('home:overview.phase3.description', 'Create and improve responses')}</p>
             <div className="text-amber-300/80 text-sm">
-              Steps: 11-15
+              {t('home:overview.phase3.steps', 'Steps: 11-15')}
             </div>
           </div>
         </div>
@@ -258,15 +180,15 @@ export default function Home() {
         {/* Key Benefits Section */}
         <div className="bg-slate-800/60 border border-slate-700 rounded-xl p-6 md:p-8 max-w-4xl mx-auto mb-20
           shadow-lg">
-          <h3 className="text-lg font-medium text-emerald-400 mb-4">Key Benefits of RAG</h3>
+          <h3 className="text-lg font-medium text-emerald-400 mb-4">{t('home:benefits.title', 'Key Benefits of RAG')}</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 bg-slate-700/50 rounded-lg flex flex-col items-center text-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-emerald-400 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
               </svg>
-              <h4 className="font-medium text-white mb-2">Reduced Hallucinations</h4>
-              <p className="text-slate-300 text-sm">Ground responses in factual data rather than training data memorization</p>
+              <h4 className="font-medium text-white mb-2">{t('home:benefits.reducedHallucinations.title', 'Reduced Hallucinations')}</h4>
+              <p className="text-slate-300 text-sm">{t('home:benefits.reducedHallucinations.description', 'Ground responses in factual data rather than training data memorization')}</p>
             </div>
 
             <div className="p-4 bg-slate-700/50 rounded-lg flex flex-col items-center text-center">
@@ -274,8 +196,8 @@ export default function Home() {
                 <circle cx="12" cy="12" r="10" />
                 <path d="M12 16v-4M12 8h.01" />
               </svg>
-              <h4 className="font-medium text-white mb-2">Up-to-date Information</h4>
-              <p className="text-slate-300 text-sm">Access fresh data not available during model training</p>
+              <h4 className="font-medium text-white mb-2">{t('home:benefits.upToDate.title', 'Up-to-date Information')}</h4>
+              <p className="text-slate-300 text-sm">{t('home:benefits.upToDate.description', 'Access fresh data not available during model training')}</p>
             </div>
 
             <div className="p-4 bg-slate-700/50 rounded-lg flex flex-col items-center text-center">
@@ -283,8 +205,8 @@ export default function Home() {
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
-              <h4 className="font-medium text-white mb-2">Source Attribution</h4>
-              <p className="text-slate-300 text-sm">Provide citations and evidence for generated content</p>
+              <h4 className="font-medium text-white mb-2">{t('home:benefits.sourceAttribution.title', 'Source Attribution')}</h4>
+              <p className="text-slate-300 text-sm">{t('home:benefits.sourceAttribution.description', 'Provide citations and evidence for generated content')}</p>
             </div>
 
             <div className="p-4 bg-slate-700/50 rounded-lg flex flex-col items-center text-center">
@@ -292,21 +214,21 @@ export default function Home() {
                 <polyline points="4 17 10 11 4 5" />
                 <line x1="12" y1="19" x2="20" y2="19" />
               </svg>
-              <h4 className="font-medium text-white mb-2">Domain Specialization</h4>
-              <p className="text-slate-300 text-sm">Enhance performance on specific topics without fine-tuning</p>
+              <h4 className="font-medium text-white mb-2">{t('home:benefits.domainSpecialization.title', 'Domain Specialization')}</h4>
+              <p className="text-slate-300 text-sm">{t('home:benefits.domainSpecialization.description', 'Enhance performance on specific topics without fine-tuning')}</p>
             </div>
           </div>
         </div>
 
         {/* Step-by-Step Grid with Phase Labels */}
         <h2 className="text-3xl font-bold text-center mb-10 bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
-          The RAG Pipeline: Step by Step
+          {t('home:pipeline.title', 'The RAG Pipeline: Step by Step')}
         </h2>
 
         {/* Phase 1 Label */}
         <div className="mb-8">
           <div className="inline-block bg-emerald-600 text-white px-5 py-2 rounded-lg text-lg font-medium mb-4">
-            Phase 1: Data Ingestion
+            {t('home:phases.phase1', 'Phase 1: Data Ingestion')}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {steps.slice(0, 6).map((step) => (
@@ -344,7 +266,7 @@ export default function Home() {
                   </div>
 
                   <div className="pl-14 mt-6 flex items-center text-emerald-400 group-hover:text-emerald-300">
-                    <span className="transition-all group-hover:mr-2">Explore</span>
+                    <span className="transition-all group-hover:mr-2">{t('home:stepCard.explore', 'Explore')}</span>
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -356,7 +278,7 @@ export default function Home() {
         {/* Phase 2 Label */}
         <div className="mb-8">
           <div className="inline-block bg-emerald-600 text-white px-5 py-2 rounded-lg text-lg font-medium mb-4">
-            Phase 2: Retrieval
+            {t('home:phases.phase2', 'Phase 2: Retrieval')}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {steps.slice(6, 10).map((step) => (
@@ -394,7 +316,7 @@ export default function Home() {
                   </div>
 
                   <div className="pl-14 mt-6 flex items-center text-emerald-400 group-hover:text-emerald-300">
-                    <span className="transition-all group-hover:mr-2">Explore</span>
+                    <span className="transition-all group-hover:mr-2">{t('home:stepCard.explore', 'Explore')}</span>
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -406,7 +328,7 @@ export default function Home() {
         {/* Phase 3 Label */}
         <div>
           <div className="inline-block bg-emerald-600 text-white px-5 py-2 rounded-lg text-lg font-medium mb-4">
-            Phase 3: Generation
+            {t('home:phases.phase3', 'Phase 3: Generation')}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {steps.slice(10).map((step) => (
@@ -444,7 +366,7 @@ export default function Home() {
                   </div>
 
                   <div className="pl-14 mt-6 flex items-center text-emerald-400 group-hover:text-emerald-300">
-                    <span className="transition-all group-hover:mr-2">Explore</span>
+                    <span className="transition-all group-hover:mr-2">{t('home:stepCard.explore', 'Explore')}</span>
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
@@ -466,10 +388,10 @@ export default function Home() {
               <X size={18} />
             </button>
             <h3 className="text-lg font-semibold text-emerald-400 mb-2">
-              Skip the RAG Complexity
+              {t('home:popup.title', 'Skip the RAG Complexity')}
             </h3>
             <p className="text-slate-300 text-sm mb-4">
-              Building a RAG system from scratch can be challenging. Let us handle the hard parts for you with our enterprise-ready platform.
+              {t('home:popup.description', 'Building a RAG system from scratch can be challenging. Let us handle the hard parts for you with our enterprise-ready platform.')}
             </p>
             <div className="flex gap-3">
               <a
@@ -478,7 +400,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded text-sm font-medium transition-colors flex-1 text-center"
               >
-                Schedule a Demo
+                {t('home:popup.scheduleDemo', 'Schedule a Demo')}
               </a>
             </div>
           </div>
@@ -489,10 +411,9 @@ export default function Home() {
       <div className="bg-emerald-900/30 border border-emerald-800 rounded-xl p-8 max-w-4xl mx-auto mb-16 mt-20">
         <div className="flex flex-col md:flex-row items-center gap-6">
           <div className="flex-1">
-            <h3 className="text-2xl font-bold text-emerald-400 mb-3">Skip the RAG Complexity</h3>
+            <h3 className="text-2xl font-bold text-emerald-400 mb-3">{t('home:cta.title', 'Skip the RAG Complexity')}</h3>
             <p className="text-slate-300 mb-4">
-              Building RAG systems from scratch is challenging. Respeak provides an out-of-the-box RAG platform
-              with cutting-edge information extraction, table parsing, and image understanding.
+              {t('home:cta.description', 'Building RAG systems from scratch is challenging. Respeak provides an out-of-the-box RAG platform with cutting-edge information extraction, table parsing, and image understanding.')}
             </p>
             <div className="flex gap-4 flex-wrap">
               <a
@@ -506,7 +427,7 @@ export default function Home() {
                   <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
                   <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
                 </svg>
-                Schedule a Demo
+                {t('home:cta.scheduleDemo', 'Schedule a Demo')}
               </a>
               <a
                 href="https://www.respeak.io"
@@ -520,7 +441,7 @@ export default function Home() {
                   <polyline points="15 3 21 3 21 9"></polyline>
                   <line x1="10" y1="14" x2="21" y2="3"></line>
                 </svg>
-                Visit Respeak
+                {t('home:cta.visitRespeak', 'Visit Respeak')}
               </a>
             </div>
           </div>
@@ -537,8 +458,8 @@ export default function Home() {
                 </svg>
               </div>
               <div>
-                <p className="font-medium">Follow Dr. Tim Rietz</p>
-                <p className="text-xs text-slate-400">for more RAG insights</p>
+                <p className="font-medium">{t('home:cta.followText', 'Follow Dr. Tim Rietz')}</p>
+                <p className="text-xs text-slate-400">{t('home:cta.followSubtext', 'for more RAG insights')}</p>
               </div>
             </a>
           </div>
@@ -547,11 +468,11 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="container mx-auto px-4 py-10 text-center text-slate-400 border-t border-slate-800">
-        <p>© 2025 <a href="https://www.respeak.io" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">Respeak GmbH</a>. All rights reserved.</p>
+        <p>{t('home:footer.copyright', '© 2025')} <a href="https://www.respeak.io" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">Respeak GmbH</a>. {t('home:footer.allRightsReserved', 'All rights reserved')}.</p>
         <div className="mt-4 flex justify-center gap-6">
-          <a href="https://www.respeak.io" className="hover:text-emerald-400 transition-colors">Website</a>
-          <a href="https://www.linkedin.com/company/respeak-io" className="hover:text-emerald-400 transition-colors">LinkedIn</a>
-          <a href="https://meetings-eu1.hubspot.com/tim-rietz" className="hover:text-emerald-400 transition-colors">Book a Demo</a>
+          <a href="https://www.respeak.io" className="hover:text-emerald-400 transition-colors">{t('home:footer.website', 'Website')}</a>
+          <a href="https://www.linkedin.com/company/respeak-io" className="hover:text-emerald-400 transition-colors">{t('home:footer.linkedin', 'LinkedIn')}</a>
+          <a href="https://meetings-eu1.hubspot.com/tim-rietz" className="hover:text-emerald-400 transition-colors">{t('home:footer.bookDemo', 'Book a Demo')}</a>
         </div>
       </footer>
     </div>

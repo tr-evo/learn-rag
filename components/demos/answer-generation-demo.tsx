@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
@@ -438,6 +439,7 @@ const generateAnswer = (
 }
 
 export default function AnswerGenerationDemo() {
+  const { t } = useTranslation('demos')
   const [selectedQuestion, setSelectedQuestion] = useState<keyof typeof sampleQuestions>("refund")
   const [selectedContext, setSelectedContext] = useState<keyof typeof sampleContexts>("complete")
   const [selectedTechnique, setSelectedTechnique] = useState<keyof typeof promptingTechniques>("basic")
@@ -470,12 +472,12 @@ export default function AnswerGenerationDemo() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* User Query Selection */}
         <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600">
-          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="px-5 py-4 bg-slate-700/50">
+            <div className="flex items-center gap-2 mb-1">
               <MessageSquare className="h-5 w-5 text-emerald-400" />
-              <h3 className="text-slate-200 font-medium">Question Selection</h3>
+              <h3 className="text-slate-200 font-medium">{t('answerGeneration.questionSelection')}</h3>
             </div>
-            <span className="text-xs text-slate-400">Choose a sample question to test</span>
+            <span className="text-xs text-slate-400">{t('answerGeneration.chooseSampleQuestion')}</span>
           </div>
           <div className="p-5">
             <Select
@@ -483,7 +485,7 @@ export default function AnswerGenerationDemo() {
               onValueChange={(value) => setSelectedQuestion(value as keyof typeof sampleQuestions)}
             >
               <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                <SelectValue placeholder="Select a question" />
+                <SelectValue placeholder={t('answerGeneration.selectQuestion')} />
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-slate-700">
                 {Object.entries(sampleQuestions).map(([key, q]) => (
@@ -498,12 +500,12 @@ export default function AnswerGenerationDemo() {
 
         {/* LLM Behavior */}
         <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600">
-          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="px-5 py-4 bg-slate-700/50">
+            <div className="flex items-center gap-2 mb-1">
               <Sparkles className="h-5 w-5 text-emerald-400" />
-              <h3 className="text-slate-200 font-medium">LLM Behavior</h3>
+              <h3 className="text-slate-200 font-medium">{t('answerGeneration.llmBehavior')}</h3>
             </div>
-            <span className="text-xs text-slate-400">How the model responds to the prompt</span>
+            <span className="text-xs text-slate-400">{t('answerGeneration.howModelResponds')}</span>
           </div>
           <div className="p-5 space-y-4">
             <Select
@@ -511,7 +513,7 @@ export default function AnswerGenerationDemo() {
               onValueChange={(value) => setSelectedBehavior(value as keyof typeof llmBehaviors)}
             >
               <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                <SelectValue placeholder="Select LLM behavior" />
+                <SelectValue placeholder={t('answerGeneration.selectLLMBehavior')} />
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-slate-700">
                 {Object.entries(llmBehaviors).map(([key, behavior]) => (
@@ -523,7 +525,7 @@ export default function AnswerGenerationDemo() {
             </Select>
 
             <div className="p-3 bg-slate-900/50 border border-slate-700 rounded-md">
-              <h3 className="text-sm font-medium mb-2 text-slate-300">Behavior Description</h3>
+              <h3 className="text-sm font-medium mb-2 text-slate-300">{t('answerGeneration.behaviorDescription')}</h3>
               <p className="text-sm text-slate-400">
                 {llmBehaviors[selectedBehavior].description}
               </p>
@@ -535,12 +537,12 @@ export default function AnswerGenerationDemo() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Context Selection */}
         <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600">
-          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="px-5 py-4 bg-slate-700/50">
+            <div className="flex items-center gap-2 mb-1">
               <Info className="h-5 w-5 text-emerald-400" />
-              <h3 className="text-slate-200 font-medium">Context Selection</h3>
+              <h3 className="text-slate-200 font-medium">{t('answerGeneration.contextSelection')}</h3>
             </div>
-            <span className="text-xs text-slate-400">The information retrieved for the query</span>
+            <span className="text-xs text-slate-400">{t('answerGeneration.informationRetrieved')}</span>
           </div>
           <div className="p-5 space-y-4">
             <Select
@@ -548,7 +550,7 @@ export default function AnswerGenerationDemo() {
               onValueChange={(value) => setSelectedContext(value as keyof typeof sampleContexts)}
             >
               <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                <SelectValue placeholder="Select context type" />
+                <SelectValue placeholder={t('answerGeneration.selectContextType')} />
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-slate-700">
                 {Object.entries(sampleContexts).map(([key, context]) => (
@@ -560,7 +562,7 @@ export default function AnswerGenerationDemo() {
             </Select>
 
             <div className="p-3 bg-slate-900/50 border border-slate-700 rounded-md max-h-[150px] overflow-y-auto">
-              <h3 className="text-sm font-medium mb-2 text-slate-300">Context Preview</h3>
+              <h3 className="text-sm font-medium mb-2 text-slate-300">{t('answerGeneration.contextPreview')}</h3>
               <p className="text-xs text-slate-400 whitespace-pre-wrap">
                 {sampleContexts[selectedContext].content.length > 200
                   ? sampleContexts[selectedContext].content.substring(0, 200) + "..."
@@ -572,12 +574,12 @@ export default function AnswerGenerationDemo() {
 
         {/* Prompting Technique */}
         <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600">
-          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="px-5 py-4 bg-slate-700/50">
+            <div className="flex items-center gap-2 mb-1">
               <MessageSquare className="h-5 w-5 text-emerald-400" />
-              <h3 className="text-slate-200 font-medium">Prompting Technique</h3>
+              <h3 className="text-slate-200 font-medium">{t('answerGeneration.promptingTechnique')}</h3>
             </div>
-            <span className="text-xs text-slate-400">How to instruct the model</span>
+            <span className="text-xs text-slate-400">{t('answerGeneration.howToInstructModel')}</span>
           </div>
           <div className="p-5 space-y-4">
             <Select
@@ -585,7 +587,7 @@ export default function AnswerGenerationDemo() {
               onValueChange={(value) => setSelectedTechnique(value as keyof typeof promptingTechniques)}
             >
               <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                <SelectValue placeholder="Select prompting technique" />
+                <SelectValue placeholder={t('answerGeneration.selectPromptingTechnique')} />
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-slate-700">
                 {Object.entries(promptingTechniques).map(([key, technique]) => (
@@ -599,12 +601,12 @@ export default function AnswerGenerationDemo() {
             <div className="flex items-center space-x-2">
               <Switch id="show-prompt" checked={showPrompt} onCheckedChange={setShowPrompt}
                 className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500" />
-              <Label htmlFor="show-prompt" className="text-slate-300">Show full prompt</Label>
+              <Label htmlFor="show-prompt" className="text-slate-300">{t('answerGeneration.showFullPrompt')}</Label>
             </div>
 
             {showPrompt && (
               <div className="p-3 bg-slate-900/50 border border-slate-700 rounded-md max-h-[150px] overflow-y-auto">
-                <h3 className="text-sm font-medium mb-2 text-slate-300">Prompt Template</h3>
+                <h3 className="text-sm font-medium mb-2 text-slate-300">{t('answerGeneration.promptTemplate')}</h3>
                 <p className="text-xs text-slate-400 whitespace-pre-wrap">
                   {promptingTechniques[selectedTechnique].template}
                 </p>
@@ -621,7 +623,7 @@ export default function AnswerGenerationDemo() {
           disabled={isGenerating}
           className="w-full md:w-1/3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all disabled:opacity-50 disabled:pointer-events-none"
         >
-          {isGenerating ? "Generating..." : "Generate Answer"}
+          {isGenerating ? t('answerGeneration.processing') : t('answerGeneration.generateAnswer')}
         </Button>
       </div>
 
@@ -629,12 +631,12 @@ export default function AnswerGenerationDemo() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Full Prompt Preview */}
         <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600 h-full flex flex-col">
-          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="px-5 py-4 bg-slate-700/50">
+            <div className="flex items-center gap-2 mb-1">
               <MessageSquare className="h-5 w-5 text-emerald-400" />
-              <h3 className="text-slate-200 font-medium">Full Prompt & Context</h3>
+              <h3 className="text-slate-200 font-medium">{t('answerGeneration.fullPromptContext')}</h3>
             </div>
-            <span className="text-xs text-slate-400">What will be sent to the LLM</span>
+            <span className="text-xs text-slate-400">{t('answerGeneration.whatSentToLLM')}</span>
           </div>
           <div className="p-5 flex-grow">
             <div className="border border-slate-700 rounded-md p-4 bg-slate-900/50 h-full overflow-y-auto whitespace-pre-wrap text-slate-300">
@@ -645,17 +647,17 @@ export default function AnswerGenerationDemo() {
 
         {/* Generated Answer Section */}
         <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg transition-all hover:border-slate-600 h-full flex flex-col">
-          <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="px-5 py-4 bg-slate-700/50">
+            <div className="flex items-center gap-2 mb-1">
               <Sparkles className="h-5 w-5 text-emerald-400" />
-              <h3 className="text-slate-200 font-medium">Generated Answer</h3>
+              <h3 className="text-slate-200 font-medium">{t('answerGeneration.generatedAnswer')}</h3>
             </div>
-            <span className="text-xs text-slate-400">The LLM's response to the user query</span>
+            <span className="text-xs text-slate-400">{t('answerGeneration.llmResponse')}</span>
           </div>
           <div className="p-5 space-y-4 flex-grow">
             {!generatedAnswer ? (
               <div className="text-center py-8 text-slate-400 h-full flex items-center justify-center">
-                Configure your settings and click "Generate Answer" to see a response
+                {t('answerGeneration.configureSettings')}
               </div>
             ) : (
               <div className="h-full flex flex-col">
@@ -668,7 +670,7 @@ export default function AnswerGenerationDemo() {
                     <div className="flex items-start gap-2">
                       <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5" />
                       <div>
-                        <h3 className="font-medium text-amber-300">Issues Detected</h3>
+                        <h3 className="font-medium text-amber-300">{t('answerGeneration.issuesDetected')}</h3>
                         <ul className="mt-2 text-sm space-y-1 list-disc pl-5">
                           {generatedAnswer.issues.map((issue, index) => (
                             <li key={index}>{issue}</li>
@@ -682,10 +684,9 @@ export default function AnswerGenerationDemo() {
                     <div className="flex items-start gap-2">
                       <CheckCircle className="h-5 w-5 text-emerald-500 mt-0.5" />
                       <div>
-                        <h3 className="font-medium text-emerald-300">Good Response</h3>
+                        <h3 className="font-medium text-emerald-300">{t('answerGeneration.goodResponse')}</h3>
                         <p className="mt-1 text-sm">
-                          This response appropriately uses the provided context and follows the prompting
-                          instructions.
+                          {t('answerGeneration.goodResponseDescription')}
                         </p>
                       </div>
                     </div>
@@ -706,37 +707,34 @@ export default function AnswerGenerationDemo() {
       <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
         <div className="px-2 py-3 flex items-center gap-2 mb-4">
           <Sparkles className="h-5 w-5 text-emerald-400" />
-          <h3 className="text-slate-200 font-medium">Answer Generation Best Practices</h3>
+          <h3 className="text-slate-200 font-medium">{t('answerGeneration.bestPractices')}</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg hover:border-emerald-500/30 transition-all">
             <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
               <CheckCircle className="h-5 w-5 text-emerald-400" />
-              Clear Instructions
+              {t('answerGeneration.clearInstructions')}
             </h3>
             <p className="text-sm text-slate-400">
-              Provide explicit instructions about how to use the context, handle uncertainty, and format the
-              response. Specify whether to admit knowledge gaps or stick strictly to provided information.
+              {t('answerGeneration.clearInstructionsDescription')}
             </p>
           </div>
           <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg hover:border-emerald-500/30 transition-all">
             <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
               <CheckCircle className="h-5 w-5 text-emerald-400" />
-              Encourage Source Attribution
+              {t('answerGeneration.encourageSourceAttribution')}
             </h3>
             <p className="text-sm text-slate-400">
-              Ask the model to cite or reference the sources of information in its response. This improves
-              transparency and helps users verify information accuracy.
+              {t('answerGeneration.sourceAttributionDescription')}
             </p>
           </div>
           <div className="p-4 bg-slate-800/80 border border-slate-700 rounded-lg hover:border-emerald-500/30 transition-all">
             <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
               <CheckCircle className="h-5 w-5 text-emerald-400" />
-              Validate Outputs
+              {t('answerGeneration.validateOutputs')}
             </h3>
             <p className="text-sm text-slate-400">
-              Implement post-processing to check answers against the context. Flag responses that contain
-              information not present in the retrieved documents to catch potential hallucinations.
+              {t('answerGeneration.validateOutputsDescription')}
             </p>
           </div>
         </div>

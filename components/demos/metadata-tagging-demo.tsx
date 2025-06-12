@@ -1,6 +1,8 @@
 "use client"
 
+import React from "react"
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -8,10 +10,11 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { format } from "date-fns"
-import { CalendarIcon, Tag, Search, Filter, Shield, AlertCircle, CheckCircle2, BookOpen, AlertTriangle, FolderSearch } from "lucide-react"
+import { CalendarIcon, Tag, Search, Filter, Shield, AlertCircle, CheckCircle2, BookOpen, AlertTriangle, FolderSearch, X } from "lucide-react"
 
 // Rename the original sampleDocuments array to initialSampleDocuments
 const initialSampleDocuments = [
@@ -93,6 +96,8 @@ const initialSampleDocuments = [
 ]
 
 export default function MetadataTaggingDemo() {
+  const { t } = useTranslation('demos')
+  
   // Add these state declarations near the top with other state declarations
   const [sampleDocuments, setSampleDocuments] = useState([...initialSampleDocuments])
   const [showSaveSuccess, setShowSaveSuccess] = useState(false)
@@ -267,13 +272,13 @@ export default function MetadataTaggingDemo() {
             value="tagging" 
             className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white"
           >
-            Metadata Tagging
+            {t('metadataTagging.metadataTagging')}
           </TabsTrigger>
           <TabsTrigger 
             value="search" 
             className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white"
           >
-            Search & Filter
+            {t('metadataTagging.searchAndFilter')}
           </TabsTrigger>
       </TabsList>
 
@@ -285,9 +290,9 @@ export default function MetadataTaggingDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <BookOpen className="h-5 w-5 text-emerald-400" />
-                  <h3 className="font-medium text-slate-200">Documents</h3>
+                  <h3 className="font-medium text-slate-200">{t('metadataTagging.documents')}</h3>
                 </div>
-                <span className="text-xs text-slate-400">{sampleDocuments.length} items</span>
+                <span className="text-xs text-slate-400">{sampleDocuments.length} {t('metadataTagging.items')}</span>
               </div>
               
               <div className="p-4 space-y-3">
@@ -313,7 +318,7 @@ export default function MetadataTaggingDemo() {
                       ))}
                     {Object.keys(doc.metadata).length > 3 && (
                         <Badge className="bg-slate-700 text-slate-300 hover:bg-slate-700 text-xs">
-                        +{Object.keys(doc.metadata).length - 3} more
+                        +{Object.keys(doc.metadata).length - 3} {t('metadataTagging.more')}
                       </Badge>
                     )}
                   </div>
@@ -327,7 +332,7 @@ export default function MetadataTaggingDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Tag className="h-5 w-5 text-emerald-400" />
-                  <h3 className="font-medium text-slate-200">Metadata Editor</h3>
+                  <h3 className="font-medium text-slate-200">{t('metadataTagging.metadataEditor')}</h3>
                 </div>
                 <Badge className="bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30">
                   {selectedDocument.title}
@@ -338,7 +343,7 @@ export default function MetadataTaggingDemo() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Source */}
                 <div className="space-y-2">
-                    <Label htmlFor="source" className="text-slate-300">Source</Label>
+                    <Label htmlFor="source" className="text-slate-300">{t('metadataTagging.source')}</Label>
                   <Input
                     id="source"
                     value={editedMetadata.source}
@@ -349,7 +354,7 @@ export default function MetadataTaggingDemo() {
 
                 {/* Author */}
                 <div className="space-y-2">
-                    <Label htmlFor="author" className="text-slate-300">Author</Label>
+                    <Label htmlFor="author" className="text-slate-300">{t('metadataTagging.author')}</Label>
                   <Input
                     id="author"
                     value={editedMetadata.author}
@@ -360,7 +365,7 @@ export default function MetadataTaggingDemo() {
 
                 {/* Date */}
                 <div className="space-y-2">
-                    <Label htmlFor="date" className="text-slate-300">Date</Label>
+                    <Label htmlFor="date" className="text-slate-300">{t('metadataTagging.date')}</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                         <Button
@@ -369,7 +374,7 @@ export default function MetadataTaggingDemo() {
                           className="w-full justify-start text-left font-normal bg-slate-900/50 border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-slate-200"
                         >
                           <CalendarIcon className="mr-2 h-4 w-4 text-emerald-400" />
-                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                        {date ? format(date, "PPP") : <span>{t('metadataTagging.pickDate')}</span>}
                       </Button>
                     </PopoverTrigger>
                       <PopoverContent className="w-auto p-0 bg-slate-800 border-slate-700">
@@ -386,7 +391,7 @@ export default function MetadataTaggingDemo() {
 
                 {/* Category */}
                 <div className="space-y-2">
-                    <Label htmlFor="category" className="text-slate-300">Category</Label>
+                    <Label htmlFor="category" className="text-slate-300">{t('metadataTagging.category')}</Label>
                   <Input
                     id="category"
                     value={editedMetadata.category}
@@ -397,7 +402,7 @@ export default function MetadataTaggingDemo() {
 
                 {/* Department */}
                 <div className="space-y-2">
-                    <Label htmlFor="department" className="text-slate-300">Department</Label>
+                    <Label htmlFor="department" className="text-slate-300">{t('metadataTagging.department')}</Label>
                   <Input
                     id="department"
                     value={editedMetadata.department}
@@ -408,7 +413,7 @@ export default function MetadataTaggingDemo() {
 
                 {/* Confidentiality */}
                 <div className="space-y-2">
-                    <Label htmlFor="confidentiality" className="text-slate-300">Confidentiality</Label>
+                    <Label htmlFor="confidentiality" className="text-slate-300">{t('metadataTagging.confidentiality')}</Label>
                   <Input
                     id="confidentiality"
                     value={editedMetadata.confidentiality}
@@ -419,7 +424,7 @@ export default function MetadataTaggingDemo() {
 
                 {/* Version */}
                 <div className="space-y-2">
-                    <Label htmlFor="version" className="text-slate-300">Version</Label>
+                    <Label htmlFor="version" className="text-slate-300">{t('metadataTagging.version')}</Label>
                   <Input
                     id="version"
                     value={editedMetadata.version}
@@ -433,13 +438,13 @@ export default function MetadataTaggingDemo() {
                   onClick={saveMetadataChanges}
                   className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all mt-4"
                 >
-                  Save Metadata
+                  {t('metadataTagging.saveMetadata')}
                 </Button>
                 
             {showSaveSuccess && (
                   <div className="mt-2 p-3 bg-emerald-900/20 border border-emerald-500/50 rounded-lg text-emerald-300 flex items-center gap-2">
                     <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                    <span>Metadata saved successfully!</span>
+                    <span>{t('metadataTagging.metadataSavedSuccess')}</span>
                 </div>
                 )}
               </div>
@@ -702,7 +707,7 @@ export default function MetadataTaggingDemo() {
       <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
         <h3 className="text-sm font-medium text-emerald-400 mb-4 flex items-center gap-2">
           <CheckCircle2 className="h-4 w-4" />
-          Metadata Tagging Best Practices
+          {t('metadataTagging.metadataTaggingBestPractices', 'Metadata Tagging Best Practices')}
         </h3>
         
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -713,11 +718,10 @@ export default function MetadataTaggingDemo() {
                 <line x1="12" y1="16" x2="12" y2="12" />
                 <line x1="12" y1="8" x2="12.01" y2="8" />
               </svg>
-              <h4 className="font-medium text-slate-200">Consistency is Key</h4>
+              <h4 className="font-medium text-slate-200">{t('metadataTagging.consistencyIsKey', 'Consistency is Key')}</h4>
             </div>
             <p className="text-sm text-slate-400">
-                Use consistent naming conventions and controlled vocabularies for metadata fields. Standardize date
-                formats, department names, and other common fields.
+                {t('metadataTagging.consistencyDescription', 'Use consistent naming conventions and controlled vocabularies for metadata fields. Standardize date formats, department names, and other common fields.')}
               </p>
             </div>
           
@@ -726,11 +730,10 @@ export default function MetadataTaggingDemo() {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
               </svg>
-              <h4 className="font-medium text-slate-200">Automate When Possible</h4>
+              <h4 className="font-medium text-slate-200">{t('metadataTagging.automateWhenPossible', 'Automate When Possible')}</h4>
             </div>
             <p className="text-sm text-slate-400">
-                Use automated extraction for metadata when possible. Extract dates, authors, and categories from
-                document properties or content to reduce manual tagging errors.
+                {t('metadataTagging.automateDescription', 'Use automated extraction for metadata when possible. Extract dates, authors, and categories from document properties or content to reduce manual tagging errors.')}
               </p>
             </div>
           
@@ -740,11 +743,10 @@ export default function MetadataTaggingDemo() {
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
-              <h4 className="font-medium text-slate-200">Prioritize Security Metadata</h4>
+              <h4 className="font-medium text-slate-200">{t('metadataTagging.prioritizeSecurityMetadata', 'Prioritize Security Metadata')}</h4>
             </div>
             <p className="text-sm text-slate-400">
-                Always include access control and confidentiality metadata. This is critical for preventing unauthorized
-                access to sensitive information in RAG systems.
+                {t('metadataTagging.prioritizeSecurityDescription', 'Always include access control and confidentiality metadata. This is critical for preventing unauthorized access to sensitive information in RAG systems.')}
               </p>
             </div>
           </div>

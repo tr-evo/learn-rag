@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -161,6 +162,7 @@ const exampleQueries = [
 ]
 
 export default function HybridRetrievalDemo() {
+  const { t } = useTranslation('demos')
   const [activeTab, setActiveTab] = useState("overview")
   const [searchQuery, setSearchQuery] = useState("")
   const [vectorWeight, setVectorWeight] = useState(50)
@@ -255,9 +257,9 @@ export default function HybridRetrievalDemo() {
     <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
       <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
         <div>
-          <h2 className="text-slate-200 font-medium text-xl">Try Hybrid Retrieval</h2>
+          <h2 className="text-slate-200 font-medium text-xl">{t('hybridRetrieval.tryHybridRetrieval')}</h2>
           <p className="text-slate-400 text-sm mt-1">
-            Search through our sample document collection using different retrieval methods
+            {t('hybridRetrieval.searchThroughSampleCollection')}
           </p>
         </div>
       </div>
@@ -269,7 +271,7 @@ export default function HybridRetrievalDemo() {
             <div className="flex flex-col gap-2 sm:flex-row">
               <div className="flex-1">
                 <Input
-                  placeholder="Enter search query..."
+                  placeholder={t('hybridRetrieval.searchQuery')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
@@ -281,7 +283,7 @@ export default function HybridRetrievalDemo() {
                 className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
               >
                 {isSearching ? <LoaderIcon className="mr-2 h-4 w-4 animate-spin" /> : <SearchIcon className="mr-2 h-4 w-4" />}
-                Search
+                {t('hybridRetrieval.search')}
               </Button>
             </div>
 
@@ -303,7 +305,7 @@ export default function HybridRetrievalDemo() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-slate-200 font-medium flex items-center gap-2">
                 <Settings2Icon className="h-4 w-4 text-emerald-400" />
-                Search Configuration
+                {t('hybridRetrieval.searchConfiguration')}
               </h3>
               <div className="flex items-center space-x-2">
                 <Switch
@@ -312,20 +314,20 @@ export default function HybridRetrievalDemo() {
                   onCheckedChange={setIsAdvancedMode}
                   className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                 />
-                <Label htmlFor="advanced-mode" className="text-slate-300">Advanced Mode</Label>
+                <Label htmlFor="advanced-mode" className="text-slate-300">{t('hybridRetrieval.advancedMode')}</Label>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="fusion-method" className="text-slate-300">Fusion Method</Label>
+                  <Label htmlFor="fusion-method" className="text-slate-300">{t('hybridRetrieval.fusionMethod')}</Label>
                   <Select
                     value={fusionMethod}
                     onValueChange={setFusionMethod}
                   >
                     <SelectTrigger id="fusion-method" className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                      <SelectValue placeholder="Select fusion method" />
+                      <SelectValue placeholder={t('hybridRetrieval.selectFusionMethod')} />
                     </SelectTrigger>
                     <SelectContent className="bg-slate-800 border-slate-700">
                       {fusionMethods.map((method) => (
@@ -349,7 +351,7 @@ export default function HybridRetrievalDemo() {
                         onCheckedChange={setShowVectorResults}
                         className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                       />
-                      <Label htmlFor="show-vector" className="text-slate-300">Show Vector Results</Label>
+                      <Label htmlFor="show-vector" className="text-slate-300">{t('hybridRetrieval.showVectorSearchResults')}</Label>
                     </div>
 
                     <div className="flex items-center space-x-2">
@@ -359,7 +361,7 @@ export default function HybridRetrievalDemo() {
                         onCheckedChange={setShowBm25Results}
                         className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                       />
-                      <Label htmlFor="show-bm25" className="text-slate-300">Show BM25 Results</Label>
+                      <Label htmlFor="show-bm25" className="text-slate-300">{t('hybridRetrieval.showKeywordSearchResults')}</Label>
                     </div>
                   </div>
                 )}
@@ -369,7 +371,7 @@ export default function HybridRetrievalDemo() {
                 <div className="space-y-6">
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <Label htmlFor="vector-weight" className="text-slate-300">Vector Search Weight: {vectorWeight}%</Label>
+                      <Label htmlFor="vector-weight" className="text-slate-300">{t('hybridRetrieval.vectorSearchWeight')}: {vectorWeight}%</Label>
                     </div>
                     <Slider
                       id="vector-weight"
@@ -386,7 +388,7 @@ export default function HybridRetrievalDemo() {
 
                   <div className="space-y-2">
                     <div className="flex justify-between">
-                      <Label htmlFor="bm25-weight" className="text-slate-300">Keyword (BM25) Weight: {bm25Weight}%</Label>
+                      <Label htmlFor="bm25-weight" className="text-slate-300">{t('hybridRetrieval.keywordBM25Weight')}: {bm25Weight}%</Label>
                     </div>
                     <Slider
                       id="bm25-weight"
@@ -410,7 +412,7 @@ export default function HybridRetrievalDemo() {
             <div className="space-y-4">
               <h3 className="text-slate-200 font-medium flex items-center gap-2">
                 <SearchIcon className="h-4 w-4 text-emerald-400" />
-                Search Results
+                {t('hybridRetrieval.searchResults')}
               </h3>
               <div className="space-y-4">
                 {searchResults.map((doc) => (
@@ -421,18 +423,18 @@ export default function HybridRetrievalDemo() {
                         <Badge className="bg-slate-900/50 text-slate-300 border-slate-700">{doc.source}</Badge>
                       </div>
                       <div className="flex gap-2 mt-2 flex-wrap">
-                        {showVectorResults && renderScoreBadge(doc.scores.vector, "Vector")}
-                        {showBm25Results && renderScoreBadge(doc.scores.bm25, "BM25")}
+                        {showVectorResults && renderScoreBadge(doc.scores.vector, t('hybridRetrieval.vector'))}
+                        {showBm25Results && renderScoreBadge(doc.scores.bm25, t('hybridRetrieval.bm25'))}
                         {renderScoreBadge(
                           fusionMethod === "reciprocal" ? (doc.fusionScore || 0) : doc.scores.combined,
-                          "Combined"
+                          t('hybridRetrieval.combined')
                         )}
                       </div>
                     </div>
                     <div className="p-5">
                       <p className="text-slate-300">{doc.content}</p>
                       <div className="text-sm text-slate-400 mt-2">
-                        Document date: {doc.date}
+                        {t('hybridRetrieval.documentDate')}: {doc.date}
                       </div>
                     </div>
                   </div>
@@ -445,12 +447,10 @@ export default function HybridRetrievalDemo() {
           <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
             <h4 className="text-emerald-400 font-medium mb-2 flex items-center gap-2">
               <BarChart3Icon className="h-4 w-4" />
-              About Hybrid Retrieval
+              {t('hybridRetrieval.aboutHybridRetrieval')}
             </h4>
             <p className="text-slate-400">
-              This demo showcases how different retrieval methods can be combined for more effective document search.
-              Vector search excels at semantic understanding, while BM25 is strong with exact keyword matching.
-              Experiment with different fusion methods to see how they balance precision and recall.
+              {t('hybridRetrieval.aboutDescription')}
             </p>
           </div>
         </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
@@ -80,6 +81,7 @@ const SparklineChart = ({
 };
 
 export default function MonitoringEvaluationDemo() {
+  const { t } = useTranslation('demos')
   const [activeTab, setActiveTab] = useState("metrics")
   
   // Sample data for the chart
@@ -95,21 +97,21 @@ export default function MonitoringEvaluationDemo() {
             className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-teal-600 data-[state=active]:text-white transition-all data-[state=active]:shadow-lg"
           >
             <TrendingUp className="h-4 w-4 mr-2" />
-            Metrics
+            {t('monitoringEvaluation.metrics')}
           </TabsTrigger>
           <TabsTrigger
             value="logging"
             className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-teal-600 data-[state=active]:text-white transition-all data-[state=active]:shadow-lg"
           >
             <ListChecks className="h-4 w-4 mr-2" />
-            Logging
+            {t('monitoringEvaluation.logging')}
           </TabsTrigger>
           <TabsTrigger
             value="evaluation"
             className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-teal-600 data-[state=active]:text-white transition-all data-[state=active]:shadow-lg"
           >
             <UserRoundCog className="h-4 w-4 mr-2" />
-            Evaluation
+            {t('monitoringEvaluation.evaluation')}
           </TabsTrigger>
         </TabsList>
 
@@ -120,31 +122,31 @@ export default function MonitoringEvaluationDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <h3 className="text-slate-200 font-medium flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-emerald-400" />
-                  Performance Metrics
+                  {t('monitoringEvaluation.performanceMetrics')}
                 </h3>
-                <span className="text-xs text-slate-400">Updated hourly</span>
+                <span className="text-xs text-slate-400">{t('monitoringEvaluation.updatedHourly')}</span>
               </div>
               <div className="p-5 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg text-center hover:border-emerald-500/30 transition-all">
                     <div className="text-2xl font-bold text-emerald-400">98%</div>
-                    <div className="text-sm text-slate-400">Uptime</div>
+                    <div className="text-sm text-slate-400">{t('monitoringEvaluation.uptime')}</div>
                   </div>
                   <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg text-center hover:border-emerald-500/30 transition-all">
                     <div className="text-2xl font-bold text-emerald-400">250ms</div>
-                    <div className="text-sm text-slate-400">Average Latency</div>
+                    <div className="text-sm text-slate-400">{t('monitoringEvaluation.averageLatency')}</div>
                   </div>
                   <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg text-center hover:border-emerald-500/30 transition-all">
                     <div className="text-2xl font-bold text-emerald-400">4.5/5</div>
-                    <div className="text-sm text-slate-400">User Satisfaction</div>
+                    <div className="text-sm text-slate-400">{t('monitoringEvaluation.userSatisfaction')}</div>
                   </div>
                   <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg text-center hover:border-emerald-500/30 transition-all">
                     <div className="text-2xl font-bold text-emerald-400">2%</div>
-                    <div className="text-sm text-slate-400">Error Rate</div>
+                    <div className="text-sm text-slate-400">{t('monitoringEvaluation.errorRate')}</div>
                   </div>
                 </div>
                 <p className="text-sm text-slate-400">
-                  These metrics provide a high-level overview of the system's health and performance.
+                  {t('monitoringEvaluation.metricsDescription')}
                 </p>
               </div>
             </div>
@@ -154,9 +156,9 @@ export default function MonitoringEvaluationDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <h3 className="text-slate-200 font-medium flex items-center gap-2">
                   <LineChart className="h-5 w-5 text-emerald-400" />
-                  Performance Trends
+                  {t('monitoringEvaluation.performanceTrends')}
                 </h3>
-                <span className="text-xs text-slate-400">Last 30 days</span>
+                <span className="text-xs text-slate-400">{t('monitoringEvaluation.last30Days')}</span>
               </div>
               <div className="p-5 space-y-4">
                 <div className="h-[200px] bg-slate-900/50 border border-slate-700 rounded-md flex items-center justify-center text-slate-400 overflow-hidden">
@@ -164,7 +166,7 @@ export default function MonitoringEvaluationDemo() {
                 </div>
                 <div className="flex justify-between items-center">
                   <p className="text-sm text-slate-400">
-                    Visualizing trends helps identify potential issues.
+                    {t('monitoringEvaluation.trendsDescription')}
                   </p>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-slate-300 px-2 py-1 bg-emerald-900/20 border border-emerald-500/30 rounded-full">+5.2% ↑</span>
@@ -181,42 +183,42 @@ export default function MonitoringEvaluationDemo() {
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <h3 className="text-slate-200 font-medium flex items-center gap-2">
                 <ListChecks className="h-5 w-5 text-emerald-400" />
-                Logging Configuration
+                {t('monitoringEvaluation.loggingConfiguration')}
               </h3>
-              <span className="text-xs text-slate-400">Live</span>
+              <span className="text-xs text-slate-400">{t('monitoringEvaluation.live')}</span>
             </div>
             <div className="p-5 space-y-5">
               <div className="space-y-2">
-                <Label className="text-slate-300">Log Level</Label>
+                <Label className="text-slate-300">{t('monitoringEvaluation.logLevel')}</Label>
                 <Select>
                   <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                    <SelectValue placeholder="Select log level" />
+                    <SelectValue placeholder={t('monitoringEvaluation.selectLogLevel')} />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-800 border-slate-700">
-                    <SelectItem value="info">Info</SelectItem>
-                    <SelectItem value="warning">Warning</SelectItem>
-                    <SelectItem value="error">Error</SelectItem>
-                    <SelectItem value="debug">Debug</SelectItem>
+                    <SelectItem value="info">{t('monitoringEvaluation.info')}</SelectItem>
+                    <SelectItem value="warning">{t('monitoringEvaluation.warning')}</SelectItem>
+                    <SelectItem value="error">{t('monitoringEvaluation.error')}</SelectItem>
+                    <SelectItem value="debug">{t('monitoringEvaluation.debug')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-slate-300">Log Destination</Label>
+                <Label className="text-slate-300">{t('monitoringEvaluation.logDestination')}</Label>
                 <Select>
                   <SelectTrigger className="bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20">
-                    <SelectValue placeholder="Select log destination" />
+                    <SelectValue placeholder={t('monitoringEvaluation.selectLogDestination')} />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-800 border-slate-700">
-                    <SelectItem value="console">Console</SelectItem>
-                    <SelectItem value="file">File</SelectItem>
-                    <SelectItem value="cloud">Cloud</SelectItem>
+                    <SelectItem value="console">{t('monitoringEvaluation.console')}</SelectItem>
+                    <SelectItem value="file">{t('monitoringEvaluation.file')}</SelectItem>
+                    <SelectItem value="cloud">{t('monitoringEvaluation.cloud')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-slate-300">Sample Log Entry</Label>
+                <Label className="text-slate-300">{t('monitoringEvaluation.sampleLogEntry')}</Label>
                 <Textarea
                   readOnly
                   className="min-h-[100px] bg-slate-900/50 border-slate-700 text-slate-300 focus:border-emerald-500 focus:ring-emerald-500/20"
@@ -227,7 +229,7 @@ export default function MonitoringEvaluationDemo() {
               <div className="mt-6">
                 <button className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-2 rounded-lg shadow-lg hover:shadow-emerald-500/20 transition-all flex items-center justify-center gap-2">
                   <ListChecks className="h-4 w-4" />
-                  Apply Changes
+                  {t('monitoringEvaluation.applyChanges')}
                 </button>
               </div>
             </div>
@@ -240,33 +242,33 @@ export default function MonitoringEvaluationDemo() {
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <h3 className="text-slate-200 font-medium flex items-center gap-2">
                 <UserRoundCog className="h-5 w-5 text-emerald-400" />
-                Evaluation Metrics
+                {t('monitoringEvaluation.evaluationMetrics')}
               </h3>
-              <span className="text-xs text-slate-400">Last 1000 answers</span>
+              <span className="text-xs text-slate-400">{t('monitoringEvaluation.last1000Answers')}</span>
             </div>
             <div className="p-5 space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg text-center hover:border-emerald-500/30 transition-all">
                   <div className="text-2xl font-bold text-emerald-400">95%</div>
-                  <div className="text-sm text-slate-400">Relevance</div>
+                  <div className="text-sm text-slate-400">{t('monitoringEvaluation.relevance')}</div>
                 </div>
                 <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg text-center hover:border-emerald-500/30 transition-all">
                   <div className="text-2xl font-bold text-emerald-400">90%</div>
-                  <div className="text-sm text-slate-400">Accuracy</div>
+                  <div className="text-sm text-slate-400">{t('monitoringEvaluation.accuracy')}</div>
                 </div>
                 <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg text-center hover:border-emerald-500/30 transition-all">
                   <div className="text-2xl font-bold text-emerald-400">85%</div>
-                  <div className="text-sm text-slate-400">Coherence</div>
+                  <div className="text-sm text-slate-400">{t('monitoringEvaluation.coherence')}</div>
                 </div>
                 <div className="p-4 bg-slate-900/50 border border-slate-700 rounded-lg text-center hover:border-emerald-500/30 transition-all">
                   <div className="text-2xl font-bold text-emerald-400">5%</div>
-                  <div className="text-sm text-slate-400">Hallucination Rate</div>
+                  <div className="text-sm text-slate-400">{t('monitoringEvaluation.hallucinationRate')}</div>
                 </div>
               </div>
               
               <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4 mt-4">
                 <div className="flex justify-between items-center mb-2">
-                  <h4 className="text-slate-300 font-medium">Error Rate Trend</h4>
+                  <h4 className="text-slate-300 font-medium">{t('monitoringEvaluation.errorRateTrend')}</h4>
                   <span className="text-xs text-slate-300 px-2 py-1 bg-emerald-900/20 border border-emerald-500/30 rounded-full">-3.1% ↓</span>
                 </div>
                 <div className="h-[100px] overflow-hidden">
@@ -275,9 +277,9 @@ export default function MonitoringEvaluationDemo() {
               </div>
               
               <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
-                <h4 className="text-slate-300 mb-2 font-medium">About These Metrics</h4>
+                <h4 className="text-slate-300 mb-2 font-medium">{t('monitoringEvaluation.aboutTheseMetrics')}</h4>
                 <p className="text-sm text-slate-400">
-                  These metrics are based on a sample of 1000 generated answers, evaluated by human reviewers using a standardized rubric. The evaluation process includes checking for factual accuracy, relevance to the query, and overall coherence.
+                  {t('monitoringEvaluation.metricsExplanation')}
                 </p>
               </div>
             </div>

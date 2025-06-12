@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -40,6 +41,7 @@ const sourceDocument = `
 `
 
 export default function PostProcessingDemo() {
+  const { t } = useTranslation('demos')
   const [activeTab, setActiveTab] = useState("formatting")
   const [selectedOptions, setSelectedOptions] = useState({
     bulletPoints: false,
@@ -195,15 +197,15 @@ export default function PostProcessingDemo() {
         <TabsList className="grid grid-cols-3 bg-slate-900/50 p-1 rounded-lg">
           <TabsTrigger value="formatting" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white text-slate-300 transition-all">
             <Code className="w-4 h-4 mr-2" />
-            Formatting
+            {t('postProcessing.formatting', 'Formatting')}
           </TabsTrigger>
           <TabsTrigger value="verification" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white text-slate-300 transition-all">
             <Check className="w-4 h-4 mr-2" />
-            Verification
+            {t('postProcessing.verification', 'Verification')}
           </TabsTrigger>
           <TabsTrigger value="enhancement" className="data-[state=active]:bg-emerald-600 data-[state=active]:text-white text-slate-300 transition-all">
             <Sparkles className="w-4 h-4 mr-2" />
-            Enhancement
+            {t('postProcessing.enhancement', 'Enhancement')}
           </TabsTrigger>
         </TabsList>
 
@@ -213,7 +215,7 @@ export default function PostProcessingDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <h3 className="text-lg font-medium text-slate-200 flex items-center gap-2">
                   <ListChecks className="w-5 h-5 text-white" />
-                  Formatting Options
+                  {t('postProcessing.formattingOptions', 'Formatting Options')}
                 </h3>
               </div>
               <div className="p-6 space-y-2">
@@ -224,7 +226,7 @@ export default function PostProcessingDemo() {
                     onCheckedChange={() => handleOptionChange("bulletPoints")}
                     className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 transition-colors border-white"
                   />
-                  <Label htmlFor="bulletPoints" className="text-slate-300">Convert to bullet points</Label>
+                  <Label htmlFor="bulletPoints" className="text-slate-300">{t('postProcessing.convertToBulletPoints', 'Convert to bullet points')}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -233,7 +235,7 @@ export default function PostProcessingDemo() {
                     onCheckedChange={() => handleOptionChange("markdown")}
                     className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 transition-colors border-white"
                   />
-                  <Label htmlFor="markdown" className="text-slate-300">Add markdown formatting</Label>
+                  <Label htmlFor="markdown" className="text-slate-300">{t('postProcessing.addMarkdownFormatting', 'Add markdown formatting')}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -242,7 +244,7 @@ export default function PostProcessingDemo() {
                     onCheckedChange={() => handleOptionChange("jsonFormat")}
                     className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 transition-colors border-white"
                   />
-                  <Label htmlFor="jsonFormat" className="text-slate-300">Convert to JSON structure</Label>
+                  <Label htmlFor="jsonFormat" className="text-slate-300">{t('postProcessing.convertToJsonStructure', 'Convert to JSON structure')}</Label>
                 </div>
               </div>
             </div>
@@ -255,7 +257,7 @@ export default function PostProcessingDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <h3 className="text-lg font-medium text-slate-200 flex items-center gap-2">
                   <Check className="w-5 h-5 text-emerald-400" />
-                  Verification Options
+                  {t('postProcessing.verificationOptions', 'Verification Options')}
                 </h3>
               </div>
               <div className="p-6 space-y-2">
@@ -266,7 +268,7 @@ export default function PostProcessingDemo() {
                     onCheckedChange={() => handleOptionChange("factCheck")}
                     className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 transition-colors"
                   />
-                  <Label htmlFor="factCheck" className="text-slate-300">Fact-check against source</Label>
+                  <Label htmlFor="factCheck" className="text-slate-300">{t('postProcessing.factCheckAgainstSource', 'Fact-check against source')}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -275,7 +277,7 @@ export default function PostProcessingDemo() {
                     onCheckedChange={() => handleOptionChange("addCitations")}
                     className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 transition-colors"
                   />
-                  <Label htmlFor="addCitations" className="text-slate-300">Add citations to source</Label>
+                  <Label htmlFor="addCitations" className="text-slate-300">{t('postProcessing.addCitationsToSource', 'Add citations to source')}</Label>
                 </div>
               </div>
             </div>
@@ -284,7 +286,7 @@ export default function PostProcessingDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <h3 className="text-lg font-medium text-slate-200 flex items-center gap-2">
                   <FileText className="w-5 h-5 text-emerald-400" />
-                  Source Document
+                  {t('postProcessing.sourceDocument', 'Source Document')}
                 </h3>
               </div>
               <div className="p-6">
@@ -300,7 +302,7 @@ export default function PostProcessingDemo() {
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <h3 className="text-lg font-medium text-slate-200 flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-emerald-400" />
-                  Enhancement Options
+                  {t('postProcessing.enhancementOptions', 'Enhancement Options')}
                 </h3>
               </div>
               <div className="p-6 space-y-2">
@@ -311,7 +313,7 @@ export default function PostProcessingDemo() {
                     onCheckedChange={() => handleOptionChange("contentFilter")}
                     className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 transition-colors"
                   />
-                  <Label htmlFor="contentFilter" className="text-slate-300">Apply content filtering</Label>
+                  <Label htmlFor="contentFilter" className="text-slate-300">{t('postProcessing.applyContentFiltering', 'Apply content filtering')}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -320,7 +322,7 @@ export default function PostProcessingDemo() {
                     onCheckedChange={() => handleOptionChange("summarize")}
                     className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 transition-colors"
                   />
-                  <Label htmlFor="summarize" className="text-slate-300">Summarize content</Label>
+                  <Label htmlFor="summarize" className="text-slate-300">{t('postProcessing.summarizeContent', 'Summarize content')}</Label>
                 </div>
               </div>
             </div>
@@ -333,7 +335,7 @@ export default function PostProcessingDemo() {
           <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
             <h3 className="text-lg font-medium text-slate-200 flex items-center gap-2">
               <FolderUp className="w-5 h-5 text-emerald-400" />
-              Raw LLM Output
+              {t('postProcessing.rawLlmOutput', 'Raw LLM Output')}
             </h3>
           </div>
           <div className="p-6">
@@ -345,11 +347,11 @@ export default function PostProcessingDemo() {
           <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
             <h3 className="text-lg font-medium text-slate-200 flex items-center gap-2">
               <Code className="w-5 h-5 text-emerald-400" />
-              Processed Output
+              {t('postProcessing.processedOutput', 'Processed Output')}
             </h3>
             {processedOutput && (
               <span className="bg-emerald-900/20 border border-emerald-500/50 text-emerald-300 text-xs px-2 py-1 rounded-full">
-                Processed
+                {t('postProcessing.processed', 'Processed')}
               </span>
             )}
           </div>
@@ -358,12 +360,12 @@ export default function PostProcessingDemo() {
               {isProcessing ? (
                 <div className="flex items-center justify-center h-full">
                   <RefreshCw className="w-5 h-5 text-emerald-400 animate-spin" />
-                  <span className="ml-2 text-slate-300">Processing...</span>
+                  <span className="ml-2 text-slate-300">{t('postProcessing.processing', 'Processing...')}</span>
                 </div>
               ) : processedOutput ? (
                 <pre className="whitespace-pre-wrap text-slate-300">{processedOutput}</pre>
               ) : (
-                <p className="text-slate-400 italic">Select options and click "Process" to see the result</p>
+                <p className="text-slate-400 italic">{t('postProcessing.selectOptionsAndProcess', 'Select options and click "Process" to see the result')}</p>
               )}
             </div>
           </div>
@@ -379,12 +381,12 @@ export default function PostProcessingDemo() {
           {isProcessing ? (
             <>
               <RefreshCw className="w-5 h-5 animate-spin" />
-              Processing...
+              {t('postProcessing.processing', 'Processing...')}
             </>
           ) : (
             <>
               <RefreshCw className="w-5 h-5" />
-              Process Output {totalSelectedOptions > 0 && `(${totalSelectedOptions} options)`}
+              {t('postProcessing.processOutput', 'Process Output')} {totalSelectedOptions > 0 && `(${totalSelectedOptions} ${t('postProcessing.options', 'options')})`}
             </>
           )}
         </Button>
@@ -392,7 +394,7 @@ export default function PostProcessingDemo() {
         {!processedOutput && !isProcessing && totalSelectedOptions === 0 && (
           <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-2 flex items-start gap-3 animate-in fade-in-50 duration-300">
             <Info className="text-emerald-400 w-5 h-5 flex-shrink-0 mt-0.5" />
-            <p className="text-slate-400 text-sm">Select options from the tabs above and click "Process" to transform the raw LLM output according to your specifications.</p>
+            <p className="text-slate-400 text-sm">{t('postProcessing.selectOptionsAndProcess', 'Select options from the tabs above and click "Process" to transform the raw LLM output according to your specifications.')}</p>
           </div>
         )}
 
@@ -401,10 +403,10 @@ export default function PostProcessingDemo() {
             <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
               <h3 className="text-lg font-medium text-slate-200 flex items-center gap-2">
                 <Filter className="w-5 h-5 text-emerald-400" />
-                Processing Notes
+                {t('postProcessing.processingNotes', 'Processing Notes')}
               </h3>
               <span className="bg-amber-900/20 border border-amber-500/30 text-amber-300 text-xs px-2 py-1 rounded-full">
-                {processingNotes.split('\n\n').length} changes
+                {processingNotes.split('\n\n').length} {t('postProcessing.changes', 'changes')}
               </span>
             </div>
             <div className="p-6">
