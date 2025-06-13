@@ -550,9 +550,9 @@ export default function ChunkingDesignDemo() {
                     <div className="mt-2 text-sm text-amber-300 flex items-center gap-1 bg-amber-900/20 border border-amber-500/30 p-2 rounded">
                       <AlertCircle className="h-4 w-4" />
                       <span>
-                        Overlap is not applicable for this configuration. 
+                        {t('chunkingDesign.overlapNotApplicable')} 
                         {chunkingStrategy === "paragraph" && respectParagraphs 
-                          ? " Enable 'Split large paragraphs' to use overlap." 
+                          ? t('chunkingDesign.overlapNotApplicableHint')
                           : ""}
                       </span>
                     </div>
@@ -802,114 +802,114 @@ export default function ChunkingDesignDemo() {
         <TabsContent value="comparison">
           <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
             <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
-              <h3 className="text-slate-200 font-medium">Chunking Strategy Comparison</h3>
-              <div className="text-sm text-slate-400">Compare different approaches to chunking</div>
+              <h3 className="text-slate-200 font-medium">{t('chunkingDesign.chunkingStrategyComparison', 'Chunking Strategy Comparison')}</h3>
+              <div className="text-sm text-slate-400">{t('chunkingDesign.compareDifferentApproaches', 'Compare different approaches to chunking')}</div>
             </div>
             <div className="p-5">
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="border-b border-slate-700">
-                      <th className="text-left p-3 text-slate-300">Strategy</th>
-                      <th className="text-left p-3 text-slate-300">Best For</th>
-                      <th className="text-left p-3 text-slate-300">Advantages</th>
-                      <th className="text-left p-3 text-slate-300">Disadvantages</th>
+                      <th className="text-left p-3 text-slate-300">{t('chunkingDesign.strategy', 'Strategy')}</th>
+                      <th className="text-left p-3 text-slate-300">{t('chunkingDesign.bestFor', 'Best For')}</th>
+                      <th className="text-left p-3 text-slate-300">{t('chunkingDesign.advantages', 'Advantages')}</th>
+                      <th className="text-left p-3 text-slate-300">{t('chunkingDesign.disadvantages', 'Disadvantages')}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="border-b border-slate-700">
-                      <td className="p-3 font-medium text-slate-200">Fixed Size</td>
+                      <td className="p-3 font-medium text-slate-200">{t('chunkingDesign.fixedSizeStrategy', 'Fixed Size')}</td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Simple text</li>
-                          <li>Homogeneous content</li>
-                          <li>When consistency matters</li>
+                          <li>{t('chunkingDesign.simpleText', 'Simple text')}</li>
+                          <li>{t('chunkingDesign.homogeneousContent', 'Homogeneous content')}</li>
+                          <li>{t('chunkingDesign.whenConsistencyMatters', 'When consistency matters')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Simple to implement</li>
-                          <li>Predictable chunk sizes</li>
-                          <li>Works with any text</li>
+                          <li>{t('chunkingDesign.simpleToImplement', 'Simple to implement')}</li>
+                          <li>{t('chunkingDesign.predictableChunkSizes', 'Predictable chunk sizes')}</li>
+                          <li>{t('chunkingDesign.worksWithAnyText', 'Works with any text')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>May split mid-sentence or paragraph</li>
-                          <li>Can break semantic units</li>
-                          <li>Often requires higher overlap</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-slate-700">
-                      <td className="p-3 font-medium text-slate-200">Paragraph-based</td>
-                      <td className="p-3 text-sm text-slate-400">
-                        <ul className="list-disc pl-5">
-                          <li>Well-structured documents</li>
-                          <li>Articles and blog posts</li>
-                          <li>Documentation</li>
-                        </ul>
-                      </td>
-                      <td className="p-3 text-sm text-slate-400">
-                        <ul className="list-disc pl-5">
-                          <li>Preserves natural document structure</li>
-                          <li>Keeps related content together</li>
-                          <li>Often needs less overlap</li>
-                        </ul>
-                      </td>
-                      <td className="p-3 text-sm text-slate-400">
-                        <ul className="list-disc pl-5">
-                          <li>Inconsistent chunk sizes</li>
-                          <li>Very long paragraphs may exceed limits</li>
-                          <li>Depends on good paragraph formatting</li>
+                          <li>{t('chunkingDesign.maySplitMidSentence', 'May split mid-sentence or paragraph')}</li>
+                          <li>{t('chunkingDesign.canBreakSemanticUnits', 'Can break semantic units')}</li>
+                          <li>{t('chunkingDesign.oftenRequiresHigherOverlap', 'Often requires higher overlap')}</li>
                         </ul>
                       </td>
                     </tr>
                     <tr className="border-b border-slate-700">
-                      <td className="p-3 font-medium text-slate-200">Sentence-based</td>
+                      <td className="p-3 font-medium text-slate-200">{t('chunkingDesign.paragraphBasedStrategy', 'Paragraph-based')}</td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Q&A content</li>
-                          <li>Fact-dense material</li>
-                          <li>When precision matters</li>
+                          <li>{t('chunkingDesign.wellStructuredDocuments', 'Well-structured documents')}</li>
+                          <li>{t('chunkingDesign.articlesAndBlogPosts', 'Articles and blog posts')}</li>
+                          <li>{t('chunkingDesign.documentation', 'Documentation')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Preserves complete sentences</li>
-                          <li>Good for precise fact retrieval</li>
-                          <li>Works well with complex punctuation</li>
+                          <li>{t('chunkingDesign.preservesNaturalStructure', 'Preserves natural document structure')}</li>
+                          <li>{t('chunkingDesign.keepsRelatedContentTogether', 'Keeps related content together')}</li>
+                          <li>{t('chunkingDesign.oftenNeedsLessOverlap', 'Often needs less overlap')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>May create very small chunks</li>
-                          <li>Can lose paragraph-level context</li>
-                          <li>Requires good sentence detection</li>
+                          <li>{t('chunkingDesign.inconsistentChunkSizes', 'Inconsistent chunk sizes')}</li>
+                          <li>{t('chunkingDesign.veryLongParagraphs', 'Very long paragraphs may exceed limits')}</li>
+                          <li>{t('chunkingDesign.dependsOnGoodFormatting', 'Depends on good paragraph formatting')}</li>
+                        </ul>
+                      </td>
+                    </tr>
+                    <tr className="border-b border-slate-700">
+                      <td className="p-3 font-medium text-slate-200">{t('chunkingDesign.sentenceBasedStrategy', 'Sentence-based')}</td>
+                      <td className="p-3 text-sm text-slate-400">
+                        <ul className="list-disc pl-5">
+                          <li>{t('chunkingDesign.qaContent', 'Q&A content')}</li>
+                          <li>{t('chunkingDesign.factDenseMaterial', 'Fact-dense material')}</li>
+                          <li>{t('chunkingDesign.whenPrecisionMatters', 'When precision matters')}</li>
+                        </ul>
+                      </td>
+                      <td className="p-3 text-sm text-slate-400">
+                        <ul className="list-disc pl-5">
+                          <li>{t('chunkingDesign.preservesCompleteSentences', 'Preserves complete sentences')}</li>
+                          <li>{t('chunkingDesign.goodForPreciseFactRetrieval', 'Good for precise fact retrieval')}</li>
+                          <li>{t('chunkingDesign.worksWellWithComplexPunctuation', 'Works well with complex punctuation')}</li>
+                        </ul>
+                      </td>
+                      <td className="p-3 text-sm text-slate-400">
+                        <ul className="list-disc pl-5">
+                          <li>{t('chunkingDesign.mayCreateVerySmallChunks', 'May create very small chunks')}</li>
+                          <li>{t('chunkingDesign.canLoseParagraphContext', 'Can lose paragraph-level context')}</li>
+                          <li>{t('chunkingDesign.requiresGoodSentenceDetection', 'Requires good sentence detection')}</li>
                         </ul>
                       </td>
                     </tr>
                     <tr>
-                      <td className="p-3 font-medium text-slate-200">Semantic</td>
+                      <td className="p-3 font-medium text-slate-200">{t('chunkingDesign.semanticBasedStrategy', 'Semantic')}</td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Complex documents</li>
-                          <li>Legal or technical content</li>
-                          <li>When context is critical</li>
+                          <li>{t('chunkingDesign.technicalDocumentation', 'Technical documentation')}</li>
+                          <li>{t('chunkingDesign.complexNarratives', 'Complex narratives')}</li>
+                          <li>{t('chunkingDesign.whenMeaningMatters', 'When meaning matters')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Preserves semantic meaning</li>
-                          <li>Adapts to document structure</li>
-                          <li>Best for complex retrieval</li>
+                          <li>{t('chunkingDesign.preservesMeaningAndContext', 'Preserves meaning and context')}</li>
+                          <li>{t('chunkingDesign.intelligentBoundaryDetection', 'Intelligent boundary detection')}</li>
+                          <li>{t('chunkingDesign.betterForComplexContent', 'Better for complex content')}</li>
                         </ul>
                       </td>
                       <td className="p-3 text-sm text-slate-400">
                         <ul className="list-disc pl-5">
-                          <li>Most complex to implement</li>
-                          <li>May require ML models</li>
-                          <li>Computationally expensive</li>
+                          <li>{t('chunkingDesign.requiresAdvancedNLP', 'Requires advanced NLP')}</li>
+                          <li>{t('chunkingDesign.computationallyExpensive', 'Computationally expensive')}</li>
+                          <li>{t('chunkingDesign.mayStillMakeMistakes', 'May still make mistakes')}</li>
                         </ul>
                       </td>
                     </tr>
@@ -922,77 +922,77 @@ export default function ChunkingDesignDemo() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
             <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
               <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
-                <h3 className="text-slate-200 font-medium">Chunk Size Considerations</h3>
+                <h3 className="text-slate-200 font-medium">{t('chunkingDesign.chunkSizeConsiderations', 'Chunk Size Considerations')}</h3>
               </div>
               <div className="p-5 space-y-4">
                 <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
-                  <h3 className="font-medium mb-2 text-slate-200">Small Chunks (50-150 tokens)</h3>
+                  <h3 className="font-medium mb-2 text-slate-200">{t('chunkingDesign.smallChunks', 'Small Chunks (50-150 tokens)')}</h3>
                   <p className="text-sm text-slate-400 mb-2">
-                    Small chunks improve precision by targeting specific information but may lose context.
+                    {t('chunkingDesign.smallChunksDescription', 'Small chunks improve precision by targeting specific information but may lose context.')}
                   </p>
                   <div className="flex items-center gap-2 mt-3">
                     <div style={{ width: '100%' }} className="h-2 bg-emerald-500 rounded"></div>
-                    <span className="text-xs w-20 text-slate-300">Precision</span>
+                    <span className="text-xs w-20 text-slate-300">{t('chunkingDesign.precision', 'Precision')}</span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     <div style={{ width: '33%' }} className="h-2 bg-red-500 rounded"></div>
-                    <span className="text-xs w-20 text-slate-300">Context</span>
+                    <span className="text-xs w-20 text-slate-300">{t('chunkingDesign.context', 'Context')}</span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     <div style={{ width: '40%' }} className="h-2 bg-amber-500 rounded"></div>
-                    <span className="text-xs w-20 text-slate-300">Storage Efficiency</span>
+                    <span className="text-xs w-20 text-slate-300">{t('chunkingDesign.storageEfficiency', 'Storage Efficiency')}</span>
                   </div>
                 </div>
 
                 <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
-                  <h3 className="font-medium mb-2 text-slate-200">Medium Chunks (150-300 tokens)</h3>
+                  <h3 className="font-medium mb-2 text-slate-200">{t('chunkingDesign.mediumChunks', 'Medium Chunks (150-300 tokens)')}</h3>
                   <p className="text-sm text-slate-400 mb-2">
-                    Medium chunks balance precision and context, suitable for most general use cases.
+                    {t('chunkingDesign.mediumChunksDescription', 'Medium chunks balance precision and context, suitable for most general use cases.')}
                   </p>
                   <div className="flex items-center gap-2 mt-3">
                     <div style={{ width: '75%' }} className="h-2 bg-emerald-500 rounded"></div>
-                    <span className="text-xs w-20 text-slate-300">Precision</span>
+                    <span className="text-xs w-20 text-slate-300">{t('chunkingDesign.precision', 'Precision')}</span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     <div style={{ width: '67%' }} className="h-2 bg-red-500 rounded"></div>
-                    <span className="text-xs w-20 text-slate-300">Context</span>
+                    <span className="text-xs w-20 text-slate-300">{t('chunkingDesign.context', 'Context')}</span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     <div style={{ width: '70%' }} className="h-2 bg-amber-500 rounded"></div>
-                    <span className="text-xs w-20 text-slate-300">Storage Efficiency</span>
+                    <span className="text-xs w-20 text-slate-300">{t('chunkingDesign.storageEfficiency', 'Storage Efficiency')}</span>
                   </div>
                 </div>
 
                 <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
-                  <h3 className="font-medium mb-2 text-slate-200">Large Chunks (300-500+ tokens)</h3>
+                  <h3 className="font-medium mb-2 text-slate-200">{t('chunkingDesign.largeChunks', 'Large Chunks (300-500+ tokens)')}</h3>
                   <p className="text-sm text-slate-400 mb-2">
-                    Large chunks preserve more context but may reduce precision and hit embedding model limits.
+                    {t('chunkingDesign.largeChunksDescription', 'Large chunks preserve more context but may reduce precision and hit embedding model limits.')}
                   </p>
                   <div className="flex items-center gap-2 mt-3">
                     <div style={{ width: '50%' }} className="h-2 bg-emerald-500 rounded"></div>
-                    <span className="text-xs w-20 text-slate-300">Precision</span>
+                    <span className="text-xs w-20 text-slate-300">{t('chunkingDesign.precision', 'Precision')}</span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     <div style={{ width: '100%' }} className="h-2 bg-red-500 rounded"></div>
-                    <span className="text-xs w-20 text-slate-300">Context</span>
+                    <span className="text-xs w-20 text-slate-300">{t('chunkingDesign.context', 'Context')}</span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     <div style={{ width: '90%' }} className="h-2 bg-amber-500 rounded"></div>
-                    <span className="text-xs w-20 text-slate-300">Storage Efficiency</span>
+                    <span className="text-xs w-20 text-slate-300">{t('chunkingDesign.storageEfficiency', 'Storage Efficiency')}</span>
                   </div>
                 </div>
                 
                 <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5">
-                  <h3 className="font-medium mb-2 text-slate-200">About Storage Efficiency</h3>
+                  <h3 className="font-medium mb-2 text-slate-200">{t('chunkingDesign.aboutStorageEfficiency', 'About Storage Efficiency')}</h3>
                   <p className="text-sm text-slate-400">
-                    Storage efficiency generally increases with chunk size because:
+                    {t('chunkingDesign.storageEfficiencyDescription', 'Storage efficiency generally increases with chunk size because:')}
                   </p>
                   <ul className="text-sm text-slate-400 mt-2 list-disc pl-5">
-                    <li>Each chunk requires metadata overhead (IDs, timestamps, etc.)</li>
-                    <li>More chunks (from smaller chunking) means more total overhead</li>
-                    <li>Vector embeddings typically have fixed dimensionality regardless of text length</li>
-                    <li>Large chunks may store more content with the same embedding size</li>
-                    <li>Very large chunks can hit diminishing returns due to model token limits</li>
+                    <li>{t('chunkingDesign.metadataOverhead', 'Each chunk requires metadata overhead (IDs, timestamps, etc.)')}</li>
+                    <li>{t('chunkingDesign.moreChunksMoreOverhead', 'More chunks (from smaller chunking) means more total overhead')}</li>
+                    <li>{t('chunkingDesign.vectorEmbeddingsFixedDimensionality', 'Vector embeddings typically have fixed dimensionality regardless of text length')}</li>
+                    <li>{t('chunkingDesign.largeChunksMoreContent', 'Large chunks may store more content with the same embedding size')}</li>
+                    <li>{t('chunkingDesign.veryLargeChunksDiminishingReturns', 'Very large chunks can hit diminishing returns due to model token limits')}</li>
                   </ul>
                 </div>
               </div>
@@ -1000,53 +1000,46 @@ export default function ChunkingDesignDemo() {
 
             <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
               <div className="px-5 py-4 bg-slate-700/50 flex items-center gap-2">
-                <h3 className="text-slate-200 font-medium">Best Practices</h3>
+                <h3 className="text-slate-200 font-medium">{t('chunkingDesign.bestPractices', 'Best Practices')}</h3>
               </div>
               <div className="p-5 space-y-4">
                 <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
                   <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
                     <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                    Match Chunking to Content Type
+                    {t('chunkingDesign.matchChunkingToContentType', 'Match Chunking to Content Type')}
                   </h3>
                   <p className="text-sm text-slate-400">
-                    Different content types benefit from different chunking strategies. Technical documentation works
-                    well with semantic or paragraph-based chunking, while Q&A content might benefit from
-                    sentence-based approaches.
+                    {t('chunkingDesign.matchChunkingDescription', 'Different content types benefit from different chunking strategies. Technical documentation works well with semantic or paragraph-based chunking, while Q&A content might benefit from sentence-based approaches.')}
                   </p>
                 </div>
 
                 <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
                   <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
                     <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                    Consider Embedding Model Limits
+                    {t('chunkingDesign.considerEmbeddingModelLimits', 'Consider Embedding Model Limits')}
                   </h3>
                   <p className="text-sm text-slate-400">
-                    Always ensure your chunks don't exceed the token limit of your embedding model. For example, if
-                    using OpenAI's text-embedding-ada-002, keep chunks under 8,191 tokens (though much smaller is
-                    typically better).
+                    {t('chunkingDesign.embeddingModelLimitsDescription', 'Always ensure your chunks don\'t exceed the token limit of your embedding model. For example, if using OpenAI\'s text-embedding-ada-002, keep chunks under 8,191 tokens (though much smaller is typically better).')}
                   </p>
                 </div>
 
                 <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
                   <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
                     <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                    Test and Iterate
+                    {t('chunkingDesign.testAndIterate', 'Test and Iterate')}
                   </h3>
                   <p className="text-sm text-slate-400">
-                    There's no one-size-fits-all chunking strategy. Test different approaches with representative
-                    queries and measure retrieval quality. Be prepared to adjust your strategy based on real-world
-                    performance.
+                    {t('chunkingDesign.testAndIterateDescription', 'There\'s no one-size-fits-all chunking strategy. Test different approaches with representative queries and measure retrieval quality. Be prepared to adjust your strategy based on real-world performance.')}
                   </p>
                 </div>
 
                 <div className="p-4 border border-slate-700 hover:border-slate-600 rounded-lg bg-slate-800/50 transition-all">
                   <h3 className="font-medium mb-2 flex items-center gap-2 text-slate-200">
                     <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                    Use Metadata to Enhance Retrieval
+                    {t('chunkingDesign.useMetadataToEnhance', 'Use Metadata to Enhance Retrieval')}
                   </h3>
                   <p className="text-sm text-slate-400">
-                    Complement your chunking strategy with rich metadata. Even with imperfect chunks, good metadata
-                    can help filter and rank results appropriately.
+                    {t('chunkingDesign.useMetadataDescription', 'Complement your chunking strategy with rich metadata. Even with imperfect chunks, good metadata can help filter and rank results appropriately.')}
                   </p>
                 </div>
               </div>
@@ -1054,13 +1047,13 @@ export default function ChunkingDesignDemo() {
           </div>
           
           <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
-            <h3 className="font-medium mb-3 text-slate-200">Key Takeaways</h3>
+            <h3 className="font-medium mb-3 text-slate-200">{t('chunkingDesign.keyTakeaways', 'Key Takeaways')}</h3>
             <ul className="text-sm text-slate-400 space-y-2 list-disc pl-5">
-              <li>Choose your chunking strategy based on your specific content and search requirements</li>
-              <li>Balance chunk size to optimize for both context preservation and retrieval precision</li>
-              <li>Use appropriate overlap settings when breaking apart semantically connected content</li>
-              <li>Consider storage and computational constraints when designing your chunking pipeline</li>
-              <li>Regularly evaluate and refine your chunking approach as your content and use cases evolve</li>
+              <li>{t('chunkingDesign.chooseBasedOnContent', 'Choose your chunking strategy based on your specific content and search requirements')}</li>
+              <li>{t('chunkingDesign.balanceChunkSize', 'Balance chunk size to optimize for both context preservation and retrieval precision')}</li>
+              <li>{t('chunkingDesign.useAppropriateOverlap', 'Use appropriate overlap settings when breaking apart semantically connected content')}</li>
+              <li>{t('chunkingDesign.considerStorageConstraints', 'Consider storage and computational constraints when designing your chunking pipeline')}</li>
+              <li>{t('chunkingDesign.regularlyEvaluate', 'Regularly evaluate and refine your chunking approach as your content and use cases evolve')}</li>
             </ul>
           </div>
         </TabsContent>

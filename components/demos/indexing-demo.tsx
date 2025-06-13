@@ -120,7 +120,7 @@ const euclideanDistance = (a: number[], b: number[]) => {
 
 export default function IndexingDemo() {
   const { t } = useTranslation('demos')
-  
+
   // State for the index configuration
   const [indexConfig, setIndexConfig] = useState({
     distanceMetric: "cosine",
@@ -177,16 +177,16 @@ export default function IndexingDemo() {
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    
+
     // Draw grid
     const gridSize = 20
     const gridColor = "rgba(148, 163, 184, 0.1)" // Light slate color with low opacity
     const axisColor = "rgba(148, 163, 184, 0.2)" // Slightly more visible for axes
-    
+
     // Draw grid lines
     ctx.strokeStyle = gridColor
     ctx.lineWidth = 1
-    
+
     // Vertical grid lines
     for (let x = 0; x <= canvas.width; x += gridSize) {
       ctx.beginPath()
@@ -194,7 +194,7 @@ export default function IndexingDemo() {
       ctx.lineTo(x, canvas.height)
       ctx.stroke()
     }
-    
+
     // Horizontal grid lines
     for (let y = 0; y <= canvas.height; y += gridSize) {
       ctx.beginPath()
@@ -202,17 +202,17 @@ export default function IndexingDemo() {
       ctx.lineTo(canvas.width, y)
       ctx.stroke()
     }
-    
+
     // Draw axes
     ctx.strokeStyle = axisColor
     ctx.lineWidth = 2
-    
+
     // X-axis (horizontal middle)
     ctx.beginPath()
     ctx.moveTo(0, canvas.height / 2)
     ctx.lineTo(canvas.width, canvas.height / 2)
     ctx.stroke()
-    
+
     // Y-axis (vertical middle)
     ctx.beginPath()
     ctx.moveTo(canvas.width / 2, 0)
@@ -346,8 +346,8 @@ export default function IndexingDemo() {
                   <Clock className="h-4 w-4 text-emerald-400" />
                   <span className="text-sm text-slate-400">{t('indexing.lastRefreshed')}:</span> {lastRefreshed.toLocaleTimeString()}
                 </div>
-                <Button 
-                  onClick={refreshIndex} 
+                <Button
+                  onClick={refreshIndex}
                   className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all flex items-center gap-2"
                 >
                   <RefreshCw className="h-4 w-4" />
@@ -404,9 +404,9 @@ export default function IndexingDemo() {
                 </div>
               </div>
               <div className="px-5 py-4 border-t border-slate-700">
-                <Button 
-                  onClick={performSearch} 
-                  disabled={isSearching} 
+                <Button
+                  onClick={performSearch}
+                  disabled={isSearching}
                   className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all flex items-center gap-2 disabled:opacity-70"
                 >
                   {isSearching ? (
@@ -579,8 +579,8 @@ export default function IndexingDemo() {
               >
                 {t('indexing.resetToDefaults')}
               </Button>
-              <Button 
-                onClick={refreshIndex} 
+              <Button
+                onClick={refreshIndex}
                 className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all flex items-center gap-2"
               >
                 <RefreshCw className="h-4 w-4" />
@@ -662,10 +662,10 @@ export default function IndexingDemo() {
                     <AlertCircle className="h-4 w-4 text-amber-400" />
                     {t('indexing.simulateStaleIndex')}
                   </Label>
-                  <Switch 
-                    id="stale-index" 
-                    checked={simulateStaleIndex} 
-                    onCheckedChange={setSimulateStaleIndex} 
+                  <Switch
+                    id="stale-index"
+                    checked={simulateStaleIndex}
+                    onCheckedChange={setSimulateStaleIndex}
                     className="data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
                   />
                 </div>
@@ -686,10 +686,10 @@ export default function IndexingDemo() {
                     <AlertCircle className="h-4 w-4 text-amber-400" />
                     {t('indexing.simulatePartialIndex')}
                   </Label>
-                  <Switch 
-                    id="partial-index" 
-                    checked={simulatePartialIndex} 
-                    onCheckedChange={setSimulatePartialIndex} 
+                  <Switch
+                    id="partial-index"
+                    checked={simulatePartialIndex}
+                    onCheckedChange={setSimulatePartialIndex}
                     className="data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
                   />
                 </div>
@@ -710,10 +710,10 @@ export default function IndexingDemo() {
                     <AlertCircle className="h-4 w-4 text-amber-400" />
                     {t('indexing.simulateSlowSearch')}
                   </Label>
-                  <Switch 
-                    id="slow-search" 
-                    checked={simulateSlowSearch} 
-                    onCheckedChange={setSimulateSlowSearch} 
+                  <Switch
+                    id="slow-search"
+                    checked={simulateSlowSearch}
+                    onCheckedChange={setSimulateSlowSearch}
                     className="data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
                   />
                 </div>
@@ -761,25 +761,6 @@ export default function IndexingDemo() {
                     {t('indexing.planScaleDescription')}
                   </p>
                 </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-slate-800/50 rounded-lg border border-slate-700 p-5 mt-8">
-            <h3 className="text-slate-200 font-medium mb-3 flex items-center gap-2">
-              <Database className="h-5 w-5 text-emerald-400" />
-              {t('indexing.vectorDatabaseResources')}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="text-sm text-slate-300">
-                <p>{t('indexing.optimizingVectorSearch')}</p>
-              </div>
-              <div>
-                <Button 
-                  className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-none shadow-lg hover:shadow-emerald-500/20 transition-all"
-                >
-                  {t('indexing.learnMoreVectorDatabases')}
-                </Button>
               </div>
             </div>
           </div>

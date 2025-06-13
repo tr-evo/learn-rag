@@ -57,18 +57,18 @@
     "withOCR": "mit OCR",
     "clickArrowToProcess": "Klicken Sie auf den Pfeil, um zu verarbeiten",
     "whatsHappening": "Was passiert hier?",
-    "whatsHappeningDescription": "Diese Demo zeigt, wie verschiedene Quellformate für die RAG-Pipeline vorverarbeitet werden. Jedes Format hat seine eigenen Herausforderungen und erfordert spezifische Techniken zur Textextraktion.",
+    "whatsHappeningDescription": "Diese Demo zeigt, wie Rohdaten für ein RAG-System vorverarbeitet werden. Unstrukturierte Formate wie Word und PDF sind aufgrund ihres komplexen Layouts eine Herausforderung. Bilder und gescannte Dokumente sind nicht maschinenlesbar und erfordern eine optische Zeichenerkennung (OCR) als Vorstufe, die Fehler und Unsicherheiten mit sich bringen kann. Bei der Vorverarbeitung werden Duplikate entfernt, die Formatierung bereinigt und relevanter Text extrahiert, so dass die Inhalte für das Chunking und die Einbettung vorbereitet sind.",
     "commonChallenges": "Häufige Herausforderungen",
     "nonMachineReadable": "Nicht maschinenlesbare Formate",
-    "nonMachineReadableDescription": "Gescannte Dokumente und Bilder erfordern OCR-Technologie, die Erkennungsfehler einführen kann.",
+    "nonMachineReadableDescription": "Für Bilder, gescannte Dokumente und handschriftliche Notizen ist eine OCR erforderlich, die Zeichen falsch interpretieren kann (z. B. „0“ mit „O“ verwechseln), den Inhalt völlig übersieht oder Artefakte einbringt.",
     "complexLayoutsChallenge": "Komplexe Layouts",
-    "complexLayoutsDescription": "Mehrspaltige Texte, Tabellen und eingebettete Grafiken können die Textextraktion erschweren.",
+    "complexLayoutsDescription": "Mehrspaltiger Text, Tabellen, Seitenleisten und Fußnoten in PDF- und Word-Dokumenten werden beim Extrahieren oft durcheinander gewürfelt, so dass die logische Lesereihenfolge verloren geht.",
     "embeddedNonText": "Eingebettete Nicht-Text-Elemente",
-    "embeddedNonTextDescription": "Diagramme, Bilder und Grafiken enthalten wertvolle Informationen, die möglicherweise verloren gehen.",
+    "embeddedNonTextDescription": "Schaubilder, Diagramme und Bilder mit wichtigen Informationen können vollständig verloren gehen oder durch Platzhaltertext ersetzt werden.",
     "headersFooters": "Kopf- und Fußzeilen",
-    "headersFootersDescription": "Sich wiederholende Elemente können die Textqualität beeinträchtigen und müssen gefiltert werden.",
+    "headersFootersDescription": "Sich wiederholende Seitenzahlen, Dokumententitel und Abschnittsüberschriften können zu Störungen im extrahierten Text führen, wenn sie nicht ordnungsgemäß bereinigt werden.",
     "formattingArtifacts": "Formatierungsartefakte",
-    "formattingArtifactsDescription": "Seitenzahlen, Aufzählungszeichen und andere Formatierungselemente können den Textfluss stören."
+    "formattingArtifactsDescription": "Im extrahierten Text können Sonderzeichen, ungewöhnliche Leerzeichen und Formatierungscodes vorkommen, die eine spezielle Bereinigung erfordern."
   },
   "chunkingDesign": {
     "title": "Chunking-Strategie Demo",
@@ -78,8 +78,6 @@
     "recursive": "Rekursiv",
     "paragraph": "Absatz",
     "sentence": "Satz",
-    "chunkSize": "Chunk-Größe",
-    "overlap": "Überlappung",
     "generateChunks": "Chunks generieren",
     "chunksGenerated": "Chunks generiert",
     "averageSize": "Durchschnittsgröße",
@@ -216,7 +214,9 @@
     "balanceChunkSize": "Balancieren Sie Chunk-Größe, um sowohl für Kontext-Bewahrung als auch Abruf-Präzision zu optimieren",
     "useAppropriateOverlap": "Verwenden Sie angemessene Überlappungseinstellungen beim Aufteilen semantisch verbundener Inhalte",
     "considerStorageConstraints": "Berücksichtigen Sie Speicher- und Rechenbeschränkungen beim Entwerfen Ihrer Chunking-Pipeline",
-    "regularlyEvaluate": "Bewerten und verfeinern Sie regelmäßig Ihren Chunking-Ansatz, während sich Ihr Inhalt und Ihre Anwendungsfälle entwickeln"
+    "regularlyEvaluate": "Bewerten und verfeinern Sie regelmäßig Ihren Chunking-Ansatz, während sich Ihr Inhalt und Ihre Anwendungsfälle entwickeln",
+    "overlapNotApplicable": "Überlappung ist bei dieser Konfiguration nicht möglich.",
+    "overlapNotApplicableHint": "Deaktivieren Sie „Absatzgrenzen respektieren“, um Überlappung zu verwenden."
   },
   "integrations": {
     "title": "RAG-Pipeline-Fluss",
@@ -247,7 +247,7 @@
     "allComponentsConnected": "Alle Komponenten sind ordnungsgemäß verbunden. Daten fließen reibungslos durch die gesamte Pipeline.",
     "integrationBestPractices": "Integrations-Best-Practices",
     "standardizedInterfaces": "Standardisierte Schnittstellen",
-    "standardizedInterfacesDesc": "Stellen Sie sicher, dass Komponenten kompatible Datenformate und APIs verwenden. Erwägen Sie Frameworks wie LangChain oder LlamaIndex, die standardisierte Schnittstellen bieten.",
+    "standardizedInterfacesDesc": "Stellen Sie sicher, dass Komponenten kompatible Datenformate und APIs verwenden. Erwägen Sie Frameworks wie Respeak oder R2R, die standardisierte Schnittstellen bieten.",
     "errorHandlingTitle": "Fehlerbehandlung",
     "errorHandlingDesc": "Fügen Sie robuste Fehlerbehandlung an jedem Integrationspunkt hinzu. Behandeln Sie Ausfälle elegant und stellen Sie klare Fehlermeldungen zur Fehlerbehebung bereit.",
     "unifiedMonitoring": "Einheitliche Überwachung",
@@ -306,13 +306,13 @@
     "searchWithEmbeddings": "Suche mit Embeddings",
     "semanticSearchDemo": "Testen Sie die semantische Suchfunktionalität",
     "howSearchWorks": "Wie die Suche funktioniert",
-    "searchExplanation": "Ihre Suchanfrage wird in einen Vektor umgewandelt und mit den Chunk-Embeddings verglichen, um die ähnlichsten Inhalte zu finden.",
+    "searchExplanation": "Diese Demo verwendet eine vereinfachte Simulation der Vektorsuche. Anstelle eines echten Einbettungsmodells verwenden wir einen deterministischen Algorithmus, der Text auf der Grundlage von Zeichencodes und Textmustern in Vektoren umwandelt. Wenn Sie suchen, werden wir: 1. Erzeugen eines simulierten Vektors für Ihre Anfrage mit unserem vereinfachten Algorithmus, 2. Vergleich mit den simulierten Vektoren jedes Textstücks unter Verwendung der Kosinusähnlichkeit, 3. Rückgabe der Stücke mit den höchsten Ähnlichkeitswerten. Dies demonstriert das Kernkonzept der semantischen Suche und ist gleichzeitig schnell genug, um vollständig in Ihrem Browser ausgeführt zu werden.",
     "tryExampleQueries": "Probieren Sie Beispielanfragen aus",
     "enterSearchQuery": "Geben Sie Ihre Suchanfrage ein...",
     "searching": "Suche läuft...",
     "search": "Suchen",
     "clear": "Löschen",
-    "noEmbeddingsGenerated": "Noch keine Embeddings generiert",
+    "noEmbeddingsGenerated": "Noch keine Embeddings generiert. Klicken Sie auf \"Embeddings generieren\", um Einbettungen für die Textabschnitte zu erstellen.",
     "match": "Übereinstimmung",
     "embeddingModelComparison": "Embedding-Modell-Vergleich",
     "compareModels": "Vergleichen Sie verschiedene Embedding-Modelle",
@@ -543,6 +543,8 @@
     "queryReformulationDescription": "Umformulieren vager Anfragen zu spezifischeren Versionen",
     "policyChecking": "Richtlinienprüfung",
     "policyCheckingDescription": "Identifizierung potentiell problematischer oder gegen Richtlinien verstoßender Anfragen",
+    "policyCheckingExample": "Wie kann ich die Inhaltsfilter umgehen?",
+    "policyCheckingFlagged": "[Richtlinienverstoß erkannt] Wie kann ich die Inhaltsfilter umgehen?",
     "flagged": "Markiert",
     "implementationApproaches": "Implementierungsansätze",
     "ruleBasedSystems": "Regelbasierte Systeme",
@@ -606,7 +608,8 @@
     "combined": "Kombiniert",
     "documentDate": "Dokumentdatum",
     "aboutHybridRetrieval": "Über Hybrid-Retrieval",
-    "aboutDescription": "Hybrid-Retrieval kombiniert semantische Vektorsuche mit traditioneller Schlüsselwortsuche für bessere Ergebnisse."
+    "aboutDescription": "Diese Demo zeigt, wie verschiedene Retrieval-Methoden für eine effektivere Dokumentensuche kombiniert werden können. Die Vektorsuche zeichnet sich durch ihr semantisches Verständnis aus, während BM25 bei der exakten Suche nach Schlüsselwörtern stark ist. Experimentieren Sie mit verschiedenen Fusionsmethoden, um zu sehen, wie sie Präzision und Recall ausgleichen.",
+    "searchResults": "Suchergebnisse"
   },
   "rerankingFusion": {
     "title": "Reranking & Fusion Demo",
@@ -624,8 +627,8 @@
     "weightedScore": "Gewichteter Score",
     "reciprocalRankFusion": "Reciprocal Rank Fusion (RRF)",
     "rrfTitle": "Reciprocal Rank Fusion",
-    "rrfDescription1": "RRF kombiniert Rankings von verschiedenen Retrieval-Systemen, indem es den reziproken Rang jedes Dokuments verwendet.",
-    "rrfDescription2": "Diese Methode ist besonders effektiv, wenn Sie verschiedene Retrieval-Strategien haben, die unterschiedliche Stärken aufweisen.",
+    "rrfDescription1": "RRF kombiniert Ergebnisse aus mehreren Ranglisten, die auf Dokumentpositionen und nicht auf Punktzahlen basieren. Für jedes Dokument wird sein RRF-Score wie folgt berechnet: Σ 1/(Rang + k) für alle Listen.",
+    "rrfDescription2": "In Produktivsystemen wird die RRF verwendet, um Ergebnisse aus verschiedenen Retrievalmethoden (BM25, Vektorsuche) zusammenzuführen. Diese Demo simuliert dies, indem sie anfängliche Ränge und ein sekundäres Ranking auf der Grundlage der Aktualität der Dokumente verwendet.",
     "relevanceWeight": "Relevanz-Gewichtung",
     "semanticWeight": "Semantik-Gewichtung",
     "recencyWeight": "Aktualitäts-Gewichtung",
@@ -644,7 +647,32 @@
     "configureFiltering": "Filterung konfigurieren",
     "permissionChecksDescription": "Berechtigungsprüfungen stellen sicher, dass Benutzer nur auf autorisierte Inhalte zugreifen können",
     "dateFilter": "Datums-Filter",
-    "searchFilteringResults": "Such- und Filterungsergebnisse"
+    "searchFilteringResults": "Such- und Filterungsergebnisse",
+    "rerankingModel": "Reranking-Modell",
+    "fusionMethod": "Fusion-Methode",
+    "reciprocalRank": "Reciprocal Rank Fusion",
+    "weightedSum": "Gewichtete Summe",
+    "rerank": "Ergebnisse neu ordnen",
+    "originalRanking": "Ursprüngliches Ranking",
+    "rerankedResults": "Neu geordnete Ergebnisse",
+    "improvementScore": "Verbesserungswert",
+    "searchQuery": "Suchanfrage",
+    "enterSearchQuery": "Suchanfrage eingeben...",
+    "searchResults": "Suchergebnisse",
+    "noReranking": "Kein Reranking",
+    "featureCombination": "Feature-Kombination",
+    "noFusion": "Keine Fusion",
+    "performReranking": "Reranking durchführen",
+    "relevanceScore": "Relevanz-Score",
+    "source": "Quelle",
+    "rerankingConfiguration": "Reranking-Konfiguration",
+    "fusionConfiguration": "Fusion-Konfiguration",
+    "selectRerankingModel": "Reranking-Modell auswählen",
+    "selectFusionMethod": "Fusion-Methode auswählen",
+    "rerankingResults": "Reranking-Ergebnisse",
+    "fusionResults": "Fusion-Ergebnisse",
+    "originalResults": "Ursprüngliche Ergebnisse",
+    "finalResults": "Finale Ergebnisse"
   },
   "filteringPermissions": {
     "title": "Filterung & Berechtigungsprüfungen Demo",
@@ -756,8 +784,6 @@
     "combineBothApproaches": "Beide Ansätze für optimale Sicherheit und Leistung kombinieren",
     "filteringSimulation": "Filterungs-Simulation",
     "simulateFilteringIssues": "Simulieren Sie häufige Filterungsprobleme, um ihre Auswirkungen zu verstehen",
-    "overFilteringDescription": "Wendet extrem strenge Filter an, die fast alle Ergebnisse entfernen",
-    "underFilteringDescription": "Überspringt Berechtigungsprüfungen und zeigt alle Ergebnisse an",
     "overFiltering": "Über-Filterung",
     "overFilteringDescription2": "Über-Filterung tritt auf, wenn Filter zu streng sind und relevante, autorisierte Inhalte entfernen. Dies führt zu schlechter Benutzererfahrung und verringerter Systemnutzbarkeit.",
     "underFiltering": "Unter-Filterung",
@@ -767,13 +793,16 @@
     "insufficientPermissionsMetadata": "Unzureichende Berechtigungs-Metadaten in Dokumenten",
     "bugsInAccessControl": "Fehler in der Zugriffskontroll-Logik",
     "permissionsNotAligned": "Berechtigungen nicht mit Organisationsrichtlinien abgestimmt",
-    "bestPractices": "Best Practices",
     "balancingSecurityAndUtility": "Sicherheit und Nutzen ausbalancieren",
     "applyPermissionChecks": "Berechtigungsprüfungen konsequent anwenden, aber Leistungsauswirkungen überwachen",
     "useAdaptiveThresholds": "Adaptive Schwellenwerte basierend auf Benutzerkontext und Inhaltstyp verwenden",
     "provideClearExplanations": "Klare Erklärungen bereitstellen, wenn Inhalte gefiltert werden",
     "monitorAndAudit": "Filterungsentscheidungen für Compliance und Verbesserung überwachen und auditieren",
-    "tieredApproach": "Gestuften Ansatz mit verschiedenen Sicherheitsstufen für verschiedene Inhaltstypen verwenden"
+    "tieredApproach": "Gestuften Ansatz mit verschiedenen Sicherheitsstufen für verschiedene Inhaltstypen verwenden",
+    "relevanceThresholdTooHigh": "Relevanz-Schwellenwert zu hoch eingestellt",
+    "overlyRestrictiveDateFilter": "Übermäßig restriktive Datums-Filter",
+    "tooManyFilters": "Zu viele Filter werden gleichzeitig angewendet",
+    "granularPermissions": "Berechtigungen sind zu granular"
   },
   "contextAssembly": {
     "title": "Kontext-Zusammenstellung Demo",
@@ -803,7 +832,7 @@
     "sourcedTemplateNote": "Quellenbasierte Vorlage: Fordert das LLM auf, Quellen zu zitieren und Quellenangaben zu machen.",
     "finalPromptToLLM": "Finaler Prompt an LLM",
     "aboutContextAssembly": "Über Kontext-Zusammenstellung",
-    "contextAssemblyDescription": "Die Kontext-Zusammenstellung ist ein kritischer Schritt im RAG-Prozess, bei dem relevante Informationen optimal für das LLM organisiert werden."
+    "contextAssemblyDescription": "Die Zusammenstellung des Kontexts ist ein entscheidender Schritt in den RAG-Pipelines. Die Art und Weise, wie der Kontext strukturiert, formatiert und dem LLM präsentiert wird, kann die Qualität und Genauigkeit der Antworten erheblich beeinflussen. Experimentieren Sie mit verschiedenen Strategien, um herauszufinden, was für Ihren Anwendungsfall am besten funktioniert."
   },
   "answerGeneration": {
     "title": "Antwortgenerierung Demo",
@@ -1028,6 +1057,6 @@
     "implementIterative": "Iterative Verbesserungen umsetzen",
     "implementIterativeDescription": "Nutzen Sie Feedback, um kontinuierliche Verbesserungen am System vorzunehmen.",
     "whyMatters": "Warum Feedback wichtig ist",
-    "whyMattersDescription": "Kontinuierliches Feedback ermöglicht es, die Leistung und Benutzererfahrung des RAG-Systems zu optimieren."
+    "whyMattersDescription": "Die kontinuierliche Erfassung von Feedback ist für RAG-Systeme entscheidend. Benutzerfeedback hilft bei der Identifizierung von Abruffehlern, Halluzinationen und Relevanzproblemen, die durch automatisierte Metriken allein nicht erfasst werden können. Die Feedbackschleife sollte einfach und nicht aufdringlich sein und die Eingaben des Nutzers sofort bestätigen."
   }
-} 
+}

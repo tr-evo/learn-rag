@@ -148,7 +148,7 @@ export default function StepPageClient({ step, prevStepId, nextStepId }: StepPag
                   {t('step-page:cta.title', 'Skip the Complexity')}
                 </h2>
                 <p className="text-slate-300 mb-4">
-                  {t('step-page:cta.description', 'Building a robust {{stepTitle}} solution is challenging. Respeak\'s Enterprise RAG Platform handles this complexity for you.', { stepTitle: stepContent.title.toLowerCase() })}
+                  {t('step-page:cta.description', 'Building a robust {{stepTitle}} solution is challenging. Respeak\'s Enterprise RAG Platform handles this complexity for you.', { stepTitle: stepContent.title })}
                 </p>
                 <div className="flex gap-3 flex-wrap">
                   <a

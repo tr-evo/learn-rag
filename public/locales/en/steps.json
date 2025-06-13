@@ -1,7 +1,7 @@
 {
   "steps": {
     "1": {
-      "title": "Source connection & preprocessing",
+      "title": "Source Connection & Preprocessing",
       "description": "Converts every source to clean, deduplicated text.",
       "pitfall": "Failed parsing or noisy leftovers hide data and add junk.",
       "whatItDoes": "Source preprocessing transforms raw documents into clean, normalized text that's ready for chunking and embedding. It handles tasks like removing irrelevant content, standardizing formats, and extracting useful metadata.",
@@ -31,7 +31,7 @@
       ]
     },
     "3": {
-      "title": "Metadata tagging",
+      "title": "Metadata Tagging",
       "description": "Enables filtering, access control, and audit.",
       "pitfall": "Missing or inconsistent tags block filters and leak data.",
       "whatItDoes": "Metadata tagging enriches your documents with additional information such as categories, dates, authors, source systems, and other attributes. This metadata can be used for filtering, sorting, access control, and enhancing the context provided to the LLM.",
@@ -61,7 +61,7 @@
       ]
     },
     "5": {
-      "title": "Chunking design",
+      "title": "Chunking Design",
       "description": "Balances recall vs. context size.",
       "pitfall": "Oversized chunks dilute relevance; undersized split answers.",
       "whatItDoes": "Chunking splits documents into smaller segments based on various strategies like fixed size, semantic boundaries, or structural elements. These chunks become the basic units for embedding and retrieval, determining how information is packaged for the LLM.",
@@ -76,7 +76,7 @@
       ]
     },
     "6": {
-      "title": "Embedding creation & refresh",
+      "title": "Embedding Creation & Refresh",
       "description": "Provides semantic search backbone.",
       "pitfall": "Skipping refresh drifts quality; model changes invalidate vectors.",
       "whatItDoes": "Embedding models convert text chunks into high-dimensional vectors where similar texts are positioned closer together in the vector space. These embeddings enable semantic search and similarity matching, capturing meaning beyond keyword matching.",
@@ -91,7 +91,7 @@
       ]
     },
     "7": {
-      "title": "Query understanding",
+      "title": "Query Understanding",
       "description": "Turns messy input into precise search intent.",
       "pitfall": "Ambiguity or wrong rewrite misguides retrieval.",
       "whatItDoes": "Query understanding analyzes user queries to identify intent, extract key concepts, expand terms, and transform the query into a form that maximizes retrieval effectiveness. It may involve query classification, expansion, reformulation, or decomposition into sub-queries.",
@@ -106,11 +106,11 @@
       ]
     },
     "8": {
-      "title": "Hybrid retrieval",
+      "title": "Hybrid Retrieval",
       "description": "Combines keyword precision with vector recall.",
       "pitfall": "Poor score fusion slows or skews results.",
-      "whatItDoes": "Hybrid retrieval uses a combination of retrieval methods – typically dense vector search and traditional keyword (sparse) search – to find relevant documents. It runs both methods and merges the results, leveraging the strengths of each approach.",
-      "whyItMatters": "Hybrid retrieval aims to get the best of both worlds. Sparse search excels at exact matches, while dense search excels at finding conceptually related content. By combining them, the pipeline can catch relevant documents that one method alone might miss.",
+      "whatItDoes": "Hybrid retrieval uses a combination of retrieval methods – typically dense vector search and traditional keyword (sparse) search – to find relevant documents. Instead of relying on just one approach, it runs both methods and then merges the results, leveraging the strengths of each system.",
+      "whyItMatters": "Hybrid retrieval aims to get the best of both worlds. Sparse (term-based) search excels at exact matches – if the user's query uses the same terminology as a document, a keyword search will precisely find that document. Dense search, on the other hand, excels at finding conceptually related info (synonyms, paraphrases) but might also return something contextually similar yet not actually relevant. By combining them, the pipeline can catch relevant documents that one method alone might miss.",
       "challenges": [
         "Implementing and maintaining two search systems instead of one",
         "Normalizing scores between different retrieval methods for fair comparison",
@@ -121,7 +121,7 @@
       ]
     },
     "9": {
-      "title": "Filtering & permission checks",
+      "title": "Filtering & Permission checks",
       "description": "Removes off-topic or unauthorized chunks.",
       "pitfall": "Over-filtering drops answers; under-filtering leaks secrets.",
       "whatItDoes": "Filtering narrows down search results based on metadata criteria like date, category, or source. Permission checks verify that users have appropriate access rights to the retrieved information, preventing unauthorized access to sensitive data.",
@@ -136,10 +136,10 @@
       ]
     },
     "10": {
-      "title": "Reranking / fusion",
-      "description": "Elevates the most answer-rich passages.",
+      "title": "Reranking / Fusion",
+      "description": "Reranking and fusion techniques improve retrieval quality by reordering or combining results from different retrieval methods.",
       "pitfall": "Heavy models add latency; bad fusion repeats or misorders.",
-      "whatItDoes": "Reranking takes initial search results and reorders them using more sophisticated models to improve relevance. Fusion combines results from multiple retrieval methods using algorithms like reciprocal rank fusion to create a unified ranking.",
+      "whatItDoes": "Reranking takes initial search results and reorders them using more sophisticated (and often more computationally expensive) models to improve relevance. Fusion combines results from multiple retrieval methods (like keyword search and semantic search) to leverage the strengths of each approach.",
       "whyItMatters": "These techniques significantly improve retrieval quality by addressing the limitations of individual retrieval methods. They help balance precision and recall, combining the strengths of different approaches to deliver more relevant results to the LLM.",
       "challenges": [
         "Balancing the computational cost of reranking with retrieval speed",
@@ -151,11 +151,11 @@
       ]
     },
     "11": {
-      "title": "Context assembly",
+      "title": "Context Assembly",
       "description": "Packs the best snippets into the prompt window.",
       "pitfall": "Token overflow or duplication confuses the LLM.",
-      "whatItDoes": "Context assembly takes the highest-ranked passages after retrieval and reranking and prepares them as context for the model. This includes formatting the text, removing redundancies, trimming for length, organizing snippets logically, and structuring the prompt clearly.",
-      "whyItMatters": "The LLM's answer will only be as good as the context it receives. Even with perfect retrieval, poorly assembled context can confuse the model or cause it to miss critical information. Well-assembled context gives the model clear, digestible facts to work with.",
+      "whatItDoes": "Context assembly takes the highest-ranked passages after retrieval and reranking and prepares them as context for the model. This includes formatting the text, removing redundancies, trimming for length to fit token limits, organizing snippets in a logical order, and structuring the prompt to clearly separate context from the query.",
+      "whyItMatters": "The LLM's answer will only be as good as the context it receives. Even with perfect retrieval, poorly assembled context can confuse the model or cause it to miss critical information. Well-assembled context gives the model a clear, digestible set of facts to work with and helps prevent it from veering off-course.",
       "challenges": [
         "Managing token limits while preserving essential information",
         "Avoiding context dilution from loosely related chunks",
@@ -166,11 +166,11 @@
       ]
     },
     "12": {
-      "title": "Answer generation",
+      "title": "Answer Generation",
       "description": "Produces the user-visible response.",
       "pitfall": "Hallucinations if context misses facts or prompt misguides.",
       "whatItDoes": "The LLM takes the assembled context and user query to generate a natural language response. It synthesizes relevant information from the context, formats the answer appropriately, and delivers the final output to the user while staying grounded in the provided information.",
-      "whyItMatters": "This is the culmination of the RAG pipeline where value is delivered to the user. Well-performed answer generation produces responses that are correct, complete, and clear, significantly reducing hallucinations compared to using the LLM alone.",
+      "whyItMatters": "This is the culmination of the RAG pipeline where value is delivered to the user. A well-performed answer generation produces responses that are correct (grounded in facts), complete, and clear, significantly reducing hallucinations compared to using the LLM alone.",
       "challenges": [
         "Preventing hallucinations even with provided context",
         "Ensuring the model uses the context rather than prior knowledge when they conflict",
@@ -184,8 +184,8 @@
       "title": "Post-processing",
       "description": "Formats, cites, and sanity-checks output.",
       "pitfall": "Weak fact-check passes errors; over-editing distorts meaning.",
-      "whatItDoes": "Post-processing takes the raw output from the LLM and applies various transformations such as formatting, fact-checking against source documents, adding citations, filtering inappropriate content, and summarizing when needed. It serves as a quality control layer.",
-      "whyItMatters": "Even with context, LLMs can produce outputs that benefit from verification and formatting. Post-processing ensures the final answer is not only correct but also presented appropriately, increasing trust and usability.",
+      "whatItDoes": "Takes the raw output from the LLM and applies various transformations such as formatting (bullet points, markdown, JSON), fact-checking against source documents, adding citations, filtering inappropriate content, and summarizing when needed. It serves as a quality control layer before delivering the final response.",
+      "whyItMatters": "Even with context, LLMs can produce outputs that benefit from an extra check. Post-processing ensures the final answer is not only correct but also presented appropriately. It increases trust and usability by delivering polished, verified responses aligned with application-specific requirements.",
       "challenges": [
         "Implementing reliable automated fact-checking against source documents",
         "Modifying outputs without changing their meaning or introducing errors",
@@ -196,11 +196,11 @@
       ]
     },
     "14": {
-      "title": "Monitoring & evaluation",
+      "title": "Monitoring & Evaluation",
       "description": "Reveals quality, latency, and drift.",
       "pitfall": "Wrong metrics hide failures; poor logging thwarts debugging.",
-      "whatItDoes": "Monitoring collects real-time metrics on system performance, such as latency, usage statistics, error rates, and user feedback. Evaluation systematically assesses answer quality through manual reviews, user ratings, and automated metrics against benchmark datasets.",
-      "whyItMatters": "Without monitoring and evaluation, you're operating blind. These processes help you detect issues, understand where improvements are needed, measure the impact of changes, and catch regressions before they affect users significantly.",
+      "whatItDoes": "Monitoring collects real-time metrics on system performance, such as latency, usage statistics, error rates, and user feedback. Evaluation systematically assesses answer quality through manual reviews, user ratings, and automated metrics against benchmark datasets. Both rely on comprehensive logging of inputs, retrievals, and outputs.",
+      "whyItMatters": "Without monitoring and evaluation, you're flying blind. These processes help you detect issues, understand where improvements are needed, and measure the impact of changes. They provide the insights necessary to maintain high quality, justify the system's performance, and catch regressions before they affect users.",
       "challenges": [
         "Defining meaningful metrics that truly capture RAG system quality",
         "Attributing issues to specific pipeline components for targeted improvements",
@@ -211,11 +211,11 @@
       ]
     },
     "15": {
-      "title": "Feedback loop",
+      "title": "Feedback Loop",
       "description": "Feeds findings back to improve all stages.",
       "pitfall": "Ignoring feedback lets issues persist or regressions slip in.",
       "whatItDoes": "The feedback loop takes learnings from monitoring, user feedback, and evaluation to make iterative improvements throughout the pipeline. It includes adding missing content, refining chunking strategies, updating embeddings, fine-tuning models, and enhancing prompts based on real-world usage patterns.",
-      "whyItMatters": "No RAG system is perfect from the start. The feedback loop is how your system evolves and adapts to changing needs and expectations. By actively incorporating feedback, you can address content gaps, improve retrieval accuracy, and ensure continued relevance.",
+      "whyItMatters": "No RAG system is perfect from the start. The feedback loop is how your system evolves and adapts to changing needs and expectations. By actively incorporating feedback, you can address content gaps, improve retrieval accuracy, enhance answer quality, and ensure your system remains relevant and effective as requirements change.",
       "challenges": [
         "Collecting meaningful feedback from users who may not always provide explicit ratings",
         "Analyzing diverse feedback data to identify actionable improvements",

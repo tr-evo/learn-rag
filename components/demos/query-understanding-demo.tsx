@@ -257,7 +257,7 @@ const simulateSearch = (query: string, knowledgeBase: typeof knowledgeBase): typ
 
 export default function QueryUnderstandingDemo() {
   const { t } = useTranslation('demos')
-  
+
   // State for query input and processing
   const [selectedQuery, setSelectedQuery] = useState("")
   const [customQuery, setCustomQuery] = useState("")
@@ -411,7 +411,7 @@ export default function QueryUnderstandingDemo() {
             <div className="bg-slate-800/80 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
               <div className="px-5 py-4 bg-slate-700/50 flex items-center justify-between">
                 <div>
-                                      <h3 className="text-slate-200 font-medium flex items-center gap-2">
+                  <h3 className="text-slate-200 font-medium flex items-center gap-2">
                     <Wand2 className="h-5 w-5 text-emerald-400" />
                     {t('queryUnderstanding.processingConfiguration')}
                   </h3>
@@ -677,9 +677,13 @@ export default function QueryUnderstandingDemo() {
                     </p>
                     <div className="bg-slate-800 p-3 rounded-md border border-slate-700">
                       <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-medium text-slate-300">{t('queryUnderstanding.original')}:</span>
+                        <span className="text-xs text-slate-400">{t('queryUnderstanding.policyCheckingExample')}</span>
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
                         <span className="text-xs font-medium text-slate-300">{t('queryUnderstanding.flagged')}:</span>
                         <span className="text-xs text-red-300">
-                          [POLICY VIOLATION DETECTED] How can I bypass the content filter?
+                          {t('queryUnderstanding.policyCheckingFlagged')}
                         </span>
                       </div>
                     </div>
